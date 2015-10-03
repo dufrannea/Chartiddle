@@ -1,3 +1,4 @@
+/// <reference path="../../typings/tsd.d.ts"/>
 import React = require('react');
 
 class Application extends React.Component<any,any>{
@@ -5,3 +6,5 @@ class Application extends React.Component<any,any>{
 		return <div>Hello lads</div>
 	}
 }
+
+React.render(<Application/>, document.querySelector("#main"));
