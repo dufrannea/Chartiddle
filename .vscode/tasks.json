@@ -21,7 +21,10 @@
 	"showOutput": "silent",
 
 	// args is the HelloWorld program to compile.
-	"args": ["-p","."],
+	"args": [
+		"-p",
+		"."
+	],
 
 	// use the standard tsc problem matcher to find compile problems
 	// in the output.

@@ -4,6 +4,13 @@
 		"rootDir": "src",
 		"jsx": "react",
 		"module": "amd",
-		"outDir": "build"
-	}
+		"outDir": "build",
+		"listFiles": true
+	},
+	"exclude" : [
+		"node_modules",
+		"bower_components",
+		"build",
+		".vscode"
+	]
 }
