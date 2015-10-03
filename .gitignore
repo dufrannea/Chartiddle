@@ -1,0 +1,5 @@
+typings
+bower_components
+/src/**/*.js
+/build
+/node_modules
