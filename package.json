@@ -4,8 +4,6 @@
   "description": "",
   "main": "gulpfile.js",
   "dependencies": {
-    "gulp": "^3.9.0",
-    "karma": "^0.13.10"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
