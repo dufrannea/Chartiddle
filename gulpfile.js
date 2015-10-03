@@ -13,7 +13,7 @@ gulp.task('build-static', function(){
 		'src/**/*.html',
 		'src/**/*.css'])
 		.pipe(gulp.dest('build'));
-})
+});
 
 gulp.task('build', ["clean", "build-static"], function(){
 	var tsProject = typescript.createProject('tsconfig.json');
@@ -21,4 +21,4 @@ gulp.task('build', ["clean", "build-static"], function(){
 			.pipe(typescript(tsProject));
 
     return tsResult.js.pipe(gulp.dest('build'));
-})
+});
