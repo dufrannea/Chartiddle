@@ -1,13 +1,13 @@
 var tests = [];
 for (var file in __karma__.files) {
     if (__karma__.files.hasOwnProperty(file)) {
-        if (/test\/components\/.*\.js$/.test(file)) {
-            tests.push(file);
+        if (/tests\/.*Spec\.js$/.test(file)) {
+            var filePath = file.replace(/^\/base\/build\/tests\//g, '../tests/');
+            filePath = filePath.replace(/\.js$/g, '');
+            tests.push(filePath);
         }
     }
 }
-
-console.info(__karma__.files)
 
 requirejs.config({
     baseUrl: '/base/build/main',
