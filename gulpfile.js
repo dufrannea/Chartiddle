@@ -3,6 +3,7 @@ var clean = require('gulp-clean');
 var typescript = require('gulp-typescript');
 var install = require('gulp-install');
 var mainBowerFiles = require('main-bower-files');
+var sass = require('gulp-sass');
 
 gulp.task("clean", function(){
 	return gulp
@@ -15,6 +16,15 @@ gulp.task('build-static', function(){
 		'src/**/*.html',
 		'src/**/*.css'])
 		.pipe(gulp.dest('build'));
+});
+
+/**
+ * build sass
+ */
+gulp.task('build-sass', function () {
+  gulp.src('src/styles/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('build/main/styles'));
 });
 
 /**
@@ -50,7 +60,7 @@ gulp.task("build-bower", function(){
 /**
  * build for dev
  */
-gulp.task('build', ["build-typescript","build-static"]);
+gulp.task('build', ["build-typescript","build-static", "build-sass"]);
 
 /**
  * Rebuild : clean, build static and typescript files,
