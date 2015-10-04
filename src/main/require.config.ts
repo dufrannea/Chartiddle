@@ -5,6 +5,7 @@ declare var require : Require;
 require = <any>{
 	baseUrl : ".",
 	paths : {
-		react : 'bower_components/react'
+		react : 'bower_components/react',
+		flux : 'bower_components/Flux'
 	}
 }
