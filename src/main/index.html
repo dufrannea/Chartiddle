@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<!-- build:js -->
 		<script src="require.config.js"></script>
-		<script  src="bower_components/require.js"></script>
+		<script data-main="app/main" src="bower_components/require.js"></script>
+		<!-- endbuild -->
+		<!-- build:css -->
 		<link href="styles/style.css" rel="stylesheet"/>
+		<!-- endbuild -->
 	</head>
 	<body>
 		<div id="main"></div>
-		<script>
-			require(["app/main"])
-		</script>
 	</body>
 </html>
