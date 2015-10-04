@@ -45,8 +45,13 @@ export class TodoList extends React.Component<ITodoListParams, ITodoListState> {
 					<ul>{todoComps}</ul>
 				</div>
 				<input type="submit" onClick={this._handleClick.bind(this)} value="Add Todo"/>
+				<input type="submit" onClick={this._handleDeleteAllDone.bind(this)} value="Clear all done"/>
 			</div>
 		);
+	}
+	
+	_handleDeleteAllDone(){
+		Actions.deleteAllDone();
 	}
 	
 	_handleClick(){
@@ -68,22 +73,49 @@ interface ITodoItemState {
 class TodoItem extends React.Component<ITodoItemParams, ITodoItemState> {
 	constructor(){
 		// no editing by default.
-		this.setState({
-			editing :false
-		});
+		this.state = {
+			editing : false
+		};
 		
 		super();
 	}
 	render() {
 		return (
 			<li>
-				<span>{this.props.todo.name}</span>
-				<input type="checkbox" checked={this.props.todo.done} onChange={this.handleClick.bind(this)}/>
+				{ this.state.editing ?
+						<input type="text" ref="theinput" defaultValue={this.props.todo.name}/>
+				    :
+						<span>{this.props.todo.name}</span>
+				}
+				<input type="checkbox" checked={this.props.todo.done} onChange={this._handleToggleDone.bind(this)}/>
+				{ this.state.editing ?
+						<input type="submit" value='Save' onClick={this._handleDoneEditing.bind(this)}/>
+				    :
+						<input type="submit" value='Edit' onClick={this._handleClickEdit.bind(this)}/>
+				}
+				<input type="submit" value="Delete" onClick={this._handleClickDelete.bind(this)}/>
 			</li>
 		);
 	}
 	
-	handleClick(){
+	_handleDoneEditing(event, target){
+		Actions.updateTodoName(this.props.todo.id, this.refs['theinput']['getDOMNode']().value);
+		this.setState({
+			editing : false
+		});
+	}
+	
+	_handleClickDelete(){
+		Actions.deleteTodo(this.props.todo.id);
+	}
+	
+	_handleClickEdit(){
+		this.setState({
+			editing : true
+		});	
+	}
+	
+	_handleToggleDone(){
 		Actions.toggleTodoDone(this.props.todo.id);
 	}
 }

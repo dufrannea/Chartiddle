@@ -3,6 +3,18 @@ import {AppConstants} from './AppConstants'
 
 class AppActions {
 	
+	deleteAllDone(){
+		Dispatcher.dispatch({
+			actionType : AppConstants.DELETE_ALL_DONE
+		});
+	}
+	updateTodoName(id : number, name :string){
+		Dispatcher.dispatch({
+			actionType : AppConstants.UPDATE_TODO_NAME,
+			id : id,
+			name : name
+		});
+	}
 	/// dispatch action to the store
 	toggleTodoDone(id : number){
 		Dispatcher.dispatch({
@@ -11,6 +23,12 @@ class AppActions {
 		});
 	}
 	
+	deleteTodo(id:number){
+		Dispatcher.dispatch({
+			actionType : AppConstants.DELETE_TODO,
+			id : id
+		});
+	}
 	/**
 	 * Create a new todo
 	 */

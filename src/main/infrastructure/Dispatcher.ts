@@ -8,6 +8,8 @@ export interface IActionType {
 	actionType : AppConstants; 
 	// id of the todo to update
 	id? : number;
+	// used to update todo.
+	name? : string;
 }
 
 // here create an AppDispatcher
