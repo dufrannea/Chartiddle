@@ -12,7 +12,8 @@ var mainBowerFiles = require('main-bower-files');
 var sass = require('gulp-sass'),
 	rjs = require('gulp-requirejs-bundler'),
     uglify = require('gulp-uglify'),	
-    htmlreplace = require('gulp-html-replace');
+    htmlreplace = require('gulp-html-replace'),
+    es = require('event-stream');
     
 /**
  * TASKS DEFINITION
@@ -24,7 +25,20 @@ gulp.task("clean", function(){
 		.pipe(clean());
 });
 
-gulp.task('build-static', function(){
+gulp.task('build-bootstrap', function() {
+   var css = gulp.src([
+       'bower_components/bootstrap/dist/css/bootstrap.min.css',
+       'bower_components/bootstrap/dist/css/bootstrap-theme.min.css'
+   ]).pipe(gulp.dest('build/main/styles'));
+   
+   var fonts = gulp.src([
+       'bower_components/bootstrap/dist/fonts/*'
+   ]).pipe(gulp.dest('build/main/styles/fonts'));
+   
+   return es.concat(css, fonts);
+});
+
+gulp.task('build-static', ['build-bootstrap'], function(){
 	return gulp.src([
 		'src/**/*.html',
 		'src/**/*.css'])
@@ -35,7 +49,7 @@ gulp.task('build-static', function(){
  * build sass
  */
 gulp.task('build-sass', function () {
-  gulp.src('src/styles/*.scss')
+  return gulp.src('src/styles/*.scss')
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('build/main/styles'));
 });

@@ -6,6 +6,7 @@
   "dependencies": {},
   "devDependencies": {
     "deeply": "^0.1.0",
+    "event-stream": "^3.3.1",
     "gulp": "^3.9.0",
     "gulp-clean": "^0.3.1",
     "gulp-html-replace": "^1.5.4",
