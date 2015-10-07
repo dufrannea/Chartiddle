@@ -37,6 +37,12 @@
       "main": [
         "dist/jquery.min.js"
       ]
+    },
+    "dropzone" : {
+      "main" : [
+        "dist/min/dropzone-amd-module.min.js",
+        "dist/min/dropzone.min.css"
+      ]
     }
   }
 }
