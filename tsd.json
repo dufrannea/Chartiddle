@@ -2,8 +2,8 @@
   "version": "v4",
   "repo": "borisyankov/DefinitelyTyped",
   "ref": "master",
-  "path": "typings",
-  "bundle": "typings/tsd.d.ts",
+  "path": "src/typings",
+  "bundle": "src/typings/tsd.d.ts",
   "installed": {
     "react/react.d.ts": {
       "commit": "98d3168c2c570352a3a7393788e2ec9fbb08ade6"
@@ -16,6 +16,15 @@
     },
     "flux/flux.d.ts": {
       "commit": "98d3168c2c570352a3a7393788e2ec9fbb08ade6"
+    },
+    "papaparse/papaparse.d.ts": {
+      "commit": "3db73cb78cb08ef2315d756d1a614fda84b26df3"
+    },
+    "dropzone/dropzone.d.ts": {
+      "commit": "3db73cb78cb08ef2315d756d1a614fda84b26df3"
+    },
+    "jquery/jquery.d.ts": {
+      "commit": "3db73cb78cb08ef2315d756d1a614fda84b26df3"
     }
   }
 }
