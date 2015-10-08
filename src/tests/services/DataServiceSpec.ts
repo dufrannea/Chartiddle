@@ -3,14 +3,20 @@ import {dataService as DataService} from '../../main/services/DataService'
 import $ = require('jquery');
 
 const DATABASE_NAME = "testdb";
-	let success = false;
-	let version = 1;
+let success = false;
+let version = 1;
 describe('DataService tests', ()=>{
+	/**
+	 * Drop db before tests.
+	 */
 	beforeAll((done)=>{
 		let dropRequest = window.indexedDB.deleteDatabase(DATABASE_NAME)
 		dropRequest.onsuccess = ()=>{done()};
 	});
 	
+	/**
+	 * Inits db before each test.
+	 */
 	beforeEach((done)=>{
 		version += 1;
 		success = false;
@@ -27,8 +33,8 @@ describe('DataService tests', ()=>{
 	    expect(success).toBe(true);
 	});
 	
-	it('should query datasources',(done)=>{
-		DataService.getAllDataSources()
+	it('should return empty array when not data',(done)=>{
+		DataService.DataSourceRepository.getAll()
 		.done((dataSources)=>{
 			expect(dataSources).toEqual([]);
 		})
@@ -36,18 +42,57 @@ describe('DataService tests', ()=>{
 		.always(done)
 	});
 	
-	it('should insert datasource',(done) => {
-		DataService.insertDataSource({
-			name : "ergut",
-			id : 1
-		})
-		.pipe(()=> DataService.getAllDataSources())
+	it('should set id when inserting',(done) => {
+		let insertee : IDataSource= {
+			name : "ergut"
+		};
+		
+		DataService.DataSourceRepository.save(insertee)
 		.done((result)=>{
-				expect(result.length).toBe(1);
+			expect(insertee.id).toBeDefined();
 		})
 		.fail(fail)
 		.always(done)
 	});
+	
+	it('should update when item exists',(done)=>{
+		let insertee : IDataSource= {
+			name : "ergut"
+		};
+		
+		DataService.DataSourceRepository.save(insertee)
+		.pipe(()=>{
+			return DataService.DataSourceRepository.save({
+				name : "ergut2",
+				id : insertee.id
+			});
+		})
+		.pipe(()=> DataService.DataSourceRepository.get(insertee.id))
+		.done((fetched) => {
+			expect(fetched.name).toBe("ergut2");
+		})
+		.fail(fail)
+		.always(done)		
+	});
+	
+	it('should delete item',(done) => {
+		let insertee : IDataSource= {
+			name : "ergut"
+		};
+		
+		DataService.DataSourceRepository.save(insertee)
+		.pipe(()=>DataService.DataSourceRepository.delete(insertee.id))
+		.pipe(()=>DataService.DataModelRepository.getAll())
+		.done((result)=>{
+			expect(result.length).toBe(0);
+		})
+		.fail(fail)
+		.always(done);
+	})
+	
+	/**
+	 * Drop db after tests.
+	 */
 	afterAll(()=>{
 		window.indexedDB.deleteDatabase(DATABASE_NAME);
 	})

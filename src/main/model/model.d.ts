@@ -8,7 +8,7 @@ interface IDataSource {
     
     // unique id 
     // of the datasource.
-    id : number;
+    id? : number;
 }
 
 // global configuration for the application
