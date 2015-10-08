@@ -28,31 +28,6 @@ export class DataService {
         console.info("indexedDB seems to be supported");
     }
 
-    // TODO : migrate to repository.
-    public getAllByColumn(store: string, column: string, value: string) {
-        var db = this.db;
-        return {
-            foreach: function(each, done, bindTo) {
-                var t = db.transaction([store], "readonly");
-                t.oncomplete = function(event) {
-                    console.info("transaction completed");
-                    done.apply(bindTo, []);
-                }
-                var objectStore = t.objectStore(store);
-                objectStore.openCursor().onsuccess = function(event: any) {
-                    var cursor = event.target.result;
-                    if (cursor) {
-                        each.apply(bindTo, [cursor.value]);
-                        cursor.continue();
-                    }
-                    else {
-                        console.info("No more entries!");
-                    }
-                };
-            }
-        }
-    }
-
     /**
      * Perform checks on the browser to see if indexeddb is supported.
      */
