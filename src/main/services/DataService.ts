@@ -3,35 +3,34 @@
 
 import $ = require('jquery');
 
-declare var window :any;
+declare var window : any;
 const CHARTS_STORE : string = "Charts";
 const DATAMODELS_STORE : string = "DataModels";
 const DATASOURCES_STORE : string = "DataSources";
 
-class DataService {
+export class DataService {
     private db : IDBDatabase;
     
-    constructor(done){
-        if (!this.init()){
+    constructor(){
+        if (!this.isIndexedDBSupported()){
             console.error("indexedDB is not supported in your browser");
             return;
         }
         console.info("indexedDB seems to be supported");
-
     }
 
     /**
      * Gets a usable instance of dataservice.
      */
-    public static get() : JQueryDeferred<DataService> {
-        var res = $.Deferred<DataService>();
-
-        var service = new DataService(function(){
-            res.resolve(service);
-        });
-
-        return res;
-    }
+//     public static get() : JQueryDeferred<DataService> {
+// //         var res = $.Deferred<DataService>();
+// // 
+// //         var service = new DataService(function(){
+// //             res.resolve(service);
+// //         });
+// // 
+// //         return res;
+//     }
 
     public getConfig(): JQueryDeferred<IDataModel>{
         var res = $.Deferred<IDataModel>();
@@ -56,40 +55,7 @@ class DataService {
         return res;
     }
 
-    /**
-     * Efficiently inserts all data from the dataProvider
-     * in indexedDb.
-     */
-    public insert(dataProvider : IDataProvider): JQueryDeferred<void>{
-        var res = $.Deferred<void>();
-        var store = "dataSource"
-        // TODO : move all this to use greedy.
-        var allData = []
-        var db = this.db;
-        dataProvider.foreach(function(data){
-            allData.push(data.data[0])
-        },function(){
-                var transaction = db.transaction([store], "readwrite");
-            var objectStore = transaction.objectStore(store);
-
-            transaction.oncomplete = function(event) {
-                console.info("transaction completed");
-                res.resolve();
-            };
-
-            transaction.onerror = function(event) {
-                console.error("transaction not open due to error", event)
-                res.fail();
-            };
-
-            for (var i = 0; i < allData.length; i++){
-                var request = objectStore.add(allData[i]);	
-                /*request.onsuccess = function(event) {
-                };*/	
-            }
-            })
-        return res;
-    }
+ 
 
     public getAllByColumn(store: string, column: string, value: string) {
         var db = this.db;
@@ -113,53 +79,66 @@ class DataService {
                 };
             }
         }
-
     }
 
-    public getAll() : JQueryDeferred<IDataProvider> {
-        var result = $.Deferred<IDataProvider>();
-        var store = "dataSource";
+    public insertDataSource(dataSource : IDataSource): JQueryPromise<void>{
+        var res = $.Deferred<void>();
+        var store = DATASOURCES_STORE
         var db = this.db;
+        // TODO : move all this to use greedy.
+        var transaction = db.transaction([store], "readwrite");
+        var objectStore = transaction.objectStore(store);
 
-        var provider = {
-            foreach: function (each, done, bindTo) {
-                var t = db.transaction([store], "readonly");
-                t.oncomplete = function (event) {
-                    console.info("transaction completed");
-                    done.apply(bindTo, []);
-                }
-                var objectStore = t.objectStore(store);
-                objectStore.openCursor().onsuccess = function (event: any) {
-                    var cursor = event.target.result;
-                    if (cursor) {
-                        each.apply(bindTo, [cursor.value]);
-                        cursor.continue();
-                    }
-                    else {
-                        console.info("No more entries!");
-                    }
-                };
-            },
-            greedy: function () {
-                console.error("greedy indexedDb provider is not yet implemented");
-                var res = $.Deferred<IDataProvider>();
-                res.resolve(provider);
-                return res;
-            }
+        transaction.oncomplete = function(event) {
+            console.info("transaction completed");
+            res.resolve();
         };
 
-        result.resolve(provider);
+        transaction.onerror = function(event) {
+            console.error("transaction not open due to error", event)
+            res.reject();
+        };
 
-        return result;
+        var request = objectStore.add(dataSource);	
+        
+        return res.promise();
+    }
+
+    public getAllDataSources() : JQueryPromise<IDataSource[]> {
+        let result = $.Deferred<IDataSource[]>();
+        let store = DATASOURCES_STORE;
+        let db = this.db;
+
+        let t = db.transaction([store], "readonly");
+        // t.oncomplete = function (event) {
+        //     console.info("transaction completed");
+        // }
+        let objectStore = t.objectStore(store);
+        
+        let allDataSources : IDataSource[] = [];
+        
+        objectStore.openCursor().onsuccess = function (event: any) {
+            let cursor : IDBCursorWithValue = event.target.result;
+            if (cursor) {
+                allDataSources.push(cursor.value)
+                cursor.continue();
+            }
+            else {
+                result.resolve(allDataSources);
+                console.info("No more entries!");
+            }
+        };
+        return result.promise();
     }
     
     /**
      * Perform checks on the browser to see if indexeddb is supported.
      */
-    public init(){
+    public isIndexedDBSupported(){
         window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
         window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
         window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange
+        
         if (!window.indexedDB) {
             return false;
         }
@@ -168,43 +147,43 @@ class DataService {
 
     /**
      * Initializes the database.
+     * @param dataBaseName {string} : the name of the  
+     *        database to initialize.
      */
-    public initDatabase(dataBaseName) : JQueryDeferred<void> {
+    public initDatabase(dataBaseName, version : number) : JQueryPromise<void> {
         var res = $.Deferred<void>();
         
-        var initDbRequest = window.indexedDB.open(dataBaseName, 6);
+        var initDbRequest = window.indexedDB.open(dataBaseName, version);
         
-        initDbRequest.onsuccess = (function(event){
+        initDbRequest.onsuccess = (event) =>{
             this.db = initDbRequest.result;
             res.resolve();
-        }).bind(this);
+        }
 
-        initDbRequest.onerror = function(event){
+        initDbRequest.onerror = (event) => {
             console.error("Database error: " + event.target.errorCode);
             res.reject();
         }
-        initDbRequest.onupgradeneeded = function(event) {
+        
+        initDbRequest.onupgradeneeded = (event) => {
             this.upgradeDatabase(event.target.result);
         };
-        return res;
+        
+        return res.promise();
     }
-    
-    
      
     private upgradeDatabase(db : IDBDatabase){
 
-            // Create an objectStore to hold information about our customers. We're
-            // going to use "ssn" as our key path because it's guaranteed to be
-            // unique.
-            if (!db.objectStoreNames.contains(DATASOURCES_STORE)) {
-                var dataModelStore = db.createObjectStore(DATASOURCES_STORE,  { autoIncrement: true });
+            let dropCreate = (name : string) => {
+                if (db.objectStoreNames.contains(name)) {
+                    db.deleteObjectStore(name);
+                }
+                var dataModelStore = db.createObjectStore(name,  { autoIncrement: true , keyPath : "id" });    
             }
-            if (!db.objectStoreNames.contains(CHARTS_STORE)) {
-                var dataSourceStore = db.createObjectStore(CHARTS_STORE, { autoIncrement: true });
-            }
-            if (!db.objectStoreNames.contains(DATAMODELS_STORE)) {
-                var dataSourceStore = db.createObjectStore(DATAMODELS_STORE, { autoIncrement: true });
-            }
+            dropCreate(DATAMODELS_STORE);
+            dropCreate(DATASOURCES_STORE);
+            dropCreate(CHARTS_STORE);
+            
             // Create an index to search customers by name. We may have duplicates
             // so we can't use a unique index.
             //objectStore.createIndex("name", "name", { unique: false });
@@ -213,9 +192,6 @@ class DataService {
             // no two customers have the same email, so use a unique index.
             //objectStore.createIndex("email", "email", { unique: true });
     }
-
-    public GetModel(first_argument) {
-        
-    }
 }
-export =  DataService;
+
+export var dataService = new DataService();
