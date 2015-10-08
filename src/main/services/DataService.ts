@@ -4,6 +4,9 @@
 import $ = require('jquery');
 
 declare var window :any;
+const CHARTS_STORE : string = "Charts";
+const DATAMODELS_STORE : string = "DataModels";
+const DATASOURCES_STORE : string = "DataSources";
 
 class DataService {
     private db : IDBDatabase;
@@ -14,7 +17,7 @@ class DataService {
             return;
         }
         console.info("indexedDB seems to be supported");
-        this.initDatabase("chartiddle", done);
+
     }
 
     /**
@@ -166,27 +169,41 @@ class DataService {
     /**
      * Initializes the database.
      */
-    public initDatabase(dataBaseName, done){
+    public initDatabase(dataBaseName) : JQueryDeferred<void> {
+        var res = $.Deferred<void>();
+        
         var initDbRequest = window.indexedDB.open(dataBaseName, 6);
+        
         initDbRequest.onsuccess = (function(event){
             this.db = initDbRequest.result;
-            done();
+            res.resolve();
         }).bind(this);
 
         initDbRequest.onerror = function(event){
             console.error("Database error: " + event.target.errorCode);
+            res.reject();
         }
         initDbRequest.onupgradeneeded = function(event) {
-            var db : IDBDatabase = event.target.result;
+            this.upgradeDatabase(event.target.result);
+        };
+        return res;
+    }
+    
+    
+     
+    private upgradeDatabase(db : IDBDatabase){
 
             // Create an objectStore to hold information about our customers. We're
             // going to use "ssn" as our key path because it's guaranteed to be
             // unique.
-            if (!db.objectStoreNames.contains("applicationConfig")) {
-                var dataModelStore = db.createObjectStore("applicationConfig");
+            if (!db.objectStoreNames.contains(DATASOURCES_STORE)) {
+                var dataModelStore = db.createObjectStore(DATASOURCES_STORE,  { autoIncrement: true });
             }
-            if (!db.objectStoreNames.contains("dataSource")) {
-                var dataSourceStore = db.createObjectStore("dataSource", { autoIncrement: true });
+            if (!db.objectStoreNames.contains(CHARTS_STORE)) {
+                var dataSourceStore = db.createObjectStore(CHARTS_STORE, { autoIncrement: true });
+            }
+            if (!db.objectStoreNames.contains(DATAMODELS_STORE)) {
+                var dataSourceStore = db.createObjectStore(DATAMODELS_STORE, { autoIncrement: true });
             }
             // Create an index to search customers by name. We may have duplicates
             // so we can't use a unique index.
@@ -195,7 +212,6 @@ class DataService {
             // Create an index to search customers by email. We want to ensure that
             // no two customers have the same email, so use a unique index.
             //objectStore.createIndex("email", "email", { unique: true });
-        };
     }
 
     public GetModel(first_argument) {
