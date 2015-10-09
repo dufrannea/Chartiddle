@@ -93,7 +93,10 @@ describe('DataService tests', ()=>{
 	/**
 	 * Drop db after tests.
 	 */
-	afterAll(()=>{
-		window.indexedDB.deleteDatabase(DATABASE_NAME);
+	afterAll((done)=>{
+		let dropdb = window.indexedDB.deleteDatabase(DATABASE_NAME);
+		dropdb.onblocked = done;
+		dropdb.onerror = done;
+		dropdb.onsuccess = done;
 	})
 })

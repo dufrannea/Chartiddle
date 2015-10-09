@@ -2,7 +2,7 @@ import $ = require('jquery');
 
 export class Repository<TObject, TKey>  {
 	private tableName: string;
-	private db: IDBDatabase;
+	protected db: IDBDatabase;
 	
 	/**
 	 * Creates a new repo.
@@ -93,11 +93,11 @@ export class Repository<TObject, TKey>  {
 	 * @param T : type of deferred.
 	 * @return : the promise.
 	 */
-	private executeInTransaction<T>(payload: (o: IDBObjectStore, deferred: JQueryDeferred<T>) => void): JQueryPromise<T> {
+	protected executeInTransaction<T>(payload: (o: IDBObjectStore, deferred: JQueryDeferred<T>) => void, storeName? : string): JQueryPromise<T> {
 		let res = $.Deferred<T>();
 
         let transaction = this.db.transaction([this.tableName], "readwrite");
-        let objectStore = transaction.objectStore(this.tableName);
+        let objectStore = transaction.objectStore(storeName || this.tableName);
 
         transaction.oncomplete = function(event) {
             console.info("transaction completed");
