@@ -4,11 +4,7 @@ import {Repository} from './Repository'
 import $ = require('jquery');
 import {ConnectionPool} from './ConnectionPool'
 
-interface IFileItem {
-	id: number;
-	name: string;
-	dataStream?: IDataStream;
-}
+
 
 /**
  * Repository allowing

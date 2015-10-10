@@ -12,6 +12,10 @@ export interface IActionType {
 	actionType : AppConstants; 
 	
 	fileAction? : IFileAction;
+	
+	// weakly typed data,
+	// use with care.	
+	data? : any;
 }
 
 // here create an AppDispatcher

@@ -4,6 +4,7 @@
 import $ = require('jquery');
 import {Repository} from './Repository'
 import {ConnectionPool} from './ConnectionPool'
+import {FileRepository} from './FileRepository'
 
 declare var window: any;
 const CHARTS_STORE: string = "Charts";
@@ -18,6 +19,7 @@ export class DataService {
     public DataSourceRepository: Repository<IDataSource, number>;
     public DataModelRepository: Repository<IDataModel, number>;
     public ChartConfigurationRepository: Repository<IChartConfiguration, number>;
+    public FileRepository : FileRepository;
     
     private pool : ConnectionPool;
     
@@ -51,7 +53,7 @@ export class DataService {
      */
     public initDatabase(dataBaseName, version: number): JQueryPromise<void> {
         var res = $.Deferred<void>();
-
+        
         var initDbRequest = window.indexedDB.open(dataBaseName, version);
 
         initDbRequest.onsuccess = (event) => {
@@ -79,6 +81,7 @@ export class DataService {
         this.DataSourceRepository = new Repository<IDataSource, number>(this.pool, DATASOURCES_STORE);
         this.DataModelRepository = new Repository<IDataModel, number>(this.pool, DATAMODELS_STORE);
         this.ChartConfigurationRepository = new Repository<IChartConfiguration, number>(this.pool, CHARTS_STORE);
+        this.FileRepository = new FileRepository(this.pool);
     }
 
     /**
@@ -88,10 +91,10 @@ export class DataService {
     private upgradeDatabase(db: IDBDatabase) {
 
         let dropCreate = (name: string) => {
-            if (db.objectStoreNames.contains(name)) {
-                db.deleteObjectStore(name);
+            if (!db.objectStoreNames.contains(name)) {
+                var dataModelStore = db.createObjectStore(name, { autoIncrement: true, keyPath: "id" });
+                // db.deleteObjectStore(name);
             }
-            var dataModelStore = db.createObjectStore(name, { autoIncrement: true, keyPath: "id" });
         }
         dropCreate(DATAMODELS_STORE);
         dropCreate(DATASOURCES_STORE);

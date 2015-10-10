@@ -4,10 +4,9 @@
 
 import React = require('react');
 import {DropzoneComponent} from '../components/DropzoneComponent'
+import {dataSourceStore as DataSourceStore} from '../stores/DataSourceStore'
 import {fileStore as FileStore} from '../stores/FileStore'
 import {appActions as Actions} from '../infrastructure/Actions'
-
-let mainElement = document.querySelector("#main");
 
 interface IDataSourceListParams {
 }
@@ -16,10 +15,11 @@ interface IDataSourceListState {
 	dataSources : IDataSource[];
 }
 
+let a = FileStore;
 class DataSourceList extends React.Component<IDataSourceListParams,IDataSourceListState> {
 	constructor(){
 		this.state = {
-			dataSources : FileStore.getAllFiles()
+			dataSources : DataSourceStore.getAll()
 		};
 		super(this);
 	}
@@ -38,17 +38,20 @@ class DataSourceList extends React.Component<IDataSourceListParams,IDataSourceLi
 		Actions.addFile(f);
 	}
 	componentDidMount(){
-		FileStore.registerChangeListener(this._onChange.bind(this));
+		DataSourceStore.registerChangeListener(this._onChange.bind(this));
 	}
 	_onChange(){
-		this.setState({ dataSources : FileStore.getAllFiles()});	
+		this.setState({ dataSources : DataSourceStore.getAll()});	
 	}
 }
 
-
-React.render(
-	<div>
-		<DataSourceList/>
-	</div>,
-	mainElement
-);
+export function startReact(){
+	let mainElement = document.querySelector("#main");
+	
+	React.render(
+		<div>
+			<DataSourceList/>
+		</div>,
+		mainElement
+	);
+}

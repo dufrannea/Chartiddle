@@ -3,3 +3,8 @@ interface IDataStream {
 	completeCallback: () => void,
 	bindTo?: any) => void;
 }
+interface IFileItem {
+	id: number;
+	name: string;
+	dataStream?: IDataStream;
+}
