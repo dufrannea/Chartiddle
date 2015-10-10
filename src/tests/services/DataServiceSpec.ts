@@ -1,10 +1,15 @@
 /// <reference path="../../typings/tsd.d.ts"/>
-import {dataService as DataService} from '../../main/services/DataService'
+import {DataService} from '../../main/services/DataService'
+import {ConnectionPool} from '../../main/services/ConnectionPool'
 import $ = require('jquery');
 
 const DATABASE_NAME = "testdb";
 let success = false;
 let version = 1;
+
+let pool = new ConnectionPool();
+let dataService = new DataService(pool);
+
 describe('DataService tests', ()=>{
 	/**
 	 * Drop db before tests.
@@ -20,7 +25,7 @@ describe('DataService tests', ()=>{
 	beforeEach((done)=>{
 		version += 1;
 		success = false;
-		DataService
+		dataService
 				.initDatabase(DATABASE_NAME, 1)
 				.done(()=>{
 					success = true;
@@ -34,7 +39,7 @@ describe('DataService tests', ()=>{
 	});
 	
 	it('should return empty array when not data',(done)=>{
-		DataService.DataSourceRepository.getAll()
+		dataService.DataSourceRepository.getAll()
 		.done((dataSources)=>{
 			expect(dataSources).toEqual([]);
 		})
@@ -47,7 +52,7 @@ describe('DataService tests', ()=>{
 			name : "ergut"
 		};
 		
-		DataService.DataSourceRepository.save(insertee)
+		dataService.DataSourceRepository.save(insertee)
 		.done((result)=>{
 			expect(insertee.id).toBeDefined();
 		})
@@ -60,14 +65,14 @@ describe('DataService tests', ()=>{
 			name : "ergut"
 		};
 		
-		DataService.DataSourceRepository.save(insertee)
+		dataService.DataSourceRepository.save(insertee)
 		.pipe(()=>{
-			return DataService.DataSourceRepository.save({
+			return dataService.DataSourceRepository.save({
 				name : "ergut2",
 				id : insertee.id
 			});
 		})
-		.pipe(()=> DataService.DataSourceRepository.get(insertee.id))
+		.pipe(()=> dataService.DataSourceRepository.get(insertee.id))
 		.done((fetched) => {
 			expect(fetched.name).toBe("ergut2");
 		})
@@ -80,9 +85,9 @@ describe('DataService tests', ()=>{
 			name : "ergut"
 		};
 		
-		DataService.DataSourceRepository.save(insertee)
-		.pipe(()=>DataService.DataSourceRepository.delete(insertee.id))
-		.pipe(()=>DataService.DataModelRepository.getAll())
+		dataService.DataSourceRepository.save(insertee)
+		.pipe(()=>dataService.DataSourceRepository.delete(insertee.id))
+		.pipe(()=>dataService.DataModelRepository.getAll())
 		.done((result)=>{
 			expect(result.length).toBe(0);
 		})

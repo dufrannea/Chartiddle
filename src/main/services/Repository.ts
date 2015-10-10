@@ -1,8 +1,12 @@
 import $ = require('jquery');
+import {ConnectionPool} from './ConnectionPool'
+interface connStore {
+	[name : string] : IDBDatabase;
+}
 
 export class Repository<TObject, TKey>  {
 	private tableName: string;
-	protected db: IDBDatabase;
+	private pool : ConnectionPool;
 	
 	/**
 	 * Creates a new repo.
@@ -10,9 +14,9 @@ export class Repository<TObject, TKey>  {
 	 * @param tableName {string} : the name of the table
 	 * 			to create the repo for.
 	 */
-	constructor(db: IDBDatabase, tableName: string) {
+	constructor(pool: ConnectionPool, tableName: string) {
 		this.tableName = tableName;
-		this.db = db;
+		this.pool = pool;
 	}
 	
 	/**
@@ -52,7 +56,7 @@ export class Repository<TObject, TKey>  {
 	 */
 	public getAll(): JQueryPromise<TObject[]> {
         let result = $.Deferred<TObject[]>();
-        let transaction = this.db.transaction([this.tableName], "readonly");
+        let transaction = this.pool.db.transaction([this.tableName], "readonly");
 
         let objectStore = transaction.objectStore(this.tableName);
 
@@ -96,7 +100,7 @@ export class Repository<TObject, TKey>  {
 	protected executeInTransaction<T>(payload: (o: IDBObjectStore, deferred: JQueryDeferred<T>) => void, storeName? : string): JQueryPromise<T> {
 		let res = $.Deferred<T>();
 
-        let transaction = this.db.transaction([this.tableName], "readwrite");
+        let transaction = this.pool.db.transaction([this.tableName], "readwrite");
         let objectStore = transaction.objectStore(storeName || this.tableName);
 
         transaction.oncomplete = function(event) {

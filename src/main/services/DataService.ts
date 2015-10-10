@@ -3,6 +3,7 @@
 
 import $ = require('jquery');
 import {Repository} from './Repository'
+import {ConnectionPool} from './ConnectionPool'
 
 declare var window: any;
 const CHARTS_STORE: string = "Charts";
@@ -17,14 +18,15 @@ export class DataService {
     public DataSourceRepository: Repository<IDataSource, number>;
     public DataModelRepository: Repository<IDataModel, number>;
     public ChartConfigurationRepository: Repository<IChartConfiguration, number>;
-
-    private db: IDBDatabase;
-
-    constructor() {
+    
+    private pool : ConnectionPool;
+    
+    constructor(pool : ConnectionPool) {
         if (!this.isIndexedDBSupported()) {
             console.error("indexedDB is not supported in your browser");
             return;
         }
+        this.pool = pool;
         console.info("indexedDB seems to be supported");
     }
 
@@ -53,7 +55,7 @@ export class DataService {
         var initDbRequest = window.indexedDB.open(dataBaseName, version);
 
         initDbRequest.onsuccess = (event) => {
-            this.db = initDbRequest.result;
+            this.pool.db = initDbRequest.result;
             this.createRepos();
             res.resolve();
         }
@@ -74,9 +76,9 @@ export class DataService {
      * Create repositories.
      */
     private createRepos() {
-        this.DataSourceRepository = new Repository<IDataSource, number>(this.db, DATASOURCES_STORE);
-        this.DataModelRepository = new Repository<IDataModel, number>(this.db, DATAMODELS_STORE);
-        this.ChartConfigurationRepository = new Repository<IChartConfiguration, number>(this.db, CHARTS_STORE);
+        this.DataSourceRepository = new Repository<IDataSource, number>(this.pool, DATASOURCES_STORE);
+        this.DataModelRepository = new Repository<IDataModel, number>(this.pool, DATAMODELS_STORE);
+        this.ChartConfigurationRepository = new Repository<IChartConfiguration, number>(this.pool, CHARTS_STORE);
     }
 
     /**
@@ -99,5 +101,3 @@ export class DataService {
         // objectStore.createIndex("name", "name", { unique: false });
     }
 }
-
-export var dataService = new DataService();

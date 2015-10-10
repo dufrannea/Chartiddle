@@ -1,56 +1,27 @@
 /// <reference path="../../typings/tsd.d.ts"/>
-import {FileRepository, IDataStream} from '../../main/services/FileRepository'
+import {FileRepository} from '../../main/services/FileRepository'
+import {BatchingProvider} from '../../main/dataproviders/BatchingProvider';
+import {PapaLocalDataProvider} from '../../main/dataproviders/PapaLocalDataProvider';
+
+import {ConnectionPool} from '../../main/services/ConnectionPool'
+
 import $ = require('jquery');
 import Papa = require('papaparse');
 
 const DATABASE_NAME = "testdb2";
+const PARSE_TEXT ="1,2,3\n4,5,6\n7,8,9";
+
 let success = false;
 let version = 1;
 
-let originalProvider = { 
-	foreach : (success, done)=>{ 
-		Papa.parse("1,2,3\n4,5,6\n7,8,9", {
-			step : (result : PapaParse.ParseResult) => {
-				success(result.data[0])
-			},
-			complete : ()=>{
-				done();
-			}
-		});
-}};
-
-class BatchingProvider {
-	constructor(dataProvider : IDataStream, size : number = 40){
-		this.dataProvider = dataProvider;
-		this.size = size;
-	}
-	private dataProvider : IDataStream;
-	private size : number;
-	public foreach(success, done){
-		let batched = [];
-		let n = 0;
-		this.dataProvider.foreach((data)=>{
-			batched.push(data);
-			n++;
-			if (n == this.size){
-				success(batched);
-				n=0;
-				batched=[];
-			}
-		},()=>{
-			if (n!=0){
-				success(batched);
-				done();
-			}
-		})
-	}
-}
+var blob = <File>new Blob([PARSE_TEXT],{type : 'text/html'});
+let originalProvider = new PapaLocalDataProvider(blob);
 
 let dataProvider = new BatchingProvider(originalProvider,1);
 
-describe('DataService tests', () => {
-	let db: IDBDatabase;
-	
+let pool = new ConnectionPool();
+
+describe('FileRepositorySpec tests', () => {
 	/**
 	 * Drop db before tests.
 	 */
@@ -60,7 +31,7 @@ describe('DataService tests', () => {
 			console.info("*****dropdbsuccess")
 			let createRequest = window.indexedDB.open(DATABASE_NAME);
 			createRequest.onsuccess = (ev) => {
-				db = createRequest.result
+				pool.db = createRequest.result
 				done();
 			}
 			createRequest.onerror = (ev) => {
@@ -84,7 +55,7 @@ describe('DataService tests', () => {
 
 	it('should init database', (done) => {
 		console.info("basetest**********")
-		let repo = new FileRepository(db);
+		let repo = new FileRepository(pool);
 		repo.save({
 			dataStream: dataProvider,
 			id: 1,
@@ -97,7 +68,7 @@ describe('DataService tests', () => {
 
 	it('should read all data', (done) => {
 		console.info("completetest**********")
-		let repo = new FileRepository(db);
+		let repo = new FileRepository(pool);
 		let allData = [];
 		repo.save({
 			dataStream: dataProvider,
@@ -112,10 +83,10 @@ describe('DataService tests', () => {
 				console.info("soure read")
 			})
 		})
-			.always(()=>{
-				repo.close();
-				done();
-			});
+		.always(()=>{
+			repo.close();
+			done();
+		});
 	});
 
 	/**
