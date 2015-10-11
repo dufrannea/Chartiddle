@@ -13,12 +13,14 @@ interface IDataSourceListParams {
 
 interface IDataSourceListState {
 	dataSources : IDataSource[];
+	loading : boolean;
 }
 
 export class DataSourceList extends React.Component<IDataSourceListParams,IDataSourceListState> {
 	constructor(){
 		this.state = {
-			dataSources : DataSourceStore.getAll()
+			dataSources : DataSourceStore.getAll(),
+			loading : false
 		};
 		super(this);
 	}
@@ -33,7 +35,9 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 		});
 		return (
 			<div className="col-md-6 col-md-offset-3 displayNone">
-				<DropzoneComponent onDrop={this._acceptFile.bind(this)}/>
+				<DropzoneComponent 
+					loading={this.state.loading}
+					onDrop={this._acceptFile.bind(this)}/>
 				<div className="panel panel-default">
 					<div className="panel-heading">Your files :</div>
 					<div className="list-group">
@@ -50,6 +54,6 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 		DataSourceStore.registerChangeListener(this._onChange.bind(this));
 	}
 	_onChange(){
-		this.setState({ dataSources : DataSourceStore.getAll()});	
+		this.setState({ dataSources : DataSourceStore.getAll(), loading : DataSourceStore.isLoading()});	
 	}
 }

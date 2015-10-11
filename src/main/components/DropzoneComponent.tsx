@@ -3,6 +3,7 @@ import React = require('react');
 
 interface IDropzoneComponentParams {
 	onDrop : (f : File) => void;
+	loading : boolean;
 }
 
 interface IDropzoneComponentState {
@@ -50,7 +51,12 @@ export class DropzoneComponent extends React.Component<IDropzoneComponentParams,
 		let classes = 'dropzone' + (this.state.hover ? ' hover' : '');
 		return (
 			<div className={classes} ref="holder">
-				<span>Drag file here.</span>
+				<span style={{ position : "absolute"}}>Drag file here.</span>
+				<div style={{display: this.props.loading? '' : 'none'}} className="spinner-centerer">
+				    <div className="spinner-container">
+						<div className="whirly-loader"/>
+					</div>
+				</div>
 			</div>
 		);
 	}

@@ -10,10 +10,14 @@ import {BatchingProvider} from '../dataproviders/BatchingProvider'
 const CHANGE = "CHANGE";
 
 let dataSources : IDataSource[] = [];
+let loadingFile = false;
 
 class DataSourceStore extends EventEmitter {
 	getAll() : IDataSource[]{
 		return dataSources;
+	}
+	isLoading() : boolean {
+		return loadingFile;
 	}
 	registerChangeListener(listener) {
 		this.addEvent(CHANGE, listener);
@@ -36,6 +40,8 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 				name : action.fileAction.file.name
 			}
 			let dataService =Container.dataService; 
+			loadingFile = true;
+			dataSourceStore.fireEvent(CHANGE);
 			
 			dataService.DataSourceRepository
 				.save(dataSource)
@@ -50,6 +56,7 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 						.save(fileItem)
 				})
 				.done(()=>{
+					loadingFile = false;
 					dataSources.push(dataSource);
 					dataSourceStore.fireEvent(CHANGE);
 				})
