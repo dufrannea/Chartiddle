@@ -23,13 +23,16 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 		super(this);
 	}
 	render() {
-		let files = this.state.dataSources.map(x=> <li>{x.name}</li>)
+		let files = this.state.dataSources.map(x=> <li className="list-group-item">{x.name}</li>)
 		return (
-			<div>
+			<div className="col-md-6 col-md-offset-3">
 				<DropzoneComponent onDrop={this._acceptFile.bind(this)}/>
-				<ul>
-				{files}
-				</ul>
+				<div className="panel panel-default">
+					<div className="panel-heading">Your files :</div>
+					<ul className="list-group">
+					{files}
+					</ul>
+				</div>
 			</div>
 		);
 	}

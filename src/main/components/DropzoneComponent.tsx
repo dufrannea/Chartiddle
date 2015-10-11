@@ -49,7 +49,9 @@ export class DropzoneComponent extends React.Component<IDropzoneComponentParams,
 	render() {
 		let classes = 'dropzone' + (this.state.hover ? ' hover' : '');
 		return (
-			<div className={classes} ref="holder"></div>
+			<div className={classes} ref="holder">
+				<span>Drag file here.</span>
+			</div>
 		);
 	}
 }
