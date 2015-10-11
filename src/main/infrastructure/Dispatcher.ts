@@ -1,7 +1,7 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 
 import {Dispatcher} from 'flux';
-import {AppConstants} from '../actions/AppConstants'
+import {AppConstants, ApplicationTabs} from '../actions/AppConstants'
 
 export interface IFileAction {
 	file : File;
@@ -14,6 +14,10 @@ export interface IPreviewAction {
 	previewData : any;
 }
 
+export interface INavigateAction {
+	tab : ApplicationTabs;
+}
+
 export interface IActionType {
 	// operation to be done on todo.
 	actionType : AppConstants; 
@@ -22,6 +26,7 @@ export interface IActionType {
 	
 	previewAction? : IPreviewAction;
 	
+	navigateAction? : INavigateAction;
 	// weakly typed data,
 	// use with care.	
 	data? : any;

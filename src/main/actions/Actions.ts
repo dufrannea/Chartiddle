@@ -2,9 +2,17 @@
 /// <reference path="../model/model.d.ts"/>
 
 import {dispatcher as Dispatcher} from '../infrastructure/Dispatcher'
-import {AppConstants} from './AppConstants'
+import {AppConstants, ApplicationTabs} from './AppConstants'
 
 class AppActions {
+	goToTab(tab : ApplicationTabs) {
+		Dispatcher.dispatch({
+			actionType : AppConstants.NAVIGATE,
+			navigateAction : {
+				tab : tab
+			}
+		})
+	}
 	addFile(f : File){
 		Dispatcher.dispatch({
 			actionType : AppConstants.ADD_FILE,

@@ -25,7 +25,7 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 	render() {
 		let files = this.state.dataSources.map(x=> <li className="list-group-item">{x.name}</li>)
 		return (
-			<div className="col-md-6 col-md-offset-3">
+			<div className="col-md-6 col-md-offset-3 displayNone">
 				<DropzoneComponent onDrop={this._acceptFile.bind(this)}/>
 				<div className="panel panel-default">
 					<div className="panel-heading">Your files :</div>
