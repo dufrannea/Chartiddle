@@ -20,9 +20,6 @@
     "papaparse/papaparse.d.ts": {
       "commit": "3db73cb78cb08ef2315d756d1a614fda84b26df3"
     },
-    "dropzone/dropzone.d.ts": {
-      "commit": "3db73cb78cb08ef2315d756d1a614fda84b26df3"
-    },
     "jquery/jquery.d.ts": {
       "commit": "3db73cb78cb08ef2315d756d1a614fda84b26df3"
     }

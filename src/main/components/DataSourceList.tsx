@@ -26,7 +26,7 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 		let files = this.state.dataSources.map(x=> <li>{x.name}</li>)
 		return (
 			<div>
-				<DropzoneComponent acceptFile={this._acceptFile.bind(this)}/>
+				<DropzoneComponent onDrop={this._acceptFile.bind(this)}/>
 				<ul>
 				{files}
 				</ul>

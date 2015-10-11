@@ -1,30 +1,55 @@
 /// <reference path="../../typings/tsd.d.ts"/>
-
 import React = require('react');
-import Dropzone = require('dropzone');
 
-
-export interface IDropzoneComponentProps {
-	acceptFile?: (f: File) => void;
-}
-export interface IDropzoneComponentState {
+interface IDropzoneComponentParams {
+	onDrop : (f : File) => void;
 }
 
-export class DropzoneComponent extends React.Component<IDropzoneComponentProps, IDropzoneComponentState> {
-	componentWillMount() {
+interface IDropzoneComponentState {
+	hover : boolean;
+}
+export class DropzoneComponent extends React.Component<IDropzoneComponentParams,IDropzoneComponentState> {
+	constructor(){
+		this.state = {
+			hover: false
+		};
+		super();
 	}
-	componentDidMount() {
-		let zoneElement = this.refs['zone']['getDOMNode']();
-		let myDropZone = new Dropzone(zoneElement, {
-			 accept: this._onAddFile.bind(this)
-		});
+	componentDidMount(){
+		let element = this.refs['holder']['getDOMNode']();
+		element.ondragover = () => { 
+			console.info("dragging over");
+			this.__startHover();
+			return false; 
+		};
+		element.ondragend = () => { 
+			console.info("dragging end");
+			this.__stopHover();
+		};
+		element.ondrop = (e) => {
+			console.info("dropping");
+			e.preventDefault();
+			this.__stopHover();
+			var file = e.dataTransfer.files[0];
+			this.props.onDrop(file);
+		};
 	}
-	_onAddFile(file:File, done:(error?:string|Error) => void):void {
-		this.props.acceptFile(file);
+	__stopHover(){
+		let newState = this.state;
+		newState.hover = false;
+		this.setState(newState);
+	}
+	__startHover(){
+		let newState = this.state;
+		newState.hover = true;
+		this.setState(newState);
+	}
+	componentWillUnmount(){
 	}
 	render() {
+		let classes = 'dropzone' + (this.state.hover ? ' hover' : '');
 		return (
-			<form className="dropzone" action= ";" ref= "zone"></form>
+			<div className={classes} ref="holder"></div>
 		);
 	}
 }

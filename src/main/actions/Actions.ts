@@ -13,6 +13,22 @@ class AppActions {
 			}
 		});
 	}
+	
+	previewFile(f : File){
+		Dispatcher.dispatch({
+			actionType : AppConstants.PREVIEW_FILE,
+			fileAction : {
+				file : f 
+			}
+		});
+	}
+	
+	previewFileReady(){
+		Dispatcher.dispatch({
+			actionType : AppConstants.PREVIEW_FILE_READY,
+		});
+	}
+	
 	modelLoaded(dataSources : IDataSource[]) {
 		Dispatcher.dispatch({
 			actionType : AppConstants.MODEL_LOADED,
