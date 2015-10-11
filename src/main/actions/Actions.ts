@@ -5,11 +5,11 @@ import {dispatcher as Dispatcher} from '../infrastructure/Dispatcher'
 import {AppConstants, ApplicationTabs} from './AppConstants'
 
 class AppActions {
-	goToTab(tab : ApplicationTabs) {
+	selectDataSource(dataSource : IDataSource) {
 		Dispatcher.dispatch({
-			actionType : AppConstants.NAVIGATE,
-			navigateAction : {
-				tab : tab
+			actionType : AppConstants.SELECT_DATASOURCE,
+			selectDataSourceAction : {
+				dataSource: dataSource
 			}
 		})
 	}
@@ -19,21 +19,6 @@ class AppActions {
 			fileAction : {
 				file : f 
 			}
-		});
-	}
-	
-	previewFile(f : File){
-		Dispatcher.dispatch({
-			actionType : AppConstants.PREVIEW_FILE,
-			fileAction : {
-				file : f 
-			}
-		});
-	}
-	
-	previewFileReady(){
-		Dispatcher.dispatch({
-			actionType : AppConstants.PREVIEW_FILE_READY,
 		});
 	}
 	

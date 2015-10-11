@@ -10,13 +10,17 @@ const CHANGE = "CHANGE";
 
 // default active tab.
 let activeTab = ApplicationTabs.DATASOURCES_VIEW;
+let activeDataSource : IDataSource= null;
 
 class ApplicationStore extends EventEmitter {
+	getActiveTab(){
+		return activeTab;
+	}
 	registerChangeListener(listener) {
 		this.addEvent(CHANGE, listener);
 	}
-	getActiveTab() : ApplicationTabs {
-		return activeTab;
+	activeDataSource() :IDataSource {
+		return activeDataSource;
 	}
 	callBackId : string; 
 }
@@ -27,8 +31,9 @@ export var applicationStore = new ApplicationStore();
 // can handle.
 applicationStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
-		case AppConstants.NAVIGATE:
-			activeTab = action.navigateAction.tab;
+		case AppConstants.SELECT_DATASOURCE:
+			activeDataSource = action.selectDataSourceAction.dataSource;
+			activeTab = ApplicationTabs.CHART_VIEW;
 			applicationStore.fireEvent(CHANGE);
 			break;
 	}

@@ -22,12 +22,14 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 		};
 		super(this);
 	}
-	__handleDataSourceClick(){
-		Actions.goToTab(ApplicationTabs.CHART_VIEW)
+	__handleDataSourceClick(dataSource : IDataSource){
+		return ()=>{
+			Actions.selectDataSource(dataSource)
+		}
 	}
 	render() {
 		let files = this.state.dataSources.map(x=> {
-			return <button onClick={this.__handleDataSourceClick.bind(this)}className="list-group-item">{x.name}</button>
+			return <button key={x.id} onClick={this.__handleDataSourceClick(x)} className="list-group-item">{x.name}</button>
 		});
 		return (
 			<div className="col-md-6 col-md-offset-3 displayNone">

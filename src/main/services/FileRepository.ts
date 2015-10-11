@@ -72,18 +72,24 @@ export class FileRepository {
 		return deferred.promise();
 	}
 
-	public getAll(id: number) {
+	public getAll(id: number, lines? : number) {
 		let storeName = "FILE_" + id;
 		
 		let result = {
 			foreach : (each : (data : any) => void, done : () => void ) => {
 				let transaction = this.pool.db.transaction([storeName], "readonly");
 				let store = transaction.objectStore(storeName);
+				let nLines = 0;
 				store.openCursor().onsuccess = function(event: any) {
 					let cursor: IDBCursorWithValue = event.target.result;
 					if (cursor) {
 						each(cursor.value)
-						cursor.continue();
+						nLines++;
+						if (lines && nLines >= lines){
+							done();
+						} else {
+							cursor.continue();
+						}
 					}
 					else {
 						done();

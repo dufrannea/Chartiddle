@@ -1,9 +1,8 @@
 export enum AppConstants {
 	ADD_FILE,
 	MODEL_LOADED,
-	PREVIEW_FILE_READY,
-	PREVIEW_FILE,
-	NAVIGATE
+	SELECT_DATASOURCE,
+	PREVIEW_READY
 }
 
 export enum ApplicationTabs {

@@ -14,8 +14,8 @@ export interface IPreviewAction {
 	previewData : any;
 }
 
-export interface INavigateAction {
-	tab : ApplicationTabs;
+export interface ISelectDataSourceAction {
+	dataSource : IDataSource;
 }
 
 export interface IActionType {
@@ -26,7 +26,7 @@ export interface IActionType {
 	
 	previewAction? : IPreviewAction;
 	
-	navigateAction? : INavigateAction;
+	selectDataSourceAction? : ISelectDataSourceAction;
 	// weakly typed data,
 	// use with care.	
 	data? : any;
