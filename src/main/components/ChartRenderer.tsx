@@ -24,15 +24,25 @@ class DataPreview extends React.Component<IDataPreviewParams,IDataPreviewState> 
 		super();
 	}
 	render() {
+		let headers = [];
+		let headersLoaded = false;
 		let tableContent = this.state.data.map((row)=>{
 			let cols = [];
 			for (var colName in row){
+				if (!headersLoaded){
+					headers.push(colName);
+				}
 				cols.push(<td>{row[colName]}</td>)
 			};
+			headersLoaded=true;
 			return <tr>{cols}</tr>
-		})
+		});
+		let tableHeaders = headers.map(x=>{
+			return <TableHeaderCell name={x}/>
+		});
 		return (
-			<table className="table">
+			<table className="table table-condensed table-bordered">
+				<tr>{tableHeaders}</tr>
 				{tableContent}
 			</table>
 		);
@@ -42,6 +52,19 @@ class DataPreview extends React.Component<IDataPreviewParams,IDataPreviewState> 
 	}
 	_onChange(){
 		this.setState({ data : ChartRendererStore.getPreviewData()});	
+	}
+}
+
+interface ITableHeaderCellParams {
+	name:string
+}
+interface ITableHeaderCellState {
+}
+class TableHeaderCell extends React.Component<ITableHeaderCellParams,ITableHeaderCellState> {
+	render() {
+		return (
+			<th>{this.props.name}</th>
+		);
 	}
 }
 
