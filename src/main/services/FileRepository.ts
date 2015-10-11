@@ -46,22 +46,28 @@ export class FileRepository {
 			throw "blocked";
 			deferred.reject();
 		}
+		let transaction : IDBTransaction= undefined;
 		openDb.onsuccess = () => {
 			file.dataStream.foreach((data) => {
-				let transaction = newDb.transaction([storeName], "readwrite");
-				let store = transaction.objectStore(storeName);
-				transaction.oncomplete = () => {
-					console.info('transaction complete')
-				};
-				transaction.onerror = () => {
-					console.error("transaction rollback");
-					deferred.reject();
+				if (!transaction){
+					console.info("*******creating a new transaction")
+					transaction =newDb.transaction([storeName], "readwrite");
+					transaction.oncomplete = () => {
+						deferred.resolve();
+				 		console.info('transaction complete')
+					};
+				} else {
+					console.info("reusing transation")
 				}
-				console.info("inserting,",data);
+				let store = transaction.objectStore(storeName);
+				// TODO : handle errors.
+				// transaction.onerror = () => {
+				// 	console.error("transaction rollback");
+				// 	deferred.reject();
+				// }
+				// console.info("inserting,",data);
 				store.add(data);
 			}, () => {
-				alert("file inserserted");
-				deferred.resolve();
 				console.info("no more data");
 			});
 		}
