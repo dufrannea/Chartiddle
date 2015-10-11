@@ -11,5 +11,5 @@ export class Container {
 	}
 	static set dataService(value : DataService) {
 		Container._dataService = value;
-	}	
+	}
 }

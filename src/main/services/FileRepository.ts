@@ -4,8 +4,6 @@ import {Repository} from './Repository'
 import $ = require('jquery');
 import {ConnectionPool} from './ConnectionPool'
 
-
-
 /**
  * Repository allowing
  * to save a file in a single datastore.
@@ -54,7 +52,6 @@ export class FileRepository {
 				let store = transaction.objectStore(storeName);
 				transaction.oncomplete = () => {
 					console.info('transaction complete')
-					deferred.resolve();
 				};
 				transaction.onerror = () => {
 					console.error("transaction rollback");
@@ -63,6 +60,8 @@ export class FileRepository {
 				console.info("inserting,",data);
 				store.add(data);
 			}, () => {
+				alert("file inserserted");
+				deferred.resolve();
 				console.info("no more data");
 			});
 		}

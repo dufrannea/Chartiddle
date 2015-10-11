@@ -14,7 +14,7 @@ let dataService = new DataService(pool);
 Container.dataService = dataService;
 
 dataService
-	.initDatabase("Chartiddle", 1)
+	.initDatabase("Chartiddle")
 	.fail(()=>{
 		console.error("db updgrade failed, sorry.")
 	})
@@ -22,5 +22,5 @@ dataService
 	.then(value=> {
 		Actions.modelLoaded(value);
 	}); 
-	
+
 startReact();

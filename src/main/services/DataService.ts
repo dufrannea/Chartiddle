@@ -6,7 +6,7 @@ import {Repository} from './Repository'
 import {ConnectionPool} from './ConnectionPool'
 import {FileRepository} from './FileRepository'
 
-declare var window: any;
+declare var window: Window;
 const CHARTS_STORE: string = "Charts";
 const DATAMODELS_STORE: string = "DataModels";
 const DATASOURCES_STORE: string = "DataSources";
@@ -36,9 +36,9 @@ export class DataService {
      * Perform checks on the browser to see if indexeddb is supported.
      */
     private isIndexedDBSupported() {
-        window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-        window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
-        window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange
+        window.indexedDB = window.indexedDB || window['mozIndexedDB'] || window['webkitIndexedDB'] || window['msIndexedDB'];
+        window['IDBTransaction'] = window['IDBTransaction'] || window['webkitIDBTransaction'] || window['msIDBTransaction'];
+        window['IDBKeyRange'] = window['IDBKeyRange'] || window['webkitIDBKeyRange'] || window['msIDBKeyRange']
 
         if (!window.indexedDB) {
             return false;
@@ -51,10 +51,15 @@ export class DataService {
      * @param dataBaseName {string} : the name of the  
      *        database to initialize.
      */
-    public initDatabase(dataBaseName, version: number): JQueryPromise<void> {
+    public initDatabase(dataBaseName, version?: number): JQueryPromise<void> {
         var res = $.Deferred<void>();
         
-        var initDbRequest = window.indexedDB.open(dataBaseName, version);
+        let initDbRequest : IDBOpenDBRequest;
+        if (version){
+            initDbRequest = window.indexedDB.open(dataBaseName, version); 
+        } else {
+            initDbRequest = window.indexedDB.open(dataBaseName);
+        }
 
         initDbRequest.onsuccess = (event) => {
             this.pool.db = initDbRequest.result;
@@ -63,12 +68,12 @@ export class DataService {
         }
 
         initDbRequest.onerror = (event) => {
-            console.error("Database error: " + event.target.errorCode);
+            console.error("Database error: " + event.target['errorCode']);
             res.reject();
         }
 
         initDbRequest.onupgradeneeded = (event) => {
-            this.upgradeDatabase(event.target.result);
+            this.upgradeDatabase(event.target['result']);
         };
 
         return res.promise();

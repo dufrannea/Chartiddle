@@ -6,6 +6,7 @@ import {AppConstants} from '../infrastructure/AppConstants'
 import {EventEmitter} from '../infrastructure/EventEmitter'
 import {Container} from '../infrastructure/Container'
 import {PapaLocalDataProvider} from '../dataproviders/PapaLocalDataProvider'
+import {BatchingProvider} from '../dataproviders/BatchingProvider'
 const CHANGE = "CHANGE";
 
 let dataSources : IDataSource[] = [];
@@ -42,7 +43,7 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 					let fileItem : IFileItem = {
 						id : dataSource.id,
 						name : action.fileAction.file.name,
-						dataStream : new PapaLocalDataProvider(action.fileAction.file)
+						dataStream : new BatchingProvider(new PapaLocalDataProvider(action.fileAction.file),100)
 					};
 					return dataService
 						.FileRepository

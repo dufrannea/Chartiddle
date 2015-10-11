@@ -42,11 +42,9 @@ export class Repository<TObject, TKey>  {
 		return this.executeInTransaction<void>((objectStore, deferred) => {
 			let request = objectStore.put(item);
 			request.onerror = (ev) => {
-				deferred.reject();
 			}
 			request.onsuccess = (ev) => {
 				item[objectStore.keyPath] = request.result;
-				deferred.resolve();
 			}
 		});
 	}
