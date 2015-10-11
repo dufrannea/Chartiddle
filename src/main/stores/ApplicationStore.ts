@@ -29,6 +29,7 @@ applicationStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
 		case AppConstants.NAVIGATE:
 			activeTab = action.navigateAction.tab;
+			applicationStore.fireEvent(CHANGE);
 			break;
 	}
 });

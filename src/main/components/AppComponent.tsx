@@ -3,6 +3,7 @@
 
 import React = require('react');
 import {DataSourceList} from '../components/DataSourceList'
+import {ChartRenderer} from '../components/ChartRenderer'
 import {ApplicationTabs} from '../actions/AppConstants'
 import {applicationStore as AppStore} from '../stores/ApplicationStore';
 
@@ -31,6 +32,9 @@ export class AppComponent extends React.Component<IAppComponentParams,IAppCompon
 			switch (this.state.activeTab) {
 				case ApplicationTabs.DATASOURCES_VIEW:
 					return <DataSourceList/>
+					break;
+				case ApplicationTabs.CHART_VIEW:
+					return <ChartRenderer/>
 					break;
 				default:
 					return <div>Nothing!</div>

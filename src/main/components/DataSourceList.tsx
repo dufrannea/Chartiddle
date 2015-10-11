@@ -7,6 +7,7 @@ import {DropzoneComponent} from './DropzoneComponent'
 import {dataSourceStore as DataSourceStore} from '../stores/DataSourceStore'
 import {fileStore as FileStore} from '../stores/FileStore'
 import {appActions as Actions} from '../actions/Actions'
+import {ApplicationTabs} from '../actions/AppConstants'
 
 interface IDataSourceListParams {
 }
@@ -22,16 +23,21 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 		};
 		super(this);
 	}
+	__handleDataSourceClick(){
+		Actions.goToTab(ApplicationTabs.CHART_VIEW)
+	}
 	render() {
-		let files = this.state.dataSources.map(x=> <li className="list-group-item">{x.name}</li>)
+		let files = this.state.dataSources.map(x=> {
+			return <button onClick={this.__handleDataSourceClick.bind(this)}className="list-group-item">{x.name}</button>
+		});
 		return (
 			<div className="col-md-6 col-md-offset-3 displayNone">
 				<DropzoneComponent onDrop={this._acceptFile.bind(this)}/>
 				<div className="panel panel-default">
 					<div className="panel-heading">Your files :</div>
-					<ul className="list-group">
+					<div className="list-group">
 					{files}
-					</ul>
+					</div>
 				</div>
 			</div>
 		);

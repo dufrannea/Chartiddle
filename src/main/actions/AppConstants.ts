@@ -7,5 +7,6 @@ export enum AppConstants {
 }
 
 export enum ApplicationTabs {
-	DATASOURCES_VIEW
+	DATASOURCES_VIEW,
+	CHART_VIEW
 }
