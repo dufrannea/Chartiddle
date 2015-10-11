@@ -15,7 +15,7 @@ let success = false;
 let version = 1;
 
 var blob = <File>new Blob([PARSE_TEXT],{type : 'text/html'});
-let originalProvider = new PapaLocalDataProvider(blob);
+let originalProvider = new PapaLocalDataProvider(blob,false);
 
 let dataProvider = new BatchingProvider(originalProvider,1);
 
