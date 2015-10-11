@@ -1,8 +1,8 @@
 /// <reference path="../model/model.d.ts"/>
 /// <reference path="../dataproviders/model.d.ts"/>
 
+import {AppConstants} from '../actions/AppConstants'
 import {dispatcher as Dispatcher} from '../infrastructure/Dispatcher'
-import {AppConstants} from '../infrastructure/AppConstants'
 import {EventEmitter} from '../infrastructure/EventEmitter'
 import {Container} from '../infrastructure/Container'
 import {PapaLocalDataProvider} from '../dataproviders/PapaLocalDataProvider'

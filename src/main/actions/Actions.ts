@@ -1,7 +1,7 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 /// <reference path="../model/model.d.ts"/>
 
-import {dispatcher as Dispatcher} from './Dispatcher'
+import {dispatcher as Dispatcher} from '../infrastructure/Dispatcher'
 import {AppConstants} from './AppConstants'
 
 class AppActions {

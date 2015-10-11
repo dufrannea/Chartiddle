@@ -2,11 +2,11 @@
 /// <reference path="../model/model.d.ts" />
 /// <amd-dependency path="bootstrap"/>
 
+import {startReact} from './main'
 import {dataSourceStore as DataSourceStore} from '../stores/DataSourceStore'
-import {appActions as Actions} from '../infrastructure/Actions'
+import {appActions as Actions} from '../actions/Actions'
 import {DataService} from '../services/DataService'
 import {ConnectionPool} from '../services/ConnectionPool'
-import {startReact} from './main'
 import {Container} from '../infrastructure/Container'
 
 let pool = new ConnectionPool();

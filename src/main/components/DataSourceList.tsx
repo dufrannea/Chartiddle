@@ -6,7 +6,7 @@ import React = require('react');
 import {DropzoneComponent} from './DropzoneComponent'
 import {dataSourceStore as DataSourceStore} from '../stores/DataSourceStore'
 import {fileStore as FileStore} from '../stores/FileStore'
-import {appActions as Actions} from '../infrastructure/Actions'
+import {appActions as Actions} from '../actions/Actions'
 
 interface IDataSourceListParams {
 }

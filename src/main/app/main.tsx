@@ -4,6 +4,9 @@
 import {AppComponent} from '../components/AppComponent'
 import React = require('react');
 
+/**
+ * Renders the main application component.
+ */
 export function startReact(){
 	let mainElement = document.querySelector("#main");
 	

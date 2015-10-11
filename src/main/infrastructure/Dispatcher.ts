@@ -1,7 +1,7 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 
 import {Dispatcher} from 'flux';
-import {AppConstants} from './AppConstants'
+import {AppConstants} from '../actions/AppConstants'
 
 export interface IFileAction {
 	file : File;
