@@ -18,6 +18,11 @@ export interface ISelectDataSourceAction {
 	dataSource : IDataSource;
 }
 
+export interface IUpdateChartRendererModelAction {
+	addedColumn? : string;
+	addedRow?: string;
+}
+
 export interface IActionType {
 	// operation to be done on todo.
 	actionType : AppConstants; 
@@ -27,6 +32,8 @@ export interface IActionType {
 	previewAction? : IPreviewAction;
 	
 	selectDataSourceAction? : ISelectDataSourceAction;
+	
+	updateChartRendererAction? : IUpdateChartRendererModelAction;
 	// weakly typed data,
 	// use with care.	
 	data? : any;

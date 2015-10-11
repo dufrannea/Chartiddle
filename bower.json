@@ -24,7 +24,8 @@
     "requirejs": "~2.1.20",
     "flux": "~2.1.1",
     "bootstrap": "~3.3.5",
-    "papaparse": "~4.1.2"
+    "papaparse": "~4.1.2",
+    "jquery-ui": "~1.11.4"
   },
   "overrides": {
     "bootstrap": {
@@ -36,6 +37,14 @@
       "main": [
         "dist/jquery.min.js"
       ]
+    },
+    "jquery-ui": {
+      "main": [
+        "jquery-ui.min.js"
+      ]
     }
+  },
+  "devDependencies": {
+    "jquery-ui": "~1.11.4"
   }
 }

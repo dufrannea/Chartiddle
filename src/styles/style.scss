@@ -24,7 +24,44 @@
   }
 }
 
+$zoneWidth : 300px;
 
+.chart-drop-zone {
+  width : $zoneWidth;
+  height : $zoneWidth;
+  border : 1px solid;
+  float:left;
+  
+  &:last-child{
+    clear:right;
+  }
+  
+  &.active{
+    background-color: aquamarine;  
+  }
+}
+
+.table-header-cell {
+  
+  &:hover {
+    cursor: move;
+    background-color: cadetblue;
+    box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7); 
+  }
+}
+
+.column-dragged {
+  border : 1px solid;
+  border-radius: 5px;
+  width: 100px;
+  overflow: hidden;
+  text-align: center;
+}
+
+/**
+ * CSS3 throbber.
+ */
+ 
 @-moz-keyframes whirly-loader {
   0% {
     -moz-transform: rotate(0deg);

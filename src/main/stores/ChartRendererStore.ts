@@ -13,8 +13,16 @@ const CHANGE = "CHANGE";
 
 let currentChartId = undefined;
 let previewData = [];
+let selectedRows = [];
+let selectedColumns = [];
 
 class ChartRendererStore extends EventEmitter {
+	getSelectedRows(){
+		return selectedRows;
+	}
+	getSelectedColumns(){
+		return selectedColumns;
+	}
 	registerChangeListener(listener) {
 		this.addEvent(CHANGE, listener);
 	}
@@ -28,6 +36,14 @@ export var chartRendererStore = new ChartRendererStore();
 
 chartRendererStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
+		case AppConstants.DROP_COLUMN:
+			selectedColumns.push(action.updateChartRendererAction.addedColumn);
+			chartRendererStore.fireEvent(CHANGE);
+			break;
+		case AppConstants.DROP_ROW:
+			selectedRows.push(action.updateChartRendererAction.addedRow);
+			chartRendererStore.fireEvent(CHANGE);
+			break;			
 		case AppConstants.SELECT_DATASOURCE:
 			Dispatcher.waitFor([ApplicationStore.callBackId]);
 			

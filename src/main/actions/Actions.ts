@@ -28,6 +28,22 @@ class AppActions {
 			data : dataSources
 		})
 	}
+	dropRow(rowName : string){
+		Dispatcher.dispatch({
+			actionType : AppConstants.DROP_ROW,
+			updateChartRendererAction : {
+				addedRow : rowName
+			}
+		})
+	}
+	dropColumn(columnName : string){
+		Dispatcher.dispatch({
+			actionType : AppConstants.DROP_COLUMN,
+			updateChartRendererAction : {
+				addedColumn : columnName
+			}
+		})
+	}
 }
 
 export var appActions = new AppActions();
