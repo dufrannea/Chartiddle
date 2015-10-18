@@ -55,13 +55,13 @@ export class DataService {
      *        database to initialize.
      */
     public initDatabase(dataBaseName, version?: number): Promise<void> {
-        let initDbRequest : IDBOpenDBRequest;
-        if (version){
-            initDbRequest = this.indexedDB.open(dataBaseName, version); 
-        } else {
-            initDbRequest = this.indexedDB.open(dataBaseName);
-        }
         return new Promise<void>((resolve,reject)=>{
+            let initDbRequest : IDBOpenDBRequest;
+            if (version){
+                initDbRequest = this.indexedDB.open(dataBaseName, version); 
+            } else {
+                initDbRequest = this.indexedDB.open(dataBaseName);
+            }
             initDbRequest.onsuccess = (event) => {
                 this.pool.db = initDbRequest.result;
                 this.createRepos();

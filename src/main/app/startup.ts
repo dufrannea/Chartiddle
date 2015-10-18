@@ -3,35 +3,35 @@
 /// <amd-dependency path="bootstrap"/>
 
 import {startReact} from './main'
-// import {dataSourceStore as DataSourceStore} from '../stores/DataSourceStore'
-// import {appActions as Actions} from '../actions/Actions'
-// import {DataService} from '../services/DataService'
-// import {ConnectionPool} from '../services/ConnectionPool'
-// import {Container} from '../infrastructure/Container'
-// 
-// let pool = new ConnectionPool();
-// let dataService = new DataService(pool);
-// Container.dataService = dataService;
-// 
-// dataService
-// 	.initDatabase("Chartiddle")
-// 	.fail(()=>{
-// 		console.error("db updgrade failed, sorry.")
-// 	})
-// 	.then(() => dataService.DataSourceRepository.getAll())
-// 	.then(value=> {
-// 		Actions.modelLoaded(value);
-// 	}); 
+import {dataSourceStore as DataSourceStore} from '../stores/DataSourceStore'
+import {appActions as Actions} from '../actions/Actions'
+import {DataService} from '../services/DataService'
+import {ConnectionPool} from '../services/ConnectionPool'
+import {Container} from '../infrastructure/Container'
 
-//startReact();
-import {FileRepository} from "../services/FileRepository";
-import {ProxiedWorker} from "../infrastructure/ObjectProxy"
+let pool = new ConnectionPool();
+let dataService = new DataService(pool);
+Container.dataService = dataService;
 
-ProxiedWorker.Load<FileRepository>(FileRepository,"services/FileRepository").then(x=>{
-	return x.saveFile(
-		33,
-		<File>new Blob(["1,2,3\n5,6,7"], {type : "text/html"})
-	);
-}).then(()=>{
-	console.info("file has been saved")
-});
+dataService
+	.initDatabase("Chartiddle", 100)
+	.catch(()=>{
+		console.error("db updgrade failed, sorry.")
+	})
+	.then(() => dataService.DataSourceRepository.getAll())
+	.then(value=> {
+		Actions.modelLoaded(value);
+	}); 
+
+startReact();
+// import {FileRepository} from "../services/FileRepository";
+// import {ProxiedWorker} from "../infrastructure/ObjectProxy"
+// 
+// ProxiedWorker.Load<FileRepository>(FileRepository,"services/FileRepository").then(x=>{
+// 	return x.saveFile(
+// 		33,
+// 		<File>new Blob(["1,2,3\n5,6,7"], {type : "text/html"})
+// 	);
+// }).then(()=>{
+// 	console.info("file has been saved")
+// });
