@@ -82,6 +82,12 @@ gulp.task("build-bower", function(){
 	return gulp
 			.src(mainFiles)
 			.pipe(gulp.dest('build/main/bower_components'))
+});
+
+gulp.task("build-external-libs", function(){
+    return gulp
+            .src(["external_libs/jquery-hive/*.js"])
+            .pipe(gulp.dest("build/main/bower_components"));
 })
 
 gulp.task('release-css', ['rebuild'], function(){
@@ -130,4 +136,4 @@ gulp.task('build', ["build-typescript","build-static", "build-sass"]);
  * Rebuild : clean, build static and typescript files,
  * and install bower deps.
  */
-gulp.task('rebuild', ["build-bower", "build"]);
+gulp.task('rebuild', ["build-bower","build-external-libs", "build"]);

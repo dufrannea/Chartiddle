@@ -13,6 +13,7 @@ class AppActions {
 			}
 		})
 	}
+	
 	addFile(f : File){
 		Dispatcher.dispatch({
 			actionType : AppConstants.ADD_FILE,
@@ -28,6 +29,7 @@ class AppActions {
 			data : dataSources
 		})
 	}
+	
 	dropRow(rowName : string){
 		Dispatcher.dispatch({
 			actionType : AppConstants.DROP_ROW,
@@ -36,6 +38,7 @@ class AppActions {
 			}
 		})
 	}
+	
 	dropColumn(columnName : string){
 		Dispatcher.dispatch({
 			actionType : AppConstants.DROP_COLUMN,

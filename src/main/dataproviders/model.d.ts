@@ -8,3 +8,9 @@ interface IFileItem {
 	name: string;
 	dataStream?: IDataStream;
 }
+
+
+declare module "jquery-hive" {
+    var a : JQueryStatic;
+	export = a;
+}
