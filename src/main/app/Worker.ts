@@ -4,7 +4,6 @@
  * a second argument by default in postmessage.
  */
 declare function postMessage(arg : any);
-
 interface IMessageEvent extends MessageEvent {
 	data : IMessage;
 }
@@ -14,6 +13,7 @@ interface IMessage {
 	callActionBody? : ICallMessage
 }
 interface ILoadMessage {
+	requireJsBase : string;
 	requireJsPath : string;
 	requireConfig : any;
 	moduleName : string;
@@ -37,6 +37,7 @@ onmessage = ( ev : IMessageEvent ) =>{
 		case "LOAD" :
 			console.info("being asked to load...");
 			let {
+				requireJsBase = null,
 				requireJsPath = null,
 				requireConfig = null,
 				moduleName = ""
@@ -45,20 +46,9 @@ onmessage = ( ev : IMessageEvent ) =>{
 			if (!requireJsPath){
 				console.error("must provide a requirejs path");
 			}
-			
-			// calling script 
-			// main/ <-- baseUrl is "."
-			//    - app/
-			//        - startup.js <-- requirejs.toUrl('requireLib') returns './bower_components/requireLib' i.e. the 
-			//						   path relative to the baseUrl.
-			// 	  - workers/
-			//        - worker.js  <-- worker will try to load
-			
-			// NOTE : actualPath is not correct here...
-			// it should be 
-			// <path from root to requireJs baseURL> + 
-			// let actualPath =  /(?:\.\/)?(.*)/.exec(requireJsPath + ".js")[1];
-			requireConfig.baseUrl = '../';
+
+			requireConfig.baseUrl = requireJsBase;
+			debugger;
 			importScripts(requireJsPath);
 			require.config(requireConfig);
 			require([moduleName], (ns) => {

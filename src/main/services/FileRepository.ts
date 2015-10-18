@@ -8,7 +8,6 @@ import {PapaLocalDataProvider} from '../dataproviders/PapaLocalDataProvider'
 import {BatchingProvider} from '../dataproviders/BatchingProvider'
 import {Promise} from "es6-promise"
 
-console.info("HIVE IS ", $)
 /**
  * Repository allowing
  * to save a file in a single datastore.

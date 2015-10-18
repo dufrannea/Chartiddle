@@ -14,7 +14,8 @@ require = <any>{
 		"jquery-ui": "bower_components/jquery-ui.min",
 		"jquery-hive" : "bower_components/jquery-hive.pollen",
 		"jquery" : "bower_components/jquery.min",
-		"es6-promise" :"bower_components/promise"
+		"es6-promise" :"bower_components/promise",
+		"text" : "bower_components/text"
 	},
 	shim : {
 		bootstrap : ['jquery']

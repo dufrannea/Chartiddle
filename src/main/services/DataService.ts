@@ -22,6 +22,7 @@ export class DataService {
     public FileRepository : FileRepository;
     
     private pool : ConnectionPool;
+    private indexedDB  :IDBFactory;
     
     constructor(pool : ConnectionPool) {
         if (!this.isIndexedDBSupported()) {
@@ -36,13 +37,16 @@ export class DataService {
      * Perform checks on the browser to see if indexeddb is supported.
      */
     private isIndexedDBSupported() {
-        window.indexedDB = window.indexedDB || window['mozIndexedDB'] || window['webkitIndexedDB'] || window['msIndexedDB'];
-        window['IDBTransaction'] = window['IDBTransaction'] || window['webkitIDBTransaction'] || window['msIDBTransaction'];
-        window['IDBKeyRange'] = window['IDBKeyRange'] || window['webkitIDBKeyRange'] || window['msIDBKeyRange']
+        let global = typeof window === undefined ? self: window;
+        
+        global.indexedDB = global.indexedDB || global['mozIndexedDB'] || global['webkitIndexedDB'] || global['msIndexedDB'];
+        global['IDBTransaction'] = global['IDBTransaction'] || global['webkitIDBTransaction'] || global['msIDBTransaction'];
+        global['IDBKeyRange'] = global['IDBKeyRange'] || global['webkitIDBKeyRange'] || global['msIDBKeyRange']
 
-        if (!window.indexedDB) {
+        if (!global.indexedDB) {
             return false;
         }
+        this.indexedDB = global.indexedDB;
         return true;
     }
 
@@ -56,9 +60,9 @@ export class DataService {
         
         let initDbRequest : IDBOpenDBRequest;
         if (version){
-            initDbRequest = window.indexedDB.open(dataBaseName, version); 
+            initDbRequest = this.indexedDB.open(dataBaseName, version); 
         } else {
-            initDbRequest = window.indexedDB.open(dataBaseName);
+            initDbRequest = this.indexedDB.open(dataBaseName);
         }
 
         initDbRequest.onsuccess = (event) => {
@@ -98,14 +102,10 @@ export class DataService {
         let dropCreate = (name: string) => {
             if (!db.objectStoreNames.contains(name)) {
                 var dataModelStore = db.createObjectStore(name, { autoIncrement: true, keyPath: "id" });
-                // db.deleteObjectStore(name);
             }
         }
         dropCreate(DATAMODELS_STORE);
         dropCreate(DATASOURCES_STORE);
         dropCreate(CHARTS_STORE);
-        
-        // TODO: create indexes where needed.
-        // objectStore.createIndex("name", "name", { unique: false });
     }
 }
