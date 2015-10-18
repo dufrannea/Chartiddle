@@ -5,7 +5,6 @@ import {PapaLocalDataProvider} from '../../main/dataproviders/PapaLocalDataProvi
 
 import {ConnectionPool} from '../../main/services/ConnectionPool'
 
-import $ = require('jquery');
 import Papa = require('papaparse');
 
 const DATABASE_NAME = "testdb2";

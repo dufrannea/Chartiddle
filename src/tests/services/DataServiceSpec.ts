@@ -1,7 +1,6 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 import {DataService} from '../../main/services/DataService'
 import {ConnectionPool} from '../../main/services/ConnectionPool'
-import $ = require('jquery');
 
 const DATABASE_NAME = "testdb";
 let success = false;
@@ -27,11 +26,13 @@ describe('DataService tests', ()=>{
 		success = false;
 		dataService
 				.initDatabase(DATABASE_NAME, 1)
-				.done(()=>{
+				.then(()=>{
 					success = true;
+					done();
+				},()=>{
+					fail();
+					done();
 				})
-				.fail(fail)
-				.always(done)
 	})
 	
 	it('should init database',()=>{

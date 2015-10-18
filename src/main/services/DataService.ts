@@ -1,7 +1,6 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 /// <reference path="../model/model.d.ts"/>
 
-import $ = require('jquery');
 import {Repository} from './Repository'
 import {ConnectionPool} from './ConnectionPool'
 import {FileRepository} from './FileRepository'
@@ -55,32 +54,29 @@ export class DataService {
      * @param dataBaseName {string} : the name of the  
      *        database to initialize.
      */
-    public initDatabase(dataBaseName, version?: number): JQueryPromise<void> {
-        var res = $.Deferred<void>();
-        
+    public initDatabase(dataBaseName, version?: number): Promise<void> {
         let initDbRequest : IDBOpenDBRequest;
         if (version){
             initDbRequest = this.indexedDB.open(dataBaseName, version); 
         } else {
             initDbRequest = this.indexedDB.open(dataBaseName);
         }
-
-        initDbRequest.onsuccess = (event) => {
-            this.pool.db = initDbRequest.result;
-            this.createRepos();
-            res.resolve();
-        }
-
-        initDbRequest.onerror = (event) => {
-            console.error("Database error: " + event.target['errorCode']);
-            res.reject();
-        }
-
-        initDbRequest.onupgradeneeded = (event) => {
-            this.upgradeDatabase(event.target['result']);
-        };
-
-        return res.promise();
+        return new Promise<void>((resolve,reject)=>{
+            initDbRequest.onsuccess = (event) => {
+                this.pool.db = initDbRequest.result;
+                this.createRepos();
+                resolve();
+            }
+    
+            initDbRequest.onerror = (event) => {
+                console.error("Database error: " + event.target['errorCode']);
+                reject();
+            }
+    
+            initDbRequest.onupgradeneeded = (event) => {
+                this.upgradeDatabase(event.target['result']);
+            };
+        })
     }
 
     /**
@@ -98,7 +94,6 @@ export class DataService {
      * @param db {IDBDatabase} : the db to update.
      */
     private upgradeDatabase(db: IDBDatabase) {
-
         let dropCreate = (name: string) => {
             if (!db.objectStoreNames.contains(name)) {
                 var dataModelStore = db.createObjectStore(name, { autoIncrement: true, keyPath: "id" });
