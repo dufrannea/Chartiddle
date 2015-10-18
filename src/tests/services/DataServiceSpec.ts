@@ -40,11 +40,13 @@ describe('DataService tests', ()=>{
 	
 	it('should return empty array when not data',(done)=>{
 		dataService.DataSourceRepository.getAll()
-		.done((dataSources)=>{
+		.then((dataSources)=>{
 			expect(dataSources).toEqual([]);
+			done();
+		},()=>{
+			fail();
+			done();
 		})
-		.fail(fail)
-		.always(done)
 	});
 	
 	it('should set id when inserting',(done) => {
@@ -53,11 +55,13 @@ describe('DataService tests', ()=>{
 		};
 		
 		dataService.DataSourceRepository.save(insertee)
-		.done((result)=>{
+		.then((result)=>{
 			expect(insertee.id).toBeDefined();
+			done();
+		}, ()=>{
+			fail();
+			done()
 		})
-		.fail(fail)
-		.always(done)
 	});
 	
 	it('should update when item exists',(done)=>{
@@ -66,18 +70,20 @@ describe('DataService tests', ()=>{
 		};
 		
 		dataService.DataSourceRepository.save(insertee)
-		.pipe(()=>{
+		.then(()=>{
 			return dataService.DataSourceRepository.save({
 				name : "ergut2",
 				id : insertee.id
 			});
 		})
-		.pipe(()=> dataService.DataSourceRepository.get(insertee.id))
-		.done((fetched) => {
+		.then(()=> dataService.DataSourceRepository.get(insertee.id))
+		.then((fetched) => {
 			expect(fetched.name).toBe("ergut2");
-		})
-		.fail(fail)
-		.always(done)		
+			done();
+		},()=>{
+			fail();
+			done();
+		});
 	});
 	
 	it('should delete item',(done) => {
@@ -86,13 +92,15 @@ describe('DataService tests', ()=>{
 		};
 		
 		dataService.DataSourceRepository.save(insertee)
-		.pipe(()=>dataService.DataSourceRepository.delete(insertee.id))
-		.pipe(()=>dataService.DataModelRepository.getAll())
-		.done((result)=>{
+		.then(()=>dataService.DataSourceRepository.delete(insertee.id))
+		.then(()=>dataService.DataModelRepository.getAll())
+		.then((result)=>{
 			expect(result.length).toBe(0);
+			done();
+		},()=>{
+			fail();
+			done();
 		})
-		.fail(fail)
-		.always(done);
 	})
 	
 	/**

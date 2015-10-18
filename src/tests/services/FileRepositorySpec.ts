@@ -60,7 +60,10 @@ describe('FileRepositorySpec tests', () => {
 			dataStream: dataProvider,
 			id: 1,
 			name: "hello"
-		}).always(()=>{
+		}).then(()=>{
+			repo.close();
+			done();
+		},()=>{
 			repo.close();
 			done();
 		});
@@ -74,7 +77,7 @@ describe('FileRepositorySpec tests', () => {
 			dataStream: dataProvider,
 			id: 1,
 			name: "hello"
-		}).done(() => {
+		}).then(() => {
 			repo.getAll(1).foreach((data) => {
 				allData.push(data);
 				console.info("reading", data);
@@ -83,7 +86,10 @@ describe('FileRepositorySpec tests', () => {
 				console.info("soure read")
 			})
 		})
-		.always(()=>{
+		.then(()=>{
+			repo.close();
+			done();
+		},()=>{
 			repo.close();
 			done();
 		});

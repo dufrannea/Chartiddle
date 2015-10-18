@@ -2,7 +2,6 @@
 /// <reference path="../dataproviders/model.d.ts"/>
 
 import {Repository} from './Repository'
-import $ = require('jquery-hive');
 import {ConnectionPool} from './ConnectionPool'
 import {PapaLocalDataProvider} from '../dataproviders/PapaLocalDataProvider'
 import {BatchingProvider} from '../dataproviders/BatchingProvider'
@@ -32,7 +31,7 @@ export class FileRepository {
 			name : "somename",
 			dataStream : new BatchingProvider(new PapaLocalDataProvider(csvFile),100)
 		};
-		return this.savePromise(fileItem)
+		return this.save(fileItem)
 	}
 	
 	public openDb(version?: number, upgrade? : (IDBDatabase) => void): Promise<IDBDatabase>{
@@ -50,6 +49,7 @@ export class FileRepository {
 			if (upgrade){
 				request.onupgradeneeded = (ev)=>{
 					let newDb = <IDBDatabase>ev.target['result'];
+					this.pool.db = newDb;
 					upgrade(newDb);
 				}
 			}
@@ -68,7 +68,7 @@ export class FileRepository {
 	 * @param file {File} : a file to save.
 	 * @return {JQueryPromise<void>}
 	 */
-	public savePromise(file: IFileItem): Promise<void> {
+	public save(file: IFileItem): Promise<void> {
 
 		let storeName = "FILE_" + file.id;
 		if (this.pool.db){
@@ -107,67 +107,6 @@ export class FileRepository {
 				
 			})
 		});
-	}
-	
-	/**
-	 * Will save the stream in a store,
-	 * dropping a recreating it before.
-	 * @param file {File} : a file to save.
-	 * @return {JQueryPromise<void>}
-	 */
-	public save(file: IFileItem): JQueryPromise<void> {
-		let deferred = $.Deferred<void>();
-		let storeName = "FILE_" + file.id;
-
-		this.pool.db.close();
-		let newDb: IDBDatabase;
-		let openDb = window.indexedDB.open(this.pool.db.name, parseInt(this.pool.db.version) + 1);
-		
-		openDb.onupgradeneeded = (ev) => {
-			newDb = <IDBDatabase>ev.target['result'];
-			if (newDb.objectStoreNames.contains(storeName)) {
-				newDb.deleteObjectStore(storeName);
-			}
-			newDb.createObjectStore(storeName, { autoIncrement: true });
-			
-			// set the db in the pool
-			this.pool.db = newDb;
-		}
-		openDb.onblocked = () => {
-			console.error("blocked");
-			throw "blocked";
-			deferred.reject();
-		}
-		let transaction : IDBTransaction= undefined;
-		openDb.onsuccess = () => {
-			file.dataStream.foreach((data) => {
-				if (!transaction){
-					console.info("*******creating a new transaction")
-					transaction =newDb.transaction([storeName], "readwrite");
-					transaction.oncomplete = () => {
-						deferred.resolve();
-				 		console.info('transaction complete')
-					};
-				} else {
-					console.info("reusing transation")
-				}
-				let store = transaction.objectStore(storeName);
-				// TODO : handle errors.
-				// transaction.onerror = () => {
-				// 	console.error("transaction rollback");
-				// 	deferred.reject();
-				// }
-				// console.info("inserting,",data);
-				store.add(data);
-			}, () => {
-				console.info("no more data");
-			});
-		}
-		openDb.onerror = (err) => {
-			console.error("db upgrade failed");
-			deferred.reject();
-		}
-		return deferred.promise();
 	}
 	
 	/**

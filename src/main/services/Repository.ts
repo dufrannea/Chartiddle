@@ -1,4 +1,3 @@
-import $ = require('jquery');
 import {ConnectionPool} from './ConnectionPool'
 interface connStore {
 	[name : string] : IDBDatabase;
@@ -24,13 +23,13 @@ export class Repository<TObject, TKey>  {
 	 * @param key {TKey} : the key of the item to delete.
 	 */
 	public delete(key : TKey){
-		this.executeInTransaction((objectStore, deferred)=>{
+		this.executeInTransaction((objectStore, resolve, reject)=>{
 			let request = objectStore.delete(key);
 			request.onsuccess = (ev) => {
-				deferred.resolve();
+				resolve();
 			}
 			request.onerror = (ev) => {
-				deferred.reject();
+				reject();
 			}
 		})
 	}
@@ -38,8 +37,8 @@ export class Repository<TObject, TKey>  {
 	 * Inserts or updates the object.
 	 * @param item {TObject} : the object to insert/update.
 	 */
-	public save(item: TObject): JQueryPromise<void> {
-		return this.executeInTransaction<void>((objectStore, deferred) => {
+	public save(item: TObject): Promise<void> {
+		return this.executeInTransaction<void>((objectStore, resolve, reject) => {
 			let request = objectStore.put(item);
 			request.onerror = (ev) => {
 			}
@@ -52,39 +51,39 @@ export class Repository<TObject, TKey>  {
 	/**
 	 * Get all objects.
 	 */
-	public getAll(): JQueryPromise<TObject[]> {
-        let result = $.Deferred<TObject[]>();
-        let transaction = this.pool.db.transaction([this.tableName], "readonly");
-
-        let objectStore = transaction.objectStore(this.tableName);
-
-        let allItems: TObject[] = [];
-
-        objectStore.openCursor().onsuccess = function(event: any) {
-            let cursor: IDBCursorWithValue = event.target.result;
-            if (cursor) {
-                allItems.push(cursor.value)
-                cursor.continue();
-            }
-            else {
-                result.resolve(allItems);
-            }
-        };
-        return result.promise();
+	public getAll(): Promise<TObject[]> {
+		return new Promise<TObject[]>((resolve, reject)=>{
+			let transaction = this.pool.db.transaction([this.tableName], "readonly");
+	
+			let objectStore = transaction.objectStore(this.tableName);
+	
+			let allItems: TObject[] = [];
+	
+			objectStore.openCursor().onsuccess = function(event: any) {
+				let cursor: IDBCursorWithValue = event.target.result;
+				if (cursor) {
+					allItems.push(cursor.value)
+					cursor.continue();
+				}
+				else {
+					resolve(allItems);
+				}
+			};
+		})
     }
 	
 	/**
 	 * Get a single object.
 	 * @param key {TKey} : the key identifying the object.
 	 */
-	public get(key: TKey): JQueryPromise<TObject> {
-		return this.executeInTransaction<TObject>((objectStore, deferred) => {
+	public get(key: TKey): Promise<TObject> {
+		return this.executeInTransaction<TObject>((objectStore, resolve, reject) => {
 			let request = objectStore.get(key);
 			request.onerror = (ev) => {
-				deferred.reject();
+				reject();
 			}
 			request.onsuccess = (ev) => {
-				deferred.resolve(request.result);
+				resolve(request.result);
 			}
 		})
 	}
@@ -95,24 +94,22 @@ export class Repository<TObject, TKey>  {
 	 * @param T : type of deferred.
 	 * @return : the promise.
 	 */
-	protected executeInTransaction<T>(payload: (o: IDBObjectStore, deferred: JQueryDeferred<T>) => void, storeName? : string): JQueryPromise<T> {
-		let res = $.Deferred<T>();
-
-        let transaction = this.pool.db.transaction([this.tableName], "readwrite");
-        let objectStore = transaction.objectStore(storeName || this.tableName);
-
-        transaction.oncomplete = function(event) {
-            console.info("transaction completed");
-            res.resolve();
-        };
-
-        transaction.onerror = function(event) {
-            console.error("transaction not open due to error", event)
-            res.reject();
-        };
-
-		payload(objectStore, res);
-
-        return res.promise();
+	protected executeInTransaction<T>(payload: (o: IDBObjectStore, resolve, reject) => void, storeName? : string): Promise<T> {
+		return new Promise<T>((resolve,reject)=>{
+			let transaction = this.pool.db.transaction([this.tableName], "readwrite");
+			let objectStore = transaction.objectStore(storeName || this.tableName);
+	
+			transaction.oncomplete = function(event) {
+				console.info("transaction completed");
+				resolve();
+			};
+	
+			transaction.onerror = function(event) {
+				console.error("transaction not open due to error", event)
+				reject();
+			};
+	
+			payload(objectStore, resolve,reject);
+		});
 	}
 }

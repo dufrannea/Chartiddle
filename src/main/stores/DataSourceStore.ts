@@ -55,12 +55,12 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 						.FileRepository
 						.save(fileItem)
 				})
-				.done(()=>{
+				.then(()=>{
 					loadingFile = false;
 					dataSources.push(dataSource);
 					dataSourceStore.fireEvent(CHANGE);
 				})
-				.fail(()=>{
+				.catch(()=>{
 					alert("could not upload file")
 				});
 			break;
