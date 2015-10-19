@@ -15,6 +15,7 @@ let currentChartId = undefined;
 let previewData = [];
 let selectedRows = [];
 let selectedColumns = [];
+let selectedMeasures = [];
 let queryResult : IQueryResult = null;
 let dataSourceId : number = null;
 
@@ -34,6 +35,9 @@ class ChartRendererStore extends EventEmitter {
 	}
 	getQueryResult(){
 		return queryResult;
+	}
+	getSelectedMeasures(){
+		return selectedMeasures;
 	}
 }
 
@@ -73,7 +77,14 @@ chartRendererStore.callBackId = Dispatcher.register((action) => {
 				.then(()=>{
 					chartRendererStore.fireEvent(CHANGE);
 				})
-			break;			
+			break;	
+		case AppConstants.DROP_MEASURE:
+			selectedMeasures.push(action.updateChartRendererAction.addedMeasure);
+			getQueryResult()
+				.then(()=>{
+					chartRendererStore.fireEvent(CHANGE);
+				})
+			break;
 		case AppConstants.SELECT_DATASOURCE:
 			Dispatcher.waitFor([ApplicationStore.callBackId]);
 			dataSourceId = action.selectDataSourceAction.dataSource.id;

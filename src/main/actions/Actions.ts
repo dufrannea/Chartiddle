@@ -47,6 +47,15 @@ class AppActions {
 			}
 		})
 	}
+	
+	dropMeasure(columnName : string){
+		Dispatcher.dispatch({
+			actionType : AppConstants.DROP_MEASURE,
+			updateChartRendererAction : {
+				addedMeasure : columnName
+			}
+		})
+	}
 }
 
 export var appActions = new AppActions();

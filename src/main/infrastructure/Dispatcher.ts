@@ -21,6 +21,7 @@ export interface ISelectDataSourceAction {
 export interface IUpdateChartRendererModelAction {
 	addedColumn? : string;
 	addedRow?: string;
+	addedMeasure?:string;
 }
 
 export interface IActionType {

@@ -89,6 +89,7 @@ interface IDataProvider {
 interface IQuery {
     Rows: IRow[];
     Columns: IColumn[];
+    Measures? : IColumn[];
     drilldown?: string[];
     top?: number;
 }

@@ -4,7 +4,8 @@ export enum AppConstants {
 	SELECT_DATASOURCE,
 	PREVIEW_READY,
 	DROP_COLUMN,
-	DROP_ROW
+	DROP_ROW,
+	DROP_MEASURE
 }
 
 export enum ApplicationTabs {

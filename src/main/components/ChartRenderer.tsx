@@ -14,13 +14,15 @@ interface IChartConfigurationZoneParams {
 interface IChartConfigurationZoneState {
 	columns : string[];
 	rows : string[];
+	measures : string[];
 }
 
 class ChartConfigurationZone extends React.Component<IChartConfigurationZoneParams,IChartConfigurationZoneState> {
 	constructor() {
 		this.state = {
 			rows : ChartRendererStore.getSelectedRows(),
-			columns : ChartRendererStore.getSelectedColumns()
+			columns : ChartRendererStore.getSelectedColumns(),
+			measures : []
 		}
 		super();
 	}
@@ -29,6 +31,9 @@ class ChartConfigurationZone extends React.Component<IChartConfigurationZonePara
 	}
 	__handleRowDrop(colName : string){
 		Actions.dropRow(colName);
+	}
+	__handleMeasureDrop(colName : string){
+		Actions.dropMeasure(colName);
 	}
 	render() {
 		return (
@@ -39,6 +44,9 @@ class ChartConfigurationZone extends React.Component<IChartConfigurationZonePara
 				<ChartDropZone 
 					items={this.state.rows}
 					handleDrop={this.__handleRowDrop}/>
+				<ChartDropZone 
+					items={this.state.measures}
+					handleDrop={this.__handleMeasureDrop}/>
 			</div>
 		);
 	}
@@ -48,7 +56,8 @@ class ChartConfigurationZone extends React.Component<IChartConfigurationZonePara
 	_onChange(){
 		this.setState({ 
 			rows : ChartRendererStore.getSelectedRows(),
-			columns : ChartRendererStore.getSelectedColumns()
+			columns : ChartRendererStore.getSelectedColumns(),
+			measures : ChartRendererStore.getSelectedMeasures()
 		});	
 	}
 }
@@ -85,7 +94,7 @@ class ChartDropZone extends React.Component<IChartDropZoneParams,IChartDropZoneS
 	}
 	render() {
 		return (
-			<div ref="dropzone" className="chart-drop-zone col-md-6" style={{'min-height':'200px'}}>
+			<div ref="dropzone" className="chart-drop-zone col-md-4" style={{'min-height':'200px'}}>
 				<ul className="list-group">
 					{this.props.items.map(x=> <li className="list-group-item" ref="x">{x}</li>)}
 				</ul>
