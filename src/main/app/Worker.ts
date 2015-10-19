@@ -34,6 +34,11 @@ onmessage = ( ev : IMessageEvent ) =>{
 	} = ev;
 	
 	switch (data.action) {
+		// TODO : load should be a promise
+		// 		and calls should wait for the promise
+		//		to fullfill.
+		// Note : load failure should fail
+		//		  all waiting calls.
 		case "LOAD" :
 			console.info("being asked to load...");
 			let {
@@ -52,9 +57,10 @@ onmessage = ( ev : IMessageEvent ) =>{
 			importScripts(requireJsPath);
 			require.config(requireConfig);
 			require([moduleName], (ns) => {
-				let FileRepository = ns.FileRepository;
-				proxied =new FileRepository();
-				postMessage("LOAD_DONE");
+				ns.Load().then((value)=>{
+					proxied = value;
+					postMessage("LOAD_DONE");
+				});
 			})
 			break;
 		case "CALL":

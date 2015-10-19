@@ -36,7 +36,7 @@ export class DbStart {
      * Perform checks on the browser to see if indexeddb is supported.
      */
     private isIndexedDBSupported() {
-        let global = typeof window === undefined ? self: window;
+        let global = self || window;
         
         global.indexedDB = global.indexedDB || global['mozIndexedDB'] || global['webkitIndexedDB'] || global['msIndexedDB'];
         global['IDBTransaction'] = global['IDBTransaction'] || global['webkitIDBTransaction'] || global['msIDBTransaction'];

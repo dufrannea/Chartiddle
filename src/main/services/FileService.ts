@@ -16,6 +16,10 @@ export class FileService {
 		this._fileRepo = fileRepo;
 	}
 	
+	public getAllDataSourcesAsync() : Promise<IDataSource[]> {
+		return this._sourcesRepo.getAll();
+	}
+	
 	/**
 	 * Save a file.
 	 */
@@ -55,4 +59,4 @@ export class FileService {
 				})
 		})
 	}
-}
+} {}

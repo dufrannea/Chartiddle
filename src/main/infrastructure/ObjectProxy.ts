@@ -78,6 +78,7 @@ class ObjectProxy {
 				result = null
 			} = ev.data;
 			if (action === "CALL_DONE"){
+				console.info("received call done");
 				queued[methodName](result);	
 			}
 		})
