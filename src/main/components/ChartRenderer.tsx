@@ -6,6 +6,7 @@ import $ = require('jquery');
 import React = require('react');
 import {appActions as Actions} from '../actions/Actions'
 import {chartRendererStore as ChartRendererStore} from '../stores/ChartRendererStore';
+import {Chart} from './Chart'
 
 interface IChartConfigurationZoneParams {
 }
@@ -181,7 +182,7 @@ export class ChartRenderer extends React.Component<IChartRendererParams,IChartRe
 		return (
 			<div className="row">
 				<div className="col-md-6 col-md-offset-3">
-					<div>Here goes the chart</div>
+					<Chart/>
 					<ChartConfigurationZone/>
 					<DataPreview/>
 				</div>

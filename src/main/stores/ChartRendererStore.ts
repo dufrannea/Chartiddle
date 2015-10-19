@@ -15,6 +15,8 @@ let currentChartId = undefined;
 let previewData = [];
 let selectedRows = [];
 let selectedColumns = [];
+let queryResult : IQueryResult = null;
+let dataSourceId : number = null;
 
 class ChartRendererStore extends EventEmitter {
 	getSelectedRows(){
@@ -30,23 +32,51 @@ class ChartRendererStore extends EventEmitter {
 	getPreviewData(){
 		return previewData;
 	}
+	getQueryResult(){
+		return queryResult;
+	}
 }
 
 export var chartRendererStore = new ChartRendererStore();
-
+let getQueryResult = () => {
+	let query : IQuery = {
+		Rows : selectedRows.map(x=>{
+			return {
+				columns : [x]
+			}
+		}),
+		Columns : selectedColumns.map(x=>{
+			return {
+				columns : [x]
+			}
+		}),
+	}
+	return Container
+		.fileService
+		.Query(query, dataSourceId)
+		.then((result)=>{
+			queryResult = result;
+		});
+}
 chartRendererStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
 		case AppConstants.DROP_COLUMN:
 			selectedColumns.push(action.updateChartRendererAction.addedColumn);
-			chartRendererStore.fireEvent(CHANGE);
+			getQueryResult()
+				.then(()=>{
+					chartRendererStore.fireEvent(CHANGE);
+				})
 			break;
 		case AppConstants.DROP_ROW:
 			selectedRows.push(action.updateChartRendererAction.addedRow);
-			chartRendererStore.fireEvent(CHANGE);
+			getQueryResult()
+				.then(()=>{
+					chartRendererStore.fireEvent(CHANGE);
+				})
 			break;			
 		case AppConstants.SELECT_DATASOURCE:
 			Dispatcher.waitFor([ApplicationStore.callBackId]);
-			
+			dataSourceId = action.selectDataSourceAction.dataSource.id;
 			// get the data
 		    Container
 				.fileService

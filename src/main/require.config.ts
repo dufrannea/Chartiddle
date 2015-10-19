@@ -15,9 +15,11 @@ require = <any>{
 		"jquery-hive" : "bower_components/jquery-hive.pollen",
 		"jquery" : "bower_components/jquery.min",
 		"es6-promise" :"bower_components/promise",
-		"text" : "bower_components/text"
+		"text" : "bower_components/text",
+		"highcharts" : "bower_components/highcharts"
 	},
 	shim : {
-		bootstrap : ['jquery']
+		bootstrap : ['jquery'],
+		highcharts: ['jquery']
 	}
 }

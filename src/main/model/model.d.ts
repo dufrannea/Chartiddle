@@ -117,3 +117,8 @@ interface IQueryResult {
     Columns: string[];
     Values: number[][];
 }
+
+declare module "highcharts" {
+    var a  : HighchartsStatic;
+    export = a ;
+}

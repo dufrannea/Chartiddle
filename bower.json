@@ -27,7 +27,8 @@
     "papaparse": "~4.1.2",
     "jquery-ui": "~1.11.4",
     "es6-promise": "~3.0.2",
-    "text": "~2.0.14"
+    "text": "~2.0.14",
+    "highcharts": "~4.1.9"
   },
   "overrides": {
     "bootstrap": {
