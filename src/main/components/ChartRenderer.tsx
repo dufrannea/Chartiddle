@@ -71,7 +71,10 @@ class ChartDropZone extends React.Component<IChartDropZoneParams,IChartDropZoneS
 			},
 			activeClass : 'active',
 			drop : (ev, target)=>{
-				let data = $(ev['toElement']).data()['data'];
+				let data = $(target.draggable).data()['data'];
+				if (!data || data ===""){
+					debugger;
+				}
 				this.__handleDrop(data)
 			}
 		})
@@ -83,7 +86,7 @@ class ChartDropZone extends React.Component<IChartDropZoneParams,IChartDropZoneS
 		return (
 			<div ref="dropzone" className="chart-drop-zone">
 				<ul>
-					{this.props.items.map(x=> <li>{x}</li>)}
+					{this.props.items.map(x=> <li ref="x">{x}</li>)}
 				</ul>
 			</div>
 		);
