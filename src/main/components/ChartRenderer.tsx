@@ -31,7 +31,7 @@ class ChartConfigurationZone extends React.Component<IChartConfigurationZonePara
 	}
 	render() {
 		return (
-			<div className="chart-drop-zones">
+			<div className="row">
 				<ChartDropZone 
 					items={this.state.columns}
 					handleDrop={this.__handleColumnDrop}/>
@@ -84,9 +84,9 @@ class ChartDropZone extends React.Component<IChartDropZoneParams,IChartDropZoneS
 	}
 	render() {
 		return (
-			<div ref="dropzone" className="chart-drop-zone">
-				<ul>
-					{this.props.items.map(x=> <li ref="x">{x}</li>)}
+			<div ref="dropzone" className="chart-drop-zone col-md-6" style={{'min-height':'200px'}}>
+				<ul className="list-group">
+					{this.props.items.map(x=> <li className="list-group-item" ref="x">{x}</li>)}
 				</ul>
 			</div>
 		);

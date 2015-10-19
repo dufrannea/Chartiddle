@@ -76,10 +76,44 @@ interface IMeasure {
     type: string;
 }
 
-
 interface IDataProvider {
     foreach: (stepCallback: (data: any) => void,
                 completeCallback: () => void,
                 bindTo?: any) => void;
-    greedy: () => JQueryDeferred<IDataProvider>;
+}
+
+/**
+ * Simple model 
+ * for a query.
+ */
+interface IQuery {
+    Rows: IRow[];
+    Columns: IColumn[];
+    drilldown?: string[];
+    top?: number;
+}
+
+/**
+ * A row represented as a list
+ * of columns in the original source.
+ */
+interface IRow {
+    columns: string[];
+}
+
+/**
+ * A column represented as a list
+ * of columns in the original datasource.
+ */
+interface IColumn {
+    columns: string[];
+}
+
+/**
+ * Query execution result.
+ */
+interface IQueryResult {
+    Rows: string[];
+    Columns: string[];
+    Values: number[][];
 }
