@@ -14,7 +14,7 @@ const DATASOURCES_STORE: string = "DataSources";
  * DataService class, handling creation/updates
  * of the database, and exposing repositories.
  */
-export class DataService {
+export class DbStart {
     public DataSourceRepository: Repository<IDataSource, number>;
     public DataModelRepository: Repository<IDataModel, number>;
     public ChartConfigurationRepository: Repository<IChartConfiguration, number>;

@@ -1,7 +1,4 @@
 import {ConnectionPool} from './ConnectionPool'
-interface connStore {
-	[name : string] : IDBDatabase;
-}
 
 export class Repository<TObject, TKey>  {
 	private tableName: string;
@@ -33,6 +30,7 @@ export class Repository<TObject, TKey>  {
 			}
 		})
 	}
+	
 	/**
 	 * Inserts or updates the object.
 	 * @param item {TObject} : the object to insert/update.
@@ -94,7 +92,7 @@ export class Repository<TObject, TKey>  {
 	 * @param T : type of deferred.
 	 * @return : the promise.
 	 */
-	protected executeInTransaction<T>(payload: (o: IDBObjectStore, resolve, reject) => void, storeName? : string): Promise<T> {
+	protected executeInTransaction<T>(payload: (o: IDBObjectStore, resolve, reject) => any, storeName? : string): Promise<T> {
 		return new Promise<T>((resolve,reject)=>{
 			let transaction = this.pool.db.transaction([this.tableName], "readwrite");
 			let objectStore = transaction.objectStore(storeName || this.tableName);
@@ -109,7 +107,7 @@ export class Repository<TObject, TKey>  {
 				reject();
 			};
 	
-			payload(objectStore, resolve,reject);
+			return payload(objectStore, resolve,reject);
 		});
 	}
 }

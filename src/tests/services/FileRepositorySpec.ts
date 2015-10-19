@@ -77,7 +77,7 @@ describe('FileRepositorySpec tests', () => {
 			id: 1,
 			name: "hello"
 		}).then(() => {
-			repo.getAll(1).foreach((data) => {
+			repo.getAsDataStream(1).foreach((data) => {
 				allData.push(data);
 				console.info("reading", data);
 			}, () => {

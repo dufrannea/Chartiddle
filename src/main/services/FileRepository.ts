@@ -91,7 +91,7 @@ export class FileRepository {
 				file.dataStream.foreach((data) => {
 					if (!transaction){
 						console.info("*******creating a new transaction")
-						transaction =db.transaction([storeName], "readwrite");
+						transaction = db.transaction([storeName], "readwrite");
 						transaction.oncomplete = () => {
 							resolve();
 							console.info('transaction complete')
@@ -118,7 +118,7 @@ export class FileRepository {
 	 * TODO : Implement interpretation of 'each' return value,
 	 * 	returning false needs to stop the loop.
 	 */
-	public getAll(id: number, lines? : number) {
+	public getAsDataStream(id: number, lines? : number) {
 		let storeName = "FILE_" + id;
 		
 		let result = {

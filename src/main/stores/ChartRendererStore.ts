@@ -48,20 +48,15 @@ chartRendererStore.callBackId = Dispatcher.register((action) => {
 			Dispatcher.waitFor([ApplicationStore.callBackId]);
 			
 			// get the data
-		    let dataSource = Container
-				.dataService
-				.FileRepository
-				.getAll(action
+		    Container
+				.fileService
+				.getPreviewAsync(action
 					.selectDataSourceAction
-					.dataSource.id, 1);
-			
-			let allData = [];
-			dataSource.foreach((data)=>{
-				allData.push.apply(allData, data);
-			},()=>{
-				previewData = allData;
-				chartRendererStore.fireEvent(CHANGE);
-			})
+					.dataSource.id)
+				.then((preview)=>{
+					previewData = preview;
+					chartRendererStore.fireEvent(CHANGE);
+				});
 			break;
 	}
 });

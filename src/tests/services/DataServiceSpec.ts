@@ -1,5 +1,5 @@
 /// <reference path="../../typings/tsd.d.ts"/>
-import {DataService} from '../../main/services/DataService'
+import {DbStart} from '../../main/services/DbStart'
 import {ConnectionPool} from '../../main/services/ConnectionPool'
 
 const DATABASE_NAME = "testdb";
@@ -7,7 +7,7 @@ let success = false;
 let version = 1;
 
 let pool = new ConnectionPool();
-let dataService = new DataService(pool);
+let dataService = new DbStart(pool);
 
 describe('DataService tests', ()=>{
 	/**

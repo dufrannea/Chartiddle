@@ -5,18 +5,23 @@
 import {startReact} from './main'
 import {dataSourceStore as DataSourceStore} from '../stores/DataSourceStore'
 import {appActions as Actions} from '../actions/Actions'
-import {DataService} from '../services/DataService'
+import {DbStart} from '../services/DbStart'
+import {FileService} from '../services/FileService'
 import {ConnectionPool} from '../services/ConnectionPool'
 import {Container} from '../infrastructure/Container'
 
 let pool = new ConnectionPool();
-let dataService = new DataService(pool);
-Container.dataService = dataService;
+let dataService = new DbStart(pool);
 
 dataService
-	.initDatabase("Chartiddle", 100)
+	.initDatabase("Chartiddle")
 	.catch(()=>{
 		console.error("db updgrade failed, sorry.")
+	})
+	.then(()=>{
+		Container.fileService = new FileService(
+			dataService.DataSourceRepository, 
+			dataService.FileRepository);
 	})
 	.then(() => dataService.DataSourceRepository.getAll())
 	.then(value=> {

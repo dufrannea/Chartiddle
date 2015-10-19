@@ -1,15 +1,15 @@
-import {DataService} from '../services/DataService'
+import {FileService} from '../services/FileService'
 
 /**
  * Singleton to hold services.
  */
 export class Container {
-	static _dataService : DataService;
+	static _fileService : FileService;
 	
-	static get dataService() : DataService {
-		return Container._dataService;
+	static get fileService() : FileService {
+		return Container._fileService;
 	}
-	static set dataService(value : DataService) {
-		Container._dataService = value;
+	static set fileService(value : FileService) {
+		Container._fileService = value;
 	}
 }

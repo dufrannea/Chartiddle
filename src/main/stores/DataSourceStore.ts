@@ -39,24 +39,15 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 			let dataSource : IDataSource= {
 				name : action.fileAction.file.name
 			}
-			let dataService =Container.dataService; 
+			let fileService = Container.fileService; 
 			loadingFile = true;
 			dataSourceStore.fireEvent(CHANGE);
 			
-			dataService.DataSourceRepository
-				.save(dataSource)
-				.then(()=>{
-					let fileItem : IFileItem = {
-						id : dataSource.id,
-						name : action.fileAction.file.name,
-						dataStream : new BatchingProvider(new PapaLocalDataProvider(action.fileAction.file),100)
-					};
-					return dataService
-						.FileRepository
-						.save(fileItem)
-				})
-				.then(()=>{
+			fileService
+				.saveFileAsync(action.fileAction.file)
+				.then((id)=>{
 					loadingFile = false;
+					dataSource.id = id;
 					dataSources.push(dataSource);
 					dataSourceStore.fireEvent(CHANGE);
 				})
