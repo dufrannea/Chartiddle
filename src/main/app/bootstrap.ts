@@ -4,6 +4,7 @@
 import {DbStart} from '../services/DbStart'
 import {FileService} from '../services/FileService'
 import {ConnectionPool} from '../services/ConnectionPool'
+import {DataProcessor} from '../services/DataProcessor'
 import {Container} from '../infrastructure/Container'
 import {ProxiedWorker} from "../infrastructure/ObjectProxy"
 
@@ -20,7 +21,8 @@ export function Load(){
 		.then(()=>{
 			Container.fileService = new FileService(
 				dataService.DataSourceRepository, 
-				dataService.FileRepository);
+				dataService.FileRepository,
+				new DataProcessor());
 			return Container.fileService;
 		});
 }
