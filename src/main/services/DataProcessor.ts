@@ -101,7 +101,9 @@ export class DataProcessor {
     
                 var unfiltered = allColumns;
                 allColumns = []
-                for (var i = 0; i<Math.min(unfiltered.length, 10);i++){
+                
+                // here filter the number of results. Math.min(unfiltered.length, 10)
+                for (var i = 0; i< unfiltered.length;i++){
                     allColumns.push(unfiltered[i]);
                 }
     

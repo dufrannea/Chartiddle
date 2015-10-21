@@ -36,5 +36,10 @@ applicationStore.callBackId = Dispatcher.register((action) => {
 			activeTab = ApplicationTabs.CHART_VIEW;
 			applicationStore.fireEvent(CHANGE);
 			break;
+		case AppConstants.NAVIGATE_DATASOURCES_LIST:
+			activeDataSource = null;
+			activeTab = ApplicationTabs.DATASOURCES_VIEW;
+			applicationStore.fireEvent(CHANGE);
+			break;
 	}
 });

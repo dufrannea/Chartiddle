@@ -2,8 +2,9 @@
 /// <reference path="../model/model.d.ts" />
 
 import React = require('react');
-import {DataSourceList} from '../components/DataSourceList'
-import {ChartRenderer} from '../components/ChartRenderer'
+import {DataSourceList} from './DataSourceList'
+import {ChartRenderer} from './ChartRenderer'
+import {NavBar} from './NavBar'
 import {ApplicationTabs} from '../actions/AppConstants'
 import {applicationStore as AppStore} from '../stores/ApplicationStore';
 
@@ -43,7 +44,16 @@ export class AppComponent extends React.Component<IAppComponentParams,IAppCompon
 		})()
 		return (
 			<div>
-				{tabToRender}
+				<NavBar/>
+				<div className="container-fluid">
+					<div className="row">
+						<div className="col-xs-12">
+							<div>
+								{tabToRender}
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	}

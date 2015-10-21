@@ -1,7 +1,20 @@
 export enum AppConstants {
-	ADD_FILE,
+	/**
+	 * Global
+	 */
 	MODEL_LOADED,
+	/*
+	 * Navigation
+	 */
 	SELECT_DATASOURCE,
+	NAVIGATE_DATASOURCES_LIST,
+	/**
+	 * DatasourceList.
+	 */
+	ADD_FILE,
+	/*
+	 * Chart renderer
+	 */
 	PREVIEW_READY,
 	DROP_COLUMN,
 	DROP_ROW,

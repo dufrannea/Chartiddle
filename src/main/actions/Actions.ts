@@ -5,6 +5,10 @@ import {dispatcher as Dispatcher} from '../infrastructure/Dispatcher'
 import {AppConstants, ApplicationTabs} from './AppConstants'
 
 class AppActions {
+	/**
+	 * Select a datasource to 
+	 * go and play with it.
+	 */
 	selectDataSource(dataSource : IDataSource) {
 		Dispatcher.dispatch({
 			actionType : AppConstants.SELECT_DATASOURCE,
@@ -14,6 +18,18 @@ class AppActions {
 		})
 	}
 	
+	/**
+	 * Back to the datasources list.
+	 */
+	navigateDataSourcesList(){
+		Dispatcher.dispatch({
+			actionType : AppConstants.NAVIGATE_DATASOURCES_LIST
+		})
+	}
+	
+	/**
+	 * Add a file to indexeddb.
+	 */
 	addFile(f : File){
 		Dispatcher.dispatch({
 			actionType : AppConstants.ADD_FILE,
@@ -23,6 +39,10 @@ class AppActions {
 		});
 	}
 	
+	/**
+	 * Model has been loaded,
+	 * application is ready.
+	 */
 	modelLoaded(dataSources : IDataSource[]) {
 		Dispatcher.dispatch({
 			actionType : AppConstants.MODEL_LOADED,

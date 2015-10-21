@@ -18,6 +18,8 @@ let selectedColumns = [];
 let selectedMeasures = [];
 let queryResult : IQueryResult = null;
 let dataSourceId : number = null;
+let queryIsComputing : boolean = false;
+let chartIsDisplaying : boolean = false;
 
 class ChartRendererStore extends EventEmitter {
 	getSelectedRows(){
@@ -39,9 +41,21 @@ class ChartRendererStore extends EventEmitter {
 	getSelectedMeasures(){
 		return selectedMeasures;
 	}
+	/**
+	 * Tells whether query
+	 * is being processed.
+	 */
+	isQueryComputing(){
+		return queryIsComputing;
+	}
 }
 
 export var chartRendererStore = new ChartRendererStore();
+
+let fireChange = ()=>{
+	chartRendererStore.fireEvent(CHANGE);
+}
+
 let updateQueryResult = () => {
 	let query : IQuery = {
 		Rows : selectedRows.map(x=>{
@@ -55,16 +69,35 @@ let updateQueryResult = () => {
 			}
 		}),
 	}
+	queryIsComputing  = true;
+	// fire change before
+	// computing, to update 
+	// selected columns/rows/measures lists.
+	fireChange();
+	
 	return Container
 		.fileService
 		.Query(query, dataSourceId)
 		.then((result)=>{
 			queryResult = result;
-			chartRendererStore.fireEvent(CHANGE);
+			queryIsComputing = false;
+			fireChange();
 		});
 }
+
 chartRendererStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
+		case AppConstants.NAVIGATE_DATASOURCES_LIST:
+			 currentChartId = undefined;
+			 previewData = [];
+			 selectedRows = [];
+			 selectedColumns = [];
+			 selectedMeasures = [];
+			 queryResult  = null;
+			 dataSourceId  = null;
+			 queryIsComputing = false;
+			 chartIsDisplaying  = false;
+			 break;
 		case AppConstants.DROP_COLUMN:
 			selectedColumns.push(action.updateChartRendererAction.addedColumn);
 			updateQueryResult()
@@ -78,11 +111,11 @@ chartRendererStore.callBackId = Dispatcher.register((action) => {
 			updateQueryResult()
 			break;
 		case AppConstants.REMOVE_ROW:
-			selectedRows =selectedRows.filter(x => x !=  action.updateChartRendererAction.addedRow)
+			selectedRows = selectedRows.filter(x => x !=  action.updateChartRendererAction.addedRow)
 			updateQueryResult()
 			break;
 		case AppConstants.REMOVE_COLUMN:
-			selectedColumns =selectedColumns.filter(x => x !=  action.updateChartRendererAction.addedColumn)
+			selectedColumns = selectedColumns.filter(x => x !=  action.updateChartRendererAction.addedColumn)
 			updateQueryResult()
 			break;
 		case AppConstants.REMOVE_MEASURE:

@@ -74,25 +74,41 @@ let buildConfig = (result : IQueryResult) =>{
 interface IChartParams {
 }
 interface IChartState {
-	data : IQueryResult
+	data : IQueryResult;
+	loading : boolean;
 }
 export class Chart extends React.Component<IChartParams,IChartState> {
 	private chart : any;
+	private changeListener : any;
 	constructor(){
-		this.state = {data :  ChartRendererStore.getQueryResult()}
+		this.changeListener=this._onChange.bind(this);
+		this.state = {
+			data :  ChartRendererStore.getQueryResult(),
+			loading : ChartRendererStore.isQueryComputing()
+		}
 		super();
 	}
 	render() {
 		return (
 			<div>
 				<div ref="chart"></div>
+				<div style={{display: this.state.loading? '' : 'none'}} className="spinner-centerer">
+				    <div className="spinner-container">
+						<div className="whirly-loader"/>
+					</div>
+				</div>
 			</div>
 		);
 	}
+	componentWillUnmount(){
+		console.info("component will unmount");
+		if (this.chart){
+			$(this.chart).highcharts().destroy();
+		}
+		ChartRendererStore.removeListener("CHANGE", this.changeListener)
+	}
 	componentDidMount(){
-		ChartRendererStore.registerChangeListener(this._onChange.bind(this));
-		// this.updateChart();
-		
+		ChartRendererStore.registerChangeListener(this.changeListener);
 	}
 	updateChart(){
 		if (this.state.data != null){	
@@ -102,7 +118,8 @@ export class Chart extends React.Component<IChartParams,IChartState> {
 	}
 	_onChange(){
 		this.setState({ 
-			data : ChartRendererStore.getQueryResult()
+			data : ChartRendererStore.getQueryResult(),
+			loading : ChartRendererStore.isQueryComputing()
 		});
 		this.updateChart();
 	}
