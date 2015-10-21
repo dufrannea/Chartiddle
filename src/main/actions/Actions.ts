@@ -56,6 +56,33 @@ class AppActions {
 			}
 		})
 	}
+	
+	removeRow(rowName : string){
+		Dispatcher.dispatch({
+			actionType : AppConstants.REMOVE_ROW,
+			updateChartRendererAction : {
+				addedRow : rowName
+			}
+		})
+	}
+	
+	removeColumn(columnName : string){
+		Dispatcher.dispatch({
+			actionType : AppConstants.REMOVE_COLUMN,
+			updateChartRendererAction : {
+				addedColumn : columnName
+			}
+		})
+	}
+	
+	removeMeasure(columnName : string){
+		Dispatcher.dispatch({
+			actionType : AppConstants.REMOVE_MEASURE,
+			updateChartRendererAction : {
+				addedMeasure : columnName
+			}
+		})
+	}
 }
 
 export var appActions = new AppActions();

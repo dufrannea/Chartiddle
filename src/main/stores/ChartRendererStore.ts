@@ -42,7 +42,7 @@ class ChartRendererStore extends EventEmitter {
 }
 
 export var chartRendererStore = new ChartRendererStore();
-let getQueryResult = () => {
+let updateQueryResult = () => {
 	let query : IQuery = {
 		Rows : selectedRows.map(x=>{
 			return {
@@ -60,30 +60,34 @@ let getQueryResult = () => {
 		.Query(query, dataSourceId)
 		.then((result)=>{
 			queryResult = result;
+			chartRendererStore.fireEvent(CHANGE);
 		});
 }
 chartRendererStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
 		case AppConstants.DROP_COLUMN:
 			selectedColumns.push(action.updateChartRendererAction.addedColumn);
-			getQueryResult()
-				.then(()=>{
-					chartRendererStore.fireEvent(CHANGE);
-				})
+			updateQueryResult()
 			break;
 		case AppConstants.DROP_ROW:
 			selectedRows.push(action.updateChartRendererAction.addedRow);
-			getQueryResult()
-				.then(()=>{
-					chartRendererStore.fireEvent(CHANGE);
-				})
+			updateQueryResult()
 			break;	
 		case AppConstants.DROP_MEASURE:
 			selectedMeasures.push(action.updateChartRendererAction.addedMeasure);
-			getQueryResult()
-				.then(()=>{
-					chartRendererStore.fireEvent(CHANGE);
-				})
+			updateQueryResult()
+			break;
+		case AppConstants.REMOVE_ROW:
+			selectedRows =selectedRows.filter(x => x !=  action.updateChartRendererAction.addedRow)
+			updateQueryResult()
+			break;
+		case AppConstants.REMOVE_COLUMN:
+			selectedColumns =selectedColumns.filter(x => x !=  action.updateChartRendererAction.addedColumn)
+			updateQueryResult()
+			break;
+		case AppConstants.REMOVE_MEASURE:
+			selectedMeasures =selectedMeasures.filter(x => x !=  action.updateChartRendererAction.addedMeasure)
+			updateQueryResult()
 			break;
 		case AppConstants.SELECT_DATASOURCE:
 			Dispatcher.waitFor([ApplicationStore.callBackId]);

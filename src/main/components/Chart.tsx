@@ -91,7 +91,7 @@ export class Chart extends React.Component<IChartParams,IChartState> {
 	}
 	componentDidMount(){
 		ChartRendererStore.registerChangeListener(this._onChange.bind(this));
-		this.updateChart();
+		// this.updateChart();
 		
 	}
 	updateChart(){

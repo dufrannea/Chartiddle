@@ -5,7 +5,10 @@ export enum AppConstants {
 	PREVIEW_READY,
 	DROP_COLUMN,
 	DROP_ROW,
-	DROP_MEASURE
+	DROP_MEASURE,
+	REMOVE_COLUMN,
+	REMOVE_ROW,
+	REMOVE_MEASURE
 }
 
 export enum ApplicationTabs {

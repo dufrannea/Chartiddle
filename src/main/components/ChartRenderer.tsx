@@ -35,18 +35,30 @@ class ChartConfigurationZone extends React.Component<IChartConfigurationZonePara
 	__handleMeasureDrop(colName : string){
 		Actions.dropMeasure(colName);
 	}
+	__handleColumnRemove(colName : string){
+		Actions.removeColumn(colName);
+	}
+	__handleRowRemove(colName : string){
+		Actions.removeRow(colName);
+	}
+	__handleMeasureRemove(colName : string){
+		Actions.removeMeasure(colName);
+	}
 	render() {
 		return (
 			<div className="row">
 				<ChartDropZone 
 					items={this.state.columns}
-					handleDrop={this.__handleColumnDrop}/>
+					handleDrop={this.__handleColumnDrop}
+					handleRemove={this.__handleColumnRemove}/>
 				<ChartDropZone 
 					items={this.state.rows}
-					handleDrop={this.__handleRowDrop}/>
+					handleDrop={this.__handleRowDrop}
+					handleRemove={this.__handleRowRemove}/>
 				<ChartDropZone 
 					items={this.state.measures}
-					handleDrop={this.__handleMeasureDrop}/>
+					handleDrop={this.__handleMeasureDrop}
+					handleRemove={this.__handleMeasureRemove}/>
 			</div>
 		);
 	}
@@ -65,6 +77,7 @@ class ChartConfigurationZone extends React.Component<IChartConfigurationZonePara
 interface IChartDropZoneParams {
 	items : string[];
 	handleDrop : (data : string) => void;
+	handleRemove : (data : string) => void;
 }
 interface IChartDropZoneState {
 }
@@ -92,11 +105,14 @@ class ChartDropZone extends React.Component<IChartDropZoneParams,IChartDropZoneS
 	__handleDrop(data : string){
 		this.props.handleDrop(data);
 	}
+	__handleRemove(data : string){
+		this.props.handleRemove(data);
+	}
 	render() {
 		return (
 			<div ref="dropzone" className="chart-drop-zone col-md-4" style={{'min-height':'200px'}}>
 				<ul className="list-group">
-					{this.props.items.map(x=> <li className="list-group-item" ref="x">{x}</li>)}
+					{this.props.items.map(x=> <li className="list-group-item" ref="x"><span className="glyphicon glyphicon-remove" onClick={()=> this.__handleRemove.bind(this)(x)}></span>{" " + x}</li>)}
 				</ul>
 			</div>
 		);

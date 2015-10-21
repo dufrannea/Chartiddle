@@ -45,6 +45,11 @@ gulp.task('build-static', ['build-bootstrap'], function(){
 		.pipe(gulp.dest('build'));
 });
 
+gulp.task('build-fonts', ()=>{
+    return gulp.src('bower_components/bootstrap/dist/fonts/*')
+                .pipe(gulp.dest('build/main/fonts'))
+})
+
 /**
  * build sass
  */
@@ -130,7 +135,7 @@ gulp.task('release', ['release-html', 'release-css'], function(){
 /**
  * build for dev
  */
-gulp.task('build', ["build-typescript","build-static", "build-sass"]);
+gulp.task('build', ["build-typescript","build-static", "build-sass", "build-fonts"]);
 
 /**
  * Rebuild : clean, build static and typescript files,

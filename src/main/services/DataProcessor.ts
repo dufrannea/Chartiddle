@@ -95,7 +95,7 @@ export class DataProcessor {
                 });
     
                 // filter by value
-                allColumns = allColumns.filter(function(x){return x.val < 500});
+                // allColumns = allColumns.filter(function(x){return x.val < 500});
     
                 allColumns = allColumns.map(function(x){return x.name});
     
