@@ -89,7 +89,7 @@ interface IDataProvider {
 interface IQuery {
     Rows: IRow[];
     Columns: IColumn[];
-    Measures? : IColumn[];
+    Measures? : IMeasureDef[];
     drilldown?: string[];
     top?: number;
 }
@@ -108,6 +108,13 @@ interface IRow {
  */
 interface IColumn {
     columns: string[];
+}
+
+interface IMeasureDef {
+    column : string;
+    // type can be one of
+    // count, sum, min, max
+    type : string;
 }
 
 /**

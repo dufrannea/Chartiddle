@@ -5,13 +5,41 @@ import {Container} from '../infrastructure/Container'
 
 interface IColumnData {
     // all the rows
-    rows : Map<string, any>;
+    rows : Map<string, IRowData>;
     
     // account for all the measures you
     // want aggregated
-    [measureKey : string] : any;
+    aggregates : Map<string, number>;
 }
 
+interface IRowData {
+    // account for all the measures you
+    // want aggregated
+    aggregates : Map<string, number>;
+}
+
+const COUNT_MEASURE = "count";
+let sumAggretator = (colName)=> (currValue, row) => {
+        console.info(`in sum ${colName}`)
+        console.info(currValue,row);
+        return (currValue || 0) + parseFloat(row[colName])
+}
+
+let minAggregator = (colName)=> (currValue, row)=>{
+        if (currValue){
+            return Math.min(currValue, parseFloat(row[colName]))
+        }
+        return parseFloat(row[colName]);
+}
+
+let maxAggregator = (colName)=> (currValue, row)=>{
+        if (currValue){
+            return Math.max(currValue, parseFloat(row[colName]))
+        }
+        return parseFloat(row[colName]);
+}
+let countAggregator = ()=>(currValue, row)=> (currValue || 0)+1;
+        
 export class DataProcessor {
     /**
      * Responsible for parsing
@@ -22,18 +50,10 @@ export class DataProcessor {
     
     public Query(query: IQuery, dataProvider : IDataProvider): Promise<IQueryResult>{
         var filter;
-        // if (query.drilldown){
-        //     filter = (function(column, value){
-        //         return function(data){
-        //             return data[column] === value;
-        //         }
-        //     })("pos_seq", query.drilldown[0]);
-        //     query.Columns[0] = { columns: ['t1_tok_min'] };
-        // }
-
         let res = new Map<string,IColumnData>(),
             // all the rows we encounter
-            // across lines.
+            // across lines,some columns might not have
+            // a value for each row!
             rowsSet = new Set<string>();
 
         let rowStructure    = this.TupleStructure(query.Rows),
@@ -45,7 +65,32 @@ export class DataProcessor {
                 }
                 return value;
         }
+        let measures = query.Measures || []
+    
+        let aggregators = measures.map(({column=null, type=null})=>{
+            switch (type){
+                case "count":
+                    return {
+                        func : countAggregator(),
+                        type : "count"
+                    };
+                    break;
+                case "sum":
+                    return {
+                        func : sumAggretator(column),
+                        type : "sum"
+                    }
+                    break;
+            }
+        });
         
+        if (aggregators.length == 0){
+            aggregators.push({
+                func : countAggregator(),
+                type : "count"
+            })
+        }
+
         return new Promise<IQueryResult>((resolve,reject)=>{
             
             // for each page of data.
@@ -67,77 +112,73 @@ export class DataProcessor {
                     rowKey = rowStructure
                                 .map(x=>formatKey(factRow[x]))
                                 .reduce((p,v)=>p+v,"");
-
+                    
                     rowsSet.add(rowKey);
                     
+                    // this hierarchical structure is probably not the right way of 
+                    // doing it.
+                    // consider using a single map, with a key that would be a tuple key.
+                    // [a]  [b]  [m1]  -> 10
+                    // [a]  [c]  [m2]  -> 11
+                    // [a]  [m2]  -> 100
+                    // this would be easily stored in an indexeddb with indexes!
                     if (!res.has(colKey)){
-                        let newRowsValue = { 
-                            count : 1,
-                            rows : new Map<string,any>() 
+                        let colData : IColumnData = { 
+                            rows : new Map<string,any>(), 
+                            aggregates : new Map<string,number>()
                         };
-                        newRowsValue.rows.set(rowKey,{
-                            count : 1
+                        colData.rows.set(rowKey,{
+                            aggregates : new Map<string,number>()
                         }); 
-                        res.set(colKey, newRowsValue);
+                        aggregators.forEach(a=>{
+                            colData.rows.get(rowKey).aggregates.set(a.type,a.func(null, factRow));
+                            colData.aggregates.set(a.type,a.func(null, factRow));
+                        })
+                        res.set(colKey, colData);
                     } else {
                         let colData = res.get(colKey);
                         if (!colData.rows.has(rowKey)){
                             colData.rows.set(rowKey,{
-                                count : 0
-                            });
-                        } 
-                        colData.rows.get(rowKey).count += 1 ;
-                        colData['count'] += 1;
+                                aggregates : new Map<string,number>()
+                            }); 
+                        }
+                        aggregators.forEach(a=>{
+                            let newRowValue = a.func(colData.rows.get(rowKey).aggregates.get(a.type), factRow);
+                            colData.rows.get(rowKey).aggregates.set(a.type,newRowValue);
+                            let newColValue = a.func(colData.aggregates.get(a.type), factRow)
+                            colData.aggregates.set(a.type, newColValue);
+                        })
                     }
                 })
             },
             () => {
-                let allColumns  : any[] = []
-                let allRows : string[] = [];
+                let allColumns  : any[] = [],
+                    allRows : string[] = [];
+                    
                 res.forEach((value, index, o)=>{
-                    allColumns.push({ name : index, val : value['count']})
+                    allColumns.push(index);
                 })
-                // for (var j in res){
-                //     
-                // }
-                allColumns.sort((x,y) => {
-                    return y.val - x.val;
-                });
-    
-                // filter by value
-                // allColumns = allColumns.filter(function(x){return x.val < 500});
-    
-                let filteredColumns : string[] = allColumns.map(x =>  x.name);
-    
-                // var unfiltered = allColumns;
-                // allColumns = []
-                // 
-                // // here filter the number of results. Math.min(unfiltered.length, 10)
-                // for (var i = 0; i< unfiltered.length;i++){
-                //     allColumns.push(unfiltered[i]);
-                // }
 
                 rowsSet.forEach(rowName=>allRows.push(rowName))
     
                 let values = [];
-                
                 for (let rowKey of allRows) {
-                    let rowList = [];	
-                    for (let colKey of filteredColumns){	
+                    let rowValuesList = [];	
+                    for (let colKey of allColumns){	
                         let currRow  = res.get(colKey);
                         
                         if (currRow.rows.has(rowKey)){
-                            rowList.push(currRow.rows.get(rowKey).count);
+                            rowValuesList.push(currRow.rows.get(rowKey).aggregates.get(aggregators[0].type));
                         } else {
-                            rowList.push(0);
+                            rowValuesList.push(0); // is null
                         }
                     }
-                    values.push(rowList);
+                    values.push(rowValuesList);
                 }
                 
                 resolve({
                     Rows : allRows,
-                    Columns : filteredColumns,
+                    Columns : allColumns,
                     Values : values
                 });
             })
