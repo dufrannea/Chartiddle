@@ -45,15 +45,16 @@ let GenerateAllTuples = (tuple, ts : any[])=>{
 	let start = ts.map(x=>0);
 	let canupdate = true;
 	let res = [];
-	res.push(start.map((x,i)=>{
-		return x===0 ? tuple[i] : "All"
-	}));
+	let nt1={};
+	start.forEach((x,i)=>{
+		nt1[ts[i]] = ( x===0 ? tuple[ts[i]] : "All")
+	})
+	res.push(nt1);
 	
-	while(canupdate){
+	while (canupdate){
 		let i = 0;
 		while (start[i] != 0 && i < start.length){
 			i++;
-			console.info("search")
 		}
 		
 		if (i === start.length){
@@ -65,47 +66,51 @@ let GenerateAllTuples = (tuple, ts : any[])=>{
 		for (let j = 0; j < i ; j++){
 			start[j]=0;
 		}
-		let arr  = start.map((x,i)=>{
-			return x===0 ? tuple[i] : "All"
+		var nt={};
+		start.forEach((x,i)=>{
+			nt[ts[i]] = ( x===0 ? tuple[ts[i]] : "All")
 		})
-		console.info(arr);
-		res.push(arr);
+		res.push(nt);
 	}
 	return null;
 }
 
-let process =  (hierarchies : IHierarchy[], measures : IMeasureDef[]) : Promise<void> => {
+let process =  (hierarchies : IHierarchy[], measures : IMeasureDef[]) : Promise<any> => {
 	let ts = TupleStructure(hierarchies);
 	let simpleFacts = new Map<string, any>();
 	
-	return new Promise<void>((resolve, reject)=>{
-		console.info("tests********************")
+	return new Promise<any>((resolve, reject)=>{
 		dataSource.foreach((line)=>{
-			let key = GetUniqueName(line, ts);
-			
-			// for (let transform of GenerateAllTuples())
-			if (simpleFacts.has(key)){
+			for (let tuple of GenerateAllTuples(line,ts)){
+				// now here tuple has the wrong format.
 				
-			} else {
-				
+				let key = GetUniqueName(tuple, ts);
+				if (simpleFacts.has(key)){
+					simpleFacts.set(key,simpleFacts.get(key) +1);					
+				} else {
+					simpleFacts.set(key,0);
+				}
 			}
 		},()=>{
-			console.info("****************************DONE")
-			resolve();			
+			simpleFacts.forEach((a,b)=>{
+				if (b.indexOf("All")!=-1){
+					console.info(a,b);		
+				}
+			})
+			resolve(simpleFacts);			
 		});
 	})
 } 
 
 describe("processing tests",()=>{
-	it("should load data",()=>{
-		// process([{
-		// 	name : "h1",
-		// 	columns : ["pos_seq","t1_tok_min"]
-		// }],null).then(done)
-		let allTuples = GenerateAllTuples(["a","b","c"],[1,1,1]);
-		console.info(allTuples)
-		for (let t of allTuples ){
-			console.info(t)
-		};
+	it("should load data",(done)=>{
+		process([{
+			name : "h1",
+			columns : ["pos_seq","t1_tok_min"]
+		}],null)
+		.then((res)=>{
+			console.info("**************DONE")
+			done()
+		});
 	})
 })
