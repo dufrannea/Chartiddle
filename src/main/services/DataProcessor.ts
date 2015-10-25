@@ -3,6 +3,15 @@
 
 import {Container} from '../infrastructure/Container'
 
+interface IColumnData {
+    // all the rows
+    rows : Map<string, any>;
+    
+    // account for all the measures you
+    // want aggregated
+    [measureKey : string] : any;
+}
+
 export class DataProcessor {
     /**
      * Responsible for parsing
@@ -22,22 +31,21 @@ export class DataProcessor {
         //     query.Columns[0] = { columns: ['t1_tok_min'] };
         // }
 
-        var res = {},
-            rowsMap = {},
-            allRows: string[] = []
+        let res = new Map<string,IColumnData>(),
+            rowsSet = new Set<string>();
 
-        var rowStructure = this.TupleStructure(query.Rows);
-        var columnStructure = this.TupleStructure(query.Columns);
+        let rowStructure = this.TupleStructure(query.Rows);
+        let columnStructure = this.TupleStructure(query.Columns);
         return new Promise<IQueryResult>((resolve,reject)=>{
             dataProvider.foreach((dataLines : { [key : string] : any }[]) => {
                 dataLines.forEach(data => {
-                    var colKey  = "";
-                    var rowKey = "";
-                    var currRowData = {};
-                    var currColData = {};
-                    var currData = data;
+                    let colKey  = "";
+                    let rowKey = "";
+                    let currRowData = {};
+                    let currColData = {};
+                    let factRow = data;
         
-                    if ( filter && !filter(currData)){
+                    if ( filter && !filter(factRow)){
                         return;
                     }
         
@@ -48,89 +56,100 @@ export class DataProcessor {
                         return value;
                     }
         
-                    // compute key
-                    for (var keyIndex in columnStructure) {
-                        var localKey = formatKey(currData[columnStructure[keyIndex]]);
+                    // compute a column key 
+                    // as [2015].[march]
+                    for (let colName of columnStructure) {
+                        let localKey = formatKey(factRow[colName]);
                         colKey += localKey;
-                        currColData[columnStructure[keyIndex]] = localKey;
-                    }
-        
-                    for (var keyIndex in rowStructure) {
-                        var localKey = formatKey(currData[rowStructure[keyIndex]]);
-                        rowKey += localKey;
-                        currRowData[rowStructure[keyIndex]] = localKey;
+                        currColData[colName] = localKey;
                     }
                     
-                    if (!rowsMap.hasOwnProperty(rowKey)){
-                        rowsMap[rowKey] = undefined;
+                    // compute a row key 
+                    // as [2015].[march]
+                    for (let rowName of rowStructure) {
+                        let localKey = formatKey(factRow[rowName]);
+                        rowKey += localKey;
+                        currRowData[rowName] = localKey;
                     }
-        
-                    if (!res.hasOwnProperty(colKey)){
-                        res[colKey] = { member : currColData, count : 1, rows : {} }
-                        res[colKey].rows[rowKey] = {
+                    
+                    rowsSet.add(rowKey);
+                    
+                    if (!res.has(colKey)){
+                        let newRowsValue = { 
+                            member : currColData, 
+                            count : 1, 
+                            rows : new Map<string,any>() 
+                        };
+                        newRowsValue.rows.set(rowKey,{
                             member : currRowData,
                             count : 1
-                        } 
+                        }); 
+                        res.set(colKey, newRowsValue);
                     } else {
-                        if (!res[colKey].rows.hasOwnProperty(rowKey)){
-                            res[colKey].rows[rowKey] = {
+                        if (!res.get(colKey).rows.has(rowKey)){
+                            res.get(colKey).rows.set(rowKey,{
                                 member : currRowData,
                                 count : 1
-                            } 	
-                            res[colKey].count += 1;
+                            });
+                            res.get(colKey)['count'] += 1;
                         } else {
-                            res[colKey].rows[rowKey].count += 1 ;
-                            res[colKey].count += 1;
+                            res.get(colKey).rows.get(rowKey).count += 1 ;
+                            res.get(colKey)['count'] += 1;
                         }
                     }
                 })
             },
             () => {
-                var allColumns  : any[] = []
-                for (var j in res){
-                    allColumns.push({ name : j, val : res[j].count })
-                }
-                allColumns.sort(function(x,y){
+                let allColumns  : any[] = []
+                let allRows : string[] = [];
+                res.forEach((value, index, o)=>{
+                    allColumns.push({ name : index, val : value['count']})
+                })
+                // for (var j in res){
+                //     
+                // }
+                allColumns.sort((x,y) => {
                     return y.val - x.val;
                 });
+                
+                console.info(allColumns)
     
                 // filter by value
                 // allColumns = allColumns.filter(function(x){return x.val < 500});
     
-                allColumns = allColumns.map(function(x){return x.name});
+                let filteredColumns : string[]= allColumns.map(x =>  x.name);
     
-                var unfiltered = allColumns;
-                allColumns = []
+                // var unfiltered = allColumns;
+                // allColumns = []
+                // 
+                // // here filter the number of results. Math.min(unfiltered.length, 10)
+                // for (var i = 0; i< unfiltered.length;i++){
+                //     allColumns.push(unfiltered[i]);
+                // }
+
+                rowsSet.forEach(rowName=>allRows.push(rowName))
+    
+                let values = [];
                 
-                // here filter the number of results. Math.min(unfiltered.length, 10)
-                for (var i = 0; i< unfiltered.length;i++){
-                    allColumns.push(unfiltered[i]);
-                }
-    
-    
-                for (var member in rowsMap) {
-                    allRows.push(member);
-                }
-    
-                var values = [];
-    
-                
-                for (var rowKeyIndex in allRows) {
-                    var rowKey = allRows[rowKeyIndex];
-                    var rowList = [];	
-                    for (var colKeyIndex in allColumns){	
-                        var colKey = allColumns[colKeyIndex]
-                        var currRow  = res[colKey];
+                for (let rowKey of allRows) {
+                    let rowList = [];	
+                    for (let colKey of filteredColumns){	
+                        let  currRow  = res.get(colKey);
                         
-                        if (currRow.rows.hasOwnProperty(rowKey)){
-                            rowList.push(currRow.rows[rowKey].count);
+                        if (currRow.rows.has(rowKey)){
+                            rowList.push(currRow.rows.get(rowKey).count);
                         } else {
                             rowList.push(0);
                         }
                     }
                     values.push(rowList);
                 }
-                resolve({Rows : allRows, Columns : allColumns, Values : values});
+                
+                resolve({
+                    Rows : allRows,
+                    Columns : filteredColumns,
+                    Values : values
+                });
             })
         })
     }
@@ -142,7 +161,7 @@ export class DataProcessor {
      * are available.
      * NB: should do all columns in only one go.
      */
-    private computeHierarchies(h, data){
+    computeHierarchies(h, data){
         var computedHierarchies = {}
 
         data.parse(function(data){
@@ -188,21 +207,17 @@ export class DataProcessor {
      * Computes a unique tuple structure from 
      * hierarchies.
      */
-    private TupleStructure(hierarchies){
-        var struct = {}
-        hierarchies.forEach(function(h){
-                var cols = h.columns;
-                cols.forEach(function(colName){
-                    if (!struct.hasOwnProperty(colName)){
-                        struct[colName] = undefined;
-                    }
+    TupleStructure(hierarchies) : string[] {
+        var struct = new Set<string>();
+        hierarchies.forEach(hierarchy => {
+                var cols = hierarchy.columns;
+                cols.forEach(colName=>{
+                    struct.add(colName);
                 });
             }
         )
         var res = []
-        for (var j in struct){
-            res.push(j);
-        }
+        struct.forEach(colName => res.push(colName))
         return res;
     }
 
@@ -210,7 +225,7 @@ export class DataProcessor {
      * Builds a uniquename
      * for a tuple.
      */
-    private GetUniqueName(tuple, ts){
+    GetUniqueName(tuple, ts){
         var name ="";
         for (var i = 0; i< ts.length; i++){
             if (i!=0){
@@ -231,7 +246,7 @@ export class DataProcessor {
      * Or should it?
      * Yeah well, it should not.
      */
-    private Compute(hierarchies, data){
+    Compute(hierarchies, data){
 
         // compute the structure of a tuple 
         // for all representations.
