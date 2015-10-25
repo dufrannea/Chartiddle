@@ -32,70 +32,62 @@ export class DataProcessor {
         // }
 
         let res = new Map<string,IColumnData>(),
+            // all the rows we encounter
+            // across lines.
             rowsSet = new Set<string>();
 
-        let rowStructure = this.TupleStructure(query.Rows);
-        let columnStructure = this.TupleStructure(query.Columns);
-        return new Promise<IQueryResult>((resolve,reject)=>{
-            dataProvider.foreach((dataLines : { [key : string] : any }[]) => {
-                dataLines.forEach(data => {
-                    let colKey  = "";
-                    let rowKey = "";
-                    let currRowData = {};
-                    let currColData = {};
-                    let factRow = data;
+        let rowStructure    = this.TupleStructure(query.Rows),
+            columnStructure = this.TupleStructure(query.Columns);
         
+        let formatKey = (value) => {
+                if (!value || value === "") {
+                    return "UNKNOWN";
+                }
+                return value;
+        }
+        
+        return new Promise<IQueryResult>((resolve,reject)=>{
+            
+            // for each page of data.
+            dataProvider.foreach((dataLines : { [key : string] : any }[]) => {
+                
+                // for each line in the page
+                // of data.
+                dataLines.forEach(factRow => {
+                    let colKey : string = "";
+                    let rowKey : string = "";
                     if ( filter && !filter(factRow)){
                         return;
                     }
-        
-                    let formatKey = (value) => {
-                        if (!value || value === "") {
-                            return "UNKNOWN";
-                        }
-                        return value;
-                    }
-        
-                    // compute a column key 
-                    // as [2015].[march]
-                    for (let colName of columnStructure) {
-                        let localKey = formatKey(factRow[colName]);
-                        colKey += localKey;
-                        currColData[colName] = localKey;
-                    }
-                    
-                    // compute a row key 
-                    // as [2015].[march]
-                    for (let rowName of rowStructure) {
-                        let localKey = formatKey(factRow[rowName]);
-                        rowKey += localKey;
-                        currRowData[rowName] = localKey;
-                    }
-                    
+
+                    // compute keys for rows and columns
+                    colKey = columnStructure
+                                .map(x=>formatKey(factRow[x]))
+                                .reduce((p,v)=>p+v,"");
+                    rowKey = rowStructure
+                                .map(x=>formatKey(factRow[x]))
+                                .reduce((p,v)=>p+v,"");
+
                     rowsSet.add(rowKey);
                     
                     if (!res.has(colKey)){
                         let newRowsValue = { 
-                            member : currColData, 
-                            count : 1, 
+                            count : 1,
                             rows : new Map<string,any>() 
                         };
                         newRowsValue.rows.set(rowKey,{
-                            member : currRowData,
                             count : 1
                         }); 
                         res.set(colKey, newRowsValue);
                     } else {
-                        if (!res.get(colKey).rows.has(rowKey)){
-                            res.get(colKey).rows.set(rowKey,{
-                                member : currRowData,
-                                count : 1
+                        let colData = res.get(colKey);
+                        if (!colData.rows.has(rowKey)){
+                            colData.rows.set(rowKey,{
+                                count : 0
                             });
-                            res.get(colKey)['count'] += 1;
-                        } else {
-                            res.get(colKey).rows.get(rowKey).count += 1 ;
-                            res.get(colKey)['count'] += 1;
-                        }
+                        } 
+                        colData.rows.get(rowKey).count += 1 ;
+                        colData['count'] += 1;
                     }
                 })
             },
@@ -111,13 +103,11 @@ export class DataProcessor {
                 allColumns.sort((x,y) => {
                     return y.val - x.val;
                 });
-                
-                console.info(allColumns)
     
                 // filter by value
                 // allColumns = allColumns.filter(function(x){return x.val < 500});
     
-                let filteredColumns : string[]= allColumns.map(x =>  x.name);
+                let filteredColumns : string[] = allColumns.map(x =>  x.name);
     
                 // var unfiltered = allColumns;
                 // allColumns = []
@@ -134,7 +124,7 @@ export class DataProcessor {
                 for (let rowKey of allRows) {
                     let rowList = [];	
                     for (let colKey of filteredColumns){	
-                        let  currRow  = res.get(colKey);
+                        let currRow  = res.get(colKey);
                         
                         if (currRow.rows.has(rowKey)){
                             rowList.push(currRow.rows.get(rowKey).count);
@@ -206,18 +196,15 @@ export class DataProcessor {
     /**
      * Computes a unique tuple structure from 
      * hierarchies.
+     * TODO : Does order matter here?
      */
-    TupleStructure(hierarchies) : string[] {
-        var struct = new Set<string>();
-        hierarchies.forEach(hierarchy => {
-                var cols = hierarchy.columns;
-                cols.forEach(colName=>{
-                    struct.add(colName);
-                });
-            }
-        )
-        var res = []
-        struct.forEach(colName => res.push(colName))
+    TupleStructure(hierarchies : IRow[] | IColumn[]) : string[] {
+        let res =  [];
+        new Set<string>(
+            hierarchies
+                .map(h=>h.columns)
+                .reduce((p,c)=>p.concat(c)))
+                .forEach(x=>res.push(x));
         return res;
     }
 
