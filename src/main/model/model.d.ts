@@ -121,9 +121,18 @@ interface IMeasureDef {
  * Query execution result.
  */
 interface IQueryResult {
-    Rows: string[];
-    Columns: string[];
+    Rows: ITupleInfo[];
+    Columns: ITupleInfo[];
     Values: number[][];
+}
+
+interface ITupleInfo{
+    members : IMemberInfo[]
+}
+
+interface IMemberInfo {
+    id : string;
+    name : string;
 }
 
 declare module "highcharts" {

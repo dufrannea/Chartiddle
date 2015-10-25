@@ -81,6 +81,12 @@ export class DataProcessor {
                         type : "sum"
                     }
                     break;
+                case "min":
+                    return {
+                        func : minAggregator(column),
+                        type : "min"
+                    }
+                    break;
             }
         });
         
@@ -164,21 +170,48 @@ export class DataProcessor {
                 let values = [];
                 for (let rowKey of allRows) {
                     let rowValuesList = [];	
-                    for (let colKey of allColumns){	
-                        let currRow  = res.get(colKey);
-                        
-                        if (currRow.rows.has(rowKey)){
-                            rowValuesList.push(currRow.rows.get(rowKey).aggregates.get(aggregators[0].type));
-                        } else {
-                            rowValuesList.push(0); // is null
+                    for (let agg of aggregators){
+                        for (let colKey of allColumns){	
+                            let currRow  = res.get(colKey);
+                            
+                            if (currRow.rows.has(rowKey)){
+                                rowValuesList.push(currRow.rows.get(rowKey).aggregates.get(agg.type));
+                            } else {
+                                rowValuesList.push(0); // is null
+                            }
                         }
                     }
                     values.push(rowValuesList);
                 }
                 
+                let columnMembers : ITupleInfo[] = aggregators.map(x => {
+                    return allColumns.map(colName => {
+                        return { 
+                            members : [
+                                {
+                                    name : colName,
+                                    id: colName
+                                },
+                                {
+                                    name : `${x.type}`,
+                                    id : `${x.type}`
+                                } 
+                            ]
+                        }
+                    });
+                }).reduce((p,c)=>p.concat(c))
+                
+                let rowMembers : ITupleInfo[] = allRows.map(x=>{
+                    return {
+                        members : [{
+                            name : x,
+                            id : x
+                        }]
+                    }
+                });
                 resolve({
-                    Rows : allRows,
-                    Columns : allColumns,
+                    Columns : columnMembers,
+                    Rows : rowMembers,
                     Values : values
                 });
             })

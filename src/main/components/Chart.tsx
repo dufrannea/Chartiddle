@@ -50,11 +50,15 @@ let buildConfig = (result : IQueryResult) =>{
 		// should pick the name of the columns here...
 		var colIndex = 0;
 		var serie = vals[i].map(function(x){ 
-			var colName = result.Columns[colIndex];
+			var columnTuple = result.Columns[colIndex];
 			colIndex+=1;
-			return { name:colName , y : x, drilldown : true }
+			return { 
+				name:columnTuple.members.map(x=>x.name).reduce((p,c)=>p+","+c) ,
+				y : x,
+				drilldown : true 
+			}
 		});
-		var name = result.Rows[i];
+		var name = result.Rows[i].members.map(x=>x.name).reduce((p,c)=>p+","+c);
 		series.push({
 			name : name,
 			data : serie
