@@ -78,6 +78,16 @@ export class FileRepository {
 		return new Promise<void>((resolve,reject)=>{
 			let version : number;
 			let transaction : IDBTransaction= undefined;
+			let transactionId : number = 0;
+			
+			let tryResolve = (id)=>{
+				if (id == transactionId) {
+					resolve()
+					return true;
+				} 
+				return false;
+			}
+			
 			this.openDb().then((db)=>{
 				let version = parseInt(db.version)+1;
 				db.close();
@@ -93,14 +103,28 @@ export class FileRepository {
 						console.info("*******creating a new transaction")
 						transaction = db.transaction([storeName], "readwrite");
 						transaction.oncomplete = () => {
-							resolve();
+							tryResolve(transactionId);
 							console.info('transaction complete')
 						};
 					} else {
 						console.info("reusing transation")
 					}
-					let store = transaction.objectStore(storeName);
-					store.add(data);
+					try { 
+						transaction
+							.objectStore(storeName)
+							.add(data);
+					} catch (e){
+						console.error("reuse failed");
+						transactionId+=1;
+						transaction = db.transaction([storeName], "readwrite");
+						transaction.oncomplete = () => {
+							tryResolve(transactionId);
+							console.info('transaction complete')
+						};
+						transaction
+							.objectStore(storeName)
+							.add(data);
+					}
 				}, () => {
 					console.info("no more data");
 				});
