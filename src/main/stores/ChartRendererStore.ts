@@ -15,7 +15,7 @@ let currentChartId = undefined;
 let previewData = [];
 let selectedRows = [];
 let selectedColumns = [];
-let selectedMeasures = [];
+let selectedMeasures : string[] = [];
 let queryResult : IQueryResult = null;
 let dataSourceId : number = null;
 let queryIsComputing : boolean = false;
@@ -68,6 +68,15 @@ let updateQueryResult = () => {
 				columns : [x]
 			}
 		}),
+		Measures : [{
+				column : selectedMeasures[0],
+				type : "sum"
+			}]
+	}
+	
+	if (!selectedMeasures || selectedMeasures.length === 0){
+		fireChange();
+		return
 	}
 	queryIsComputing  = true;
 	// fire change before

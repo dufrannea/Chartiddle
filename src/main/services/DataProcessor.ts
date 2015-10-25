@@ -87,6 +87,12 @@ export class DataProcessor {
                         type : "min"
                     }
                     break;
+                case "max":
+                    return {
+                        func : maxAggregator(column),
+                        type : "max"
+                    }
+                    break;
             }
         });
         
@@ -277,7 +283,7 @@ export class DataProcessor {
         new Set<string>(
             hierarchies
                 .map(h=>h.columns)
-                .reduce((p,c)=>p.concat(c)))
+                .reduce((p,c)=>p.concat(c),[]))
                 .forEach(x=>res.push(x));
         return res;
     }
