@@ -20,8 +20,6 @@ interface IRowData {
 
 const COUNT_MEASURE = "count";
 let sumAggretator = (colName)=> (currValue, row) => {
-        console.info(`in sum ${colName}`)
-        console.info(currValue,row);
         return (currValue || 0) + parseFloat(row[colName])
 }
 

@@ -106,8 +106,6 @@ export class FileRepository {
 							tryResolve(transactionId);
 							console.info('transaction complete')
 						};
-					} else {
-						console.info("reusing transation")
 					}
 					try { 
 						transaction
