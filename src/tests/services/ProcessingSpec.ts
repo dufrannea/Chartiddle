@@ -2,7 +2,9 @@
 /// <reference path="../../main/model/model.d.ts"/>
 
 import {dataSource} from './testFile'
+// let fs = require('fs')
 
+// fs.read('')
 interface IProcessingItem {
 	// unique key of fact
 	key : string;
@@ -88,14 +90,14 @@ let process =  (hierarchies : IHierarchy[], measures : IMeasureDef[]) : Promise<
 				if (simpleFacts.has(key)){
 					simpleFacts.set(key,simpleFacts.get(key) +1);					
 				} else {
-					simpleFacts.set(key,0);
+					simpleFacts.set(key,1);
 				}
 			}
 		},()=>{
 			simpleFacts.forEach((a,b)=>{
-				if (b.indexOf("All")!=-1){
-					console.info(a,b);		
-				}
+				// if (b.indexOf("All")!=-1){
+				// 	console.info(a,b);		
+				// }
 			})
 			resolve(simpleFacts);			
 		});
@@ -104,13 +106,13 @@ let process =  (hierarchies : IHierarchy[], measures : IMeasureDef[]) : Promise<
 
 describe("processing tests",()=>{
 	it("should load data",(done)=>{
-		process([{
-			name : "h1",
+	process([{
+		name : "h1",
 			columns : ["pos_seq","t1_tok_min"]
-		}],null)
-		.then((res)=>{
-			console.info("**************DONE")
+	}],null)
+	.then((res)=>{
+		console.info("**************DONE")
 			done()
-		});
+	});
 	})
 })
