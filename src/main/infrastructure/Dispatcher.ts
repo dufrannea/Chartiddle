@@ -22,6 +22,8 @@ export interface IUpdateChartRendererModelAction {
 	addedColumn? : string;
 	addedRow?: string;
 	addedMeasure?:string;
+	updatedMeasure? : IMeasure;
+	queryOptions? : IQueryOptions;
 }
 
 export interface IActionType {

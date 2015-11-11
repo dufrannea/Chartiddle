@@ -72,6 +72,7 @@ interface IHierarchy {
 }
 
 interface IMeasure {
+    key : string;
     name: string;
     type: string;
 }
@@ -92,6 +93,15 @@ interface IQuery {
     Measures? : IMeasureDef[];
     drilldown?: string[];
     top?: number;
+}
+
+interface IQueryOptions {
+    // sort results 
+    sort : boolean;
+    // sort in ascending/descending
+    sortOrder : number;
+    // limit to n results
+    limitTo: number;
 }
 
 /**

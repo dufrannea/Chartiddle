@@ -34,9 +34,13 @@ export class FileService {
 	 * @param queryModel {IQuery} : the query.
 	 * @param sourceId {number} : the unique id of the source to query.
 	 */
-	public Query(queryModel : IQuery, sourceId : number){
+	public Query(
+		queryModel : IQuery, 
+		sourceId : number, 
+		queryOptions? : IQueryOptions){
+			
 		let source = this._fileRepo.getAsDataStream(sourceId);
-		return this._processor.Query(queryModel, source);	
+		return this._processor.Query(queryModel, source, queryOptions);	
 	}
 	
 	/**

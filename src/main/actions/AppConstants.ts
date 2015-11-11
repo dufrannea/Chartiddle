@@ -21,7 +21,9 @@ export enum AppConstants {
 	DROP_MEASURE,
 	REMOVE_COLUMN,
 	REMOVE_ROW,
-	REMOVE_MEASURE
+	REMOVE_MEASURE,
+	UPDATE_MEASURE,
+	UPDATE_QUERY_OPTIONS
 }
 
 export enum ApplicationTabs {

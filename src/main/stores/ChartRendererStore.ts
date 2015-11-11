@@ -13,13 +13,18 @@ const CHANGE = "CHANGE";
 
 let currentChartId = undefined;
 let previewData = [];
-let selectedRows = [];
-let selectedColumns = [];
-let selectedMeasures : string[] = [];
+let selectedRows : { key : string }[] = [];
+let selectedColumns : { key : string }[] = [];
+let selectedMeasures : IMeasure[] = [];
 let queryResult : IQueryResult = null;
 let dataSourceId : number = null;
 let queryIsComputing : boolean = false;
 let chartIsDisplaying : boolean = false;
+let queryOptions : IQueryOptions = {
+	sort : false,
+	sortOrder : 1,
+	limitTo : 0
+}
 
 class ChartRendererStore extends EventEmitter {
 	getSelectedRows(){
@@ -41,6 +46,9 @@ class ChartRendererStore extends EventEmitter {
 	getSelectedMeasures(){
 		return selectedMeasures;
 	}
+	getQueryOptions(){
+		return queryOptions;
+	}
 	/**
 	 * Tells whether query
 	 * is being processed.
@@ -57,26 +65,27 @@ let fireChange = ()=>{
 }
 
 let updateQueryResult = () => {
+	if (!selectedMeasures || selectedMeasures.length === 0){
+		fireChange();
+		return
+	}
 	let query : IQuery = {
 		Rows : selectedRows.map(x=>{
 			return {
-				columns : [x]
+				columns : [x.key]
 			}
 		}),
 		Columns : selectedColumns.map(x=>{
 			return {
-				columns : [x]
+				columns : [x.key]
 			}
 		}),
-		Measures : [{
-				column : selectedMeasures[0],
-				type : "sum"
-			}]
-	}
-	
-	if (!selectedMeasures || selectedMeasures.length === 0){
-		fireChange();
-		return
+		Measures : selectedMeasures.map(x=>{
+				return {
+					column : x.key,
+					type : x.type
+				};
+			})
 	}
 	queryIsComputing  = true;
 	// fire change before
@@ -86,7 +95,7 @@ let updateQueryResult = () => {
 	
 	return Container
 		.fileService
-		.Query(query, dataSourceId)
+		.Query(query, dataSourceId, queryOptions)
 		.then((result)=>{
 			queryResult = result;
 			queryIsComputing = false;
@@ -108,32 +117,43 @@ chartRendererStore.callBackId = Dispatcher.register((action) => {
 			 chartIsDisplaying  = false;
 			 break;
 		case AppConstants.DROP_COLUMN:
-			selectedColumns.push(action.updateChartRendererAction.addedColumn);
+			selectedColumns.push({ key : action.updateChartRendererAction.addedColumn});
 			updateQueryResult()
 			break;
 		case AppConstants.DROP_ROW:
-			selectedRows.push(action.updateChartRendererAction.addedRow);
+			selectedRows.push({
+				key : action.updateChartRendererAction.addedRow
+			});
 			updateQueryResult()
 			break;	
 		case AppConstants.DROP_MEASURE:
-			selectedMeasures.push(action.updateChartRendererAction.addedMeasure);
+			selectedMeasures.push({ 
+				key : action.updateChartRendererAction.addedMeasure,
+				type : "sum",
+				name : action.updateChartRendererAction.addedMeasure
+			});
 			updateQueryResult()
 			break;
 		case AppConstants.REMOVE_ROW:
-			selectedRows = selectedRows.filter(x => x !=  action.updateChartRendererAction.addedRow)
+			selectedRows = selectedRows.filter(x => x.key !=  action.updateChartRendererAction.addedRow)
 			updateQueryResult()
 			break;
 		case AppConstants.REMOVE_COLUMN:
-			selectedColumns = selectedColumns.filter(x => x !=  action.updateChartRendererAction.addedColumn)
+			selectedColumns = selectedColumns.filter(x => x.key !=  action.updateChartRendererAction.addedColumn)
 			updateQueryResult()
 			break;
 		case AppConstants.REMOVE_MEASURE:
-			selectedMeasures =selectedMeasures.filter(x => x !=  action.updateChartRendererAction.addedMeasure)
+			selectedMeasures =selectedMeasures.filter(x => x.key !=  action.updateChartRendererAction.addedMeasure)
 			updateQueryResult()
 			break;
 		case AppConstants.SELECT_DATASOURCE:
 			Dispatcher.waitFor([ApplicationStore.callBackId]);
 			dataSourceId = action.selectDataSourceAction.dataSource.id;
+			queryOptions = {
+				sort : false,
+				sortOrder : 1,
+				limitTo : 0
+			};
 			// get the data
 		    Container
 				.fileService
@@ -144,6 +164,20 @@ chartRendererStore.callBackId = Dispatcher.register((action) => {
 					previewData = preview;
 					chartRendererStore.fireEvent(CHANGE);
 				});
+			break;
+		case AppConstants.UPDATE_MEASURE : 
+			let updater = action.updateChartRendererAction.updatedMeasure;
+			let updatee = selectedMeasures.filter((m)=>{
+				return m.key === updater.key;
+			})[0];
+			updatee.type = updater.type;
+			fireChange();
+			updateQueryResult();
+			break;
+		case AppConstants.UPDATE_QUERY_OPTIONS:
+			queryOptions = action.updateChartRendererAction.queryOptions;
+			fireChange();
+			updateQueryResult();
 			break;
 	}
 });

@@ -103,6 +103,24 @@ class AppActions {
 			}
 		})
 	}
+	
+	updateMeasure(measure: IMeasure){
+		Dispatcher.dispatch({
+			actionType:AppConstants.UPDATE_MEASURE,
+			updateChartRendererAction : {
+				updatedMeasure : measure
+			}
+		})
+	}
+	
+	updateQueryOption(queryOptions : IQueryOptions){
+		Dispatcher.dispatch({
+			actionType:AppConstants.UPDATE_QUERY_OPTIONS,
+			updateChartRendererAction : {
+				queryOptions : queryOptions
+			}
+		})
+	}
 }
 
 export var appActions = new AppActions();

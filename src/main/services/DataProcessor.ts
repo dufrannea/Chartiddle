@@ -46,7 +46,17 @@ export class DataProcessor {
     constructor(){
     }
     
-    public Query(query: IQuery, dataProvider : IDataProvider): Promise<IQueryResult>{
+    public Query(
+        query: IQuery,
+        dataProvider : IDataProvider,
+        options? : IQueryOptions): Promise<IQueryResult>{
+            
+        let queryOptions : IQueryOptions = options || {
+            sort : false,
+            sortOrder : 0,
+            limitTo : 0
+        }
+        
         var filter;
         let res = new Map<string,IColumnData>(),
             // all the rows we encounter
@@ -164,10 +174,33 @@ export class DataProcessor {
             () => {
                 let allColumns  : any[] = [],
                     allRows : string[] = [];
-                    
                 res.forEach((value, index, o)=>{
                     allColumns.push(index);
                 })
+                
+                // sort results
+                if (queryOptions.sort){
+                    let sortOrderMult = 1-2*queryOptions.sortOrder;
+                    allColumns.sort((a,b)=>{
+                        let firstValue  = res.get(a).aggregates.get(measures[0].type);
+                        let secondValue = res.get(b).aggregates.get(measures[0].type);
+                        
+                        if (firstValue === null || firstValue === undefined || isNaN(firstValue)){
+                            firstValue = -Infinity;
+                        }
+                        if (secondValue === null || secondValue === undefined || isNaN(secondValue)){
+                            secondValue = -Infinity;
+                        }
+                        
+                        if (secondValue === firstValue) return 0;
+                        return (secondValue - firstValue) * sortOrderMult;
+                    });
+                    
+                    // limit number of results
+                    if (queryOptions.limitTo > 0){
+                        allColumns = allColumns.slice(0,queryOptions.limitTo)
+                    }
+                }
 
                 rowsSet.forEach(rowName=>allRows.push(rowName))
     

@@ -207,8 +207,6 @@ describe("DataProcessor tests",()=>{
 			
 			// a column per measure
 			expect(result.Columns.length).toBe(2);
-			// expect(result.Columns[0].members[0].name).toBe("1");
-			// expect(result.Columns[0].members[0].name).toBe("1");
 			
 			expect(result.Values.length).toBe(1);
 			expect(result.Values[0].length).toBe(2);

@@ -42,22 +42,31 @@ const stacked = false;
 const graphType = "column";
 
 let buildConfig = (result : IQueryResult) =>{
-	var cats = result.Columns;
-	var vals = result.Values;
-	var series = []
-	for (var i = 0; i< vals.length; i++){
+	let cats = result.Columns;
+	let vals = result.Values;
+	let series = [];
+	debugger;
+	for (let i = 0; i< vals.length; i++){
 		// should pick the name of the columns here...
 		var colIndex = 0;
-		var serie = vals[i].map(function(x){ 
-			var columnTuple = result.Columns[colIndex];
+		let serie = vals[i].map((x) => { 
+			let columnTuple = result.Columns[colIndex];
 			colIndex+=1;
 			return { 
-				name:columnTuple.members.map(x=>x.name).reduce((p,c)=>p+","+c) ,
+				name:columnTuple
+					.members
+					.map(x=>x.name)
+					.reduce((p,c)=>p+","+c) ,
 				y : x,
 				drilldown : true 
 			}
 		});
-		var name = result.Rows[i].members.map(x=>x.name).reduce((p,c)=>p+","+c);
+		
+		var name = result.Rows[i]
+			.members
+			.map(x=>x.name)
+			.reduce((p,c)=>p+","+c);
+			
 		series.push({
 			name : name,
 			data : serie
