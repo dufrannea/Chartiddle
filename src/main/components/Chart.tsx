@@ -3,7 +3,6 @@
 /// <amd-dependency path="highcharts"/>
 import React = require('react');
 import {appActions as Actions} from '../actions/Actions'
-import {chartRendererStore as ChartRendererStore} from '../stores/ChartRendererStore';
 import $ = require('jquery');
 
 declare var Highcharts: HighchartsStatic;
@@ -76,27 +75,22 @@ let buildConfig = (result : IQueryResult) =>{
 	return newConfig;
 }
 interface IChartParams {
-}
-interface IChartState {
 	data : IQueryResult;
 	loading : boolean;
+}
+interface IChartState {
 }
 export class Chart extends React.Component<IChartParams,IChartState> {
 	private chart : any;
 	private changeListener : any;
 	constructor(){
-		this.changeListener=this._onChange.bind(this);
-		this.state = {
-			data :  ChartRendererStore.getQueryResult(),
-			loading : ChartRendererStore.isQueryComputing()
-		}
 		super();
 	}
 	render() {
 		return (
 			<div>
 				<div ref="chart"></div>
-				<div style={{display: this.state.loading? '' : 'none'}} className="spinner-centerer">
+				<div style={{display: this.props.loading? '' : 'none'}} className="spinner-centerer">
 				    <div className="spinner-container">
 						<div className="whirly-loader"/>
 					</div>
@@ -105,26 +99,21 @@ export class Chart extends React.Component<IChartParams,IChartState> {
 		);
 	}
 	componentWillUnmount(){
-		console.info("component will unmount");
 		if (this.chart){
 			$(this.chart).highcharts().destroy();
 		}
-		ChartRendererStore.removeListener("CHANGE", this.changeListener)
 	}
-	componentDidMount(){
-		ChartRendererStore.registerChangeListener(this.changeListener);
-	}
-	updateChart(){
-		if (this.state.data != null){	
+
+	updateChart(data : IQueryResult){
+		if (data != null){	
 			let domElement = this.refs["chart"]['getDOMNode']();
-			this.chart = $(domElement).highcharts(buildConfig(this.state.data));
+			this.chart = $(domElement).highcharts(buildConfig(data));
 		}
 	}
-	_onChange(){
-		this.setState({ 
-			data : ChartRendererStore.getQueryResult(),
-			loading : ChartRendererStore.isQueryComputing()
-		});
-		this.updateChart();
+	componentWillReceiveProps(props : IChartParams){
+		let oldData = this.props.data;
+		if (oldData !== props.data){
+			this.updateChart(props.data);
+		}
 	}
 }

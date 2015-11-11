@@ -198,16 +198,36 @@ class TableHeaderCell extends React.Component<ITableHeaderCellParams,ITableHeade
 interface IChartRendererParams {
 }
 interface IChartRendererState {
+	loading : boolean;
+	queryResult : IQueryResult;
 }
 /**
  * Component that renders a chart.
  */
 export class ChartRenderer extends React.Component<IChartRendererParams,IChartRendererState> {
+	constructor(){
+		this.state = {
+			loading : false,
+			queryResult : null
+		}
+		super();
+	}
+	componentDidMount(){
+		ChartRendererStore.registerChangeListener(this._onChange.bind(this));
+	}
+	_onChange(){
+		this.setState({ 
+			queryResult : ChartRendererStore.getQueryResult(), 
+			loading : ChartRendererStore.isQueryComputing()}
+		);	
+	}
 	render() {
 		return (
 			<div className="row">
 				<div className="col-md-6 col-md-offset-3">
-					<Chart/>
+					<Chart 
+						loading={this.state.loading}
+						data={this.state.queryResult} />
 					<ChartConfigurationZone/>
 					<DataPreview/>
 				</div>
