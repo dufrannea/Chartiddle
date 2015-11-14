@@ -32,9 +32,6 @@
     "es6-collections/es6-collections.d.ts": {
       "commit": "3191f6e0088eee07c4d8fd24e4d27a40a60d9eb9"
     },
-    "es6-promises/es6-promises.d.ts": {
-      "commit": "efd40e67ff323f7147651bdbef03c03ead7b1675"
-    },
     "es6-promise/es6-promise.d.ts": {
       "commit": "efd40e67ff323f7147651bdbef03c03ead7b1675"
     }
