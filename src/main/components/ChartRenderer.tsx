@@ -345,6 +345,11 @@ export class ChartRenderer extends React.Component<IChartRendererParams,IChartRe
 		return (
 			<div>
 				<div className="row">
+					<div className="col-md-6 col-md-offset-3">
+						<ChartRendererToolbar/>
+					</div>
+				</div>
+				<div className="row">
 					<div className="col-md-10 col-md-offset-1">
 						<Chart 
 							loading={this.state.loading}
@@ -371,5 +376,34 @@ export class ChartRenderer extends React.Component<IChartRendererParams,IChartRe
 				</div>
 			</div>
 		);
+	}
+}
+
+interface IChartRendererToolbarParams {
+}
+interface IChartRendererToolbarState {
+}
+export class ChartRendererToolbar extends React.Component<IChartRendererToolbarParams,IChartRendererToolbarState> {
+	constructor(){
+		this.state = {};
+		super();
+	}
+	render() {
+		return (
+			<div>
+			  <button className="btn"
+			  		  onClick={this.__handleClickSave} >Save
+			  	<span className="glyphicon glyphicon-floppy-disk"></span>			
+			  </button>
+			</div>
+		);
+	}
+	__handleClickSave(){
+		Actions.saveChart(ChartRendererStore.getChartConfiguration())
+	}
+	componentDidMount(){
+	}
+	_onChange(){
+		this.setState({});
 	}
 }

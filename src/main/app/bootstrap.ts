@@ -22,7 +22,8 @@ export function Load(){
 			Container.fileService = new FileService(
 				dataService.DataSourceRepository, 
 				dataService.FileRepository,
-				new DataProcessor());
+				new DataProcessor(),
+				dataService.ChartConfigurationRepository);
 			return Container.fileService;
 		});
 }

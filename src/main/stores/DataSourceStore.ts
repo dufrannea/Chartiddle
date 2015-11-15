@@ -12,6 +12,11 @@ const CHANGE = "CHANGE";
 let dataSources : IDataSource[] = [];
 let loadingFile = false;
 
+// datasource for which we display the charts
+let viewedDataSource : IDataSource = null;
+// list of charts for current datasource
+let chartList : IChartConfiguration[] = [];
+
 class DataSourceStore extends EventEmitter {
 	getAll() : IDataSource[]{
 		return dataSources;
@@ -22,6 +27,9 @@ class DataSourceStore extends EventEmitter {
 	registerChangeListener(listener) {
 		this.addEvent(CHANGE, listener);
 	}
+	getCharts() : IChartConfiguration[]{
+		return chartList;
+	}
 	callBackId : string; 
 }
 
@@ -31,6 +39,16 @@ export var dataSourceStore = new DataSourceStore();
 // can handle.
 dataSourceStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
+		case AppConstants.SELECT_DATASOURCE:
+			Container
+				.fileService
+				.getAllChartsForDataSource(action.data.id)
+				.then((configs)=>{
+					chartList = configs;
+					debugger;
+					dataSourceStore.fireEvent(CHANGE);
+				});
+				break;
 		case AppConstants.MODEL_LOADED:
 			dataSources = <IDataSource[]>action.data;
 			dataSourceStore.fireEvent(CHANGE)

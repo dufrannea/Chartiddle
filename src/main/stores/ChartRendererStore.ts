@@ -25,6 +25,26 @@ let queryOptions : IQueryOptions = {
 	sortOrder : 1,
 	limitTo : 0
 }
+let getQuery = () => {
+	return <IQuery>{
+		Rows : selectedRows.map(x=>{
+			return {
+				columns : [x.key]
+			}
+		}),
+		Columns : selectedColumns.map(x=>{
+			return {
+				columns : [x.key]
+			}
+		}),
+		Measures : selectedMeasures.map(x=>{
+				return {
+					column : x.key,
+					type : x.type
+				};
+			})
+	}
+}
 
 class ChartRendererStore extends EventEmitter {
 	getSelectedRows(){
@@ -49,6 +69,15 @@ class ChartRendererStore extends EventEmitter {
 	getQueryOptions(){
 		return queryOptions;
 	}
+	getChartConfiguration() : IChartConfiguration{
+		return {
+			datasource_id : dataSourceId,
+			options: queryOptions,
+			query : getQuery(),
+			type : 0,
+			results : queryResult
+		}
+	}
 	/**
 	 * Tells whether query
 	 * is being processed.
@@ -64,29 +93,14 @@ let fireChange = ()=>{
 	chartRendererStore.fireEvent(CHANGE);
 }
 
+
+
 let updateQueryResult = () => {
 	if (!selectedMeasures || selectedMeasures.length === 0){
 		fireChange();
 		return
 	}
-	let query : IQuery = {
-		Rows : selectedRows.map(x=>{
-			return {
-				columns : [x.key]
-			}
-		}),
-		Columns : selectedColumns.map(x=>{
-			return {
-				columns : [x.key]
-			}
-		}),
-		Measures : selectedMeasures.map(x=>{
-				return {
-					column : x.key,
-					type : x.type
-				};
-			})
-	}
+	let query : IQuery = getQuery();
 	queryIsComputing  = true;
 	// fire change before
 	// computing, to update 
@@ -105,6 +119,14 @@ let updateQueryResult = () => {
 
 chartRendererStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
+		case AppConstants.SAVE_CHART:
+			Container
+				.fileService
+				.saveChart(action.data)
+				.then(()=>{
+					fireChange();
+				});
+				break;
 		case AppConstants.NAVIGATE_DATASOURCES_LIST:
 			 currentChartId = undefined;
 			 previewData = [];
@@ -146,7 +168,7 @@ chartRendererStore.callBackId = Dispatcher.register((action) => {
 			selectedMeasures =selectedMeasures.filter(x => x.key !=  action.updateChartRendererAction.addedMeasure)
 			updateQueryResult()
 			break;
-		case AppConstants.SELECT_DATASOURCE:
+		case AppConstants.VIEW_CHART_FOR_DATASOURCE:
 			Dispatcher.waitFor([ApplicationStore.callBackId]);
 			dataSourceId = action.selectDataSourceAction.dataSource.id;
 			queryOptions = {

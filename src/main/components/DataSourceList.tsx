@@ -7,6 +7,7 @@ import {DropzoneComponent} from './DropzoneComponent'
 import {dataSourceStore as DataSourceStore} from '../stores/DataSourceStore'
 import {appActions as Actions} from '../actions/Actions'
 import {ApplicationTabs} from '../actions/AppConstants'
+import {Chart} from './Chart'
 
 interface IDataSourceListParams {
 }
@@ -26,7 +27,7 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 	}
 	__handleDataSourceClick(dataSource : IDataSource){
 		return ()=>{
-			Actions.selectDataSource(dataSource)
+			Actions.viewChartForDataSource(dataSource)
 		}
 	}
 	__handleDataSourceDelete(dataSource : IDataSource){
@@ -54,6 +55,7 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 					{files}
 					</div>
 				</div>
+				<ChartList/>
 			</div>
 		);
 	}
@@ -83,8 +85,10 @@ interface IDataSourceItemState {
 }
 export class DataSourceItem extends React.Component<IDataSourceItemParams,IDataSourceItemState> {
 	constructor(){
-		this.state = {};
 		super();
+	}
+	__selectDataSource(){
+		Actions.previewChartsForDataSource(this.props.data);
 	}
 	render() {
 		return (
@@ -93,6 +97,13 @@ export class DataSourceItem extends React.Component<IDataSourceItemParams,IDataS
 					{this.props.data.name}
 				</span>
 				<div className="btn-group" >
+					<button
+							type="button"
+							className="btn btn-default"
+							onClick={this.__selectDataSource.bind(this)}>
+						<span className="glyphicon glyphicon-option-horizontal" 
+						      aria-hidden="true"></span>	
+					</button>
 					<button type="button" 
 							className="btn btn-default"
 							onClick={()=>this.props.onClickDelete(this.props.data)}>
@@ -109,9 +120,41 @@ export class DataSourceItem extends React.Component<IDataSourceItemParams,IDataS
 			</div>
 		);
 	}
+}
+
+interface IChartListParams {
+}
+interface IChartListState {
+	charts : IChartConfiguration[];
+}
+export class ChartList extends React.Component<IChartListParams,IChartListState> {
+	constructor(){
+		this.state = {
+			charts : []
+		};
+		super();
+	}
+	render() {
+		let charts = this.state.charts.map(c =>{
+			return <Chart
+						key={c.id}
+						data={c.results}
+						loading={false}
+					/>
+		})
+		return (
+			<ul>
+				{charts}
+			</ul>
+		);
+	}
 	componentDidMount(){
+		DataSourceStore.registerChangeListener(this._onChange.bind(this));
 	}
 	_onChange(){
-		this.setState({});
+		debugger;
+		this.setState({
+			charts : DataSourceStore.getCharts()
+		});	
 	}
 }

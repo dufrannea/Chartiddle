@@ -7,6 +7,7 @@ export enum AppConstants {
 	 * Navigation
 	 */
 	SELECT_DATASOURCE,
+	VIEW_CHART_FOR_DATASOURCE,
 	NAVIGATE_DATASOURCES_LIST,
 	DELETE_DATASOURCE,
 	/**
@@ -24,7 +25,11 @@ export enum AppConstants {
 	REMOVE_ROW,
 	REMOVE_MEASURE,
 	UPDATE_MEASURE,
-	UPDATE_QUERY_OPTIONS
+	UPDATE_QUERY_OPTIONS,
+	/**
+	 * Charts
+	 */
+	SAVE_CHART
 }
 
 export enum ApplicationTabs {

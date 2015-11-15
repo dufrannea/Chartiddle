@@ -31,7 +31,7 @@ export var applicationStore = new ApplicationStore();
 // can handle.
 applicationStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
-		case AppConstants.SELECT_DATASOURCE:
+		case AppConstants.VIEW_CHART_FOR_DATASOURCE:
 			activeDataSource = action.selectDataSourceAction.dataSource;
 			activeTab = ApplicationTabs.CHART_VIEW;
 			applicationStore.fireEvent(CHANGE);

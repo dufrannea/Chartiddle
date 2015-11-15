@@ -7,7 +7,7 @@ import $ = require('jquery');
 
 declare var Highcharts: HighchartsStatic;
 
-const  baseConfig = {
+const baseConfig = {
 	chart: {
 		type: 'column',
 		events: {
@@ -45,7 +45,6 @@ let buildConfig = (result : IQueryResult) =>{
 	let cats = result.Columns;
 	let vals = result.Values;
 	let series = [];
-	debugger;
 	for (let i = 0; i< vals.length; i++){
 		// should pick the name of the columns here...
 		var colIndex = 0;
@@ -86,6 +85,7 @@ let buildConfig = (result : IQueryResult) =>{
 interface IChartParams {
 	data : IQueryResult;
 	loading : boolean;
+	key? : number;
 }
 interface IChartState {
 }
@@ -119,10 +119,10 @@ export class Chart extends React.Component<IChartParams,IChartState> {
 			this.chart = $(domElement).highcharts(buildConfig(data));
 		}
 	}
-	componentWillReceiveProps(props : IChartParams){
+	componentWillReceiveProps(newProps : IChartParams){
 		let oldData = this.props.data;
-		if (oldData !== props.data){
-			this.updateChart(props.data);
+		if (oldData !== newProps.data){
+			this.updateChart(newProps.data);
 		}
 	}
 }

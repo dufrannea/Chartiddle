@@ -6,18 +6,34 @@ import {AppConstants, ApplicationTabs} from './AppConstants'
 
 class AppActions {
 	/**
-	 * Select a datasource to 
-	 * go and play with it.
+	 * Preview charts for datasource
+	 * @param {IDataSource} : the datasource.
 	 */
-	selectDataSource(dataSource : IDataSource) {
+	previewChartsForDataSource(dataSource : IDataSource){
 		Dispatcher.dispatch({
 			actionType : AppConstants.SELECT_DATASOURCE,
+			data : dataSource
+		})
+	}
+	
+	/**
+	 * Select a datasource to 
+	 * go and play with it.
+	 * @param {IDataSource} : the datasource.
+	 */
+	viewChartForDataSource(dataSource : IDataSource) {
+		Dispatcher.dispatch({
+			actionType : AppConstants.VIEW_CHART_FOR_DATASOURCE,
 			selectDataSourceAction : {
 				dataSource: dataSource
 			}
 		})
 	}
 	
+	/**
+	 * Delete a datasource.
+	 * @param {IDataSource} : the datasource.
+	 */
 	deleteDataSource(dataSource : IDataSource){
 		Dispatcher.dispatch({
 			actionType : AppConstants.DELETE_DATASOURCE,
@@ -140,6 +156,13 @@ class AppActions {
 				queryOptions : queryOptions
 			}
 		})
+	}
+	
+	saveChart(chart : IChartConfiguration){
+		Dispatcher.dispatch({
+			actionType: AppConstants.SAVE_CHART,
+			data : chart
+		});
 	}
 }
 

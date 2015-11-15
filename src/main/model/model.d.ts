@@ -26,28 +26,24 @@ interface IConfiguration {
     charts : IChartConfiguration[];
 }
 
-declare enum ChartType {
-    BAR,
-    SPLINE        
-}
-
 interface IChartConfiguration {
+    id? : number;
     // type of the chart
     // ie 'pie',
-    type : ChartType;
+    type : number;
     
-    // rows of the chart
-    columns : IHierarchy[];
+    // query tied to the chart.
+    query : IQuery;
     
-    // columns of the chart
-    rows : IHierarchy[];
+    // options of the chart.
+    options : IQueryOptions;
     
-    // measures of the chart
-    measures : IMeasure[];
+    // thumbnails.
+    results : IQueryResult;
     
-    // id of the model the chart
+    // id of the datasource the chart
     // refers to.
-    model_id : number;
+    datasource_id : number;
 }
 
 

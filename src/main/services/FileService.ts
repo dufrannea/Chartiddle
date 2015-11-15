@@ -10,15 +10,49 @@ export class FileService {
 	private _sourcesRepo : Repository<IDataSource, number>;
 	private _fileRepo : FileRepository;
 	private _processor : DataProcessor;
+	private _chartRepo : Repository<IChartConfiguration, number>;
 	
 	constructor(
 		sourcesRepo : Repository<IDataSource,number>,
 		fileRepo : FileRepository,
-		processor : DataProcessor)
+		processor : DataProcessor,
+		chartRepo : Repository<IChartConfiguration, number>)
 	{
 		this._sourcesRepo = sourcesRepo;
 		this._fileRepo = fileRepo;
 		this._processor = processor;
+		this._chartRepo = chartRepo;
+	}
+	
+	/**
+	 * Save a chart
+	 * @param {IChartConfiguration} : the chart to save.
+	 * @return {Promise<number>} : the id of the created configuration.
+	 */
+	public saveChart(chart: IChartConfiguration){
+		return this._chartRepo.save(chart).then(()=>{
+			return chart.id;
+		});
+	}
+	
+	/**
+	 * Get all charts for a given datasource.
+	 * @param {number} datasourceId : the id of the datasource.
+	 * @return {Promise<IChartConfiguration[]>} : the charts configurations.
+	 */
+	public getAllChartsForDataSource(datasourceId : number){
+		return this
+			._chartRepo
+			.getAll()
+			.then(charts =>{
+				if (!charts){
+					return []
+				} else{
+					return charts.filter(c =>{
+						return c.datasource_id === datasourceId;
+					})
+				}
+			});
 	}
 	
 	/**
