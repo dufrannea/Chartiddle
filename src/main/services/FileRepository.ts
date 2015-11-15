@@ -34,32 +34,21 @@ export class FileRepository {
 		return this.save(fileItem)
 	}
 	
-	public openDb(version?: number, upgrade? : (IDBDatabase) => void): Promise<IDBDatabase>{
-		return new Promise<IDBDatabase>((resolve,reject)=>{
-			let indexedDB =self.indexedDB || window.indexedDB
-			let request : IDBOpenDBRequest;
-			if (!version)
-			{
-				request = indexedDB.open("Chartiddle");
-			}
-			else 
-			{
-				request = indexedDB.open("Chartiddle", version);
-			}
-			if (upgrade){
-				request.onupgradeneeded = (ev)=>{
-					let newDb = <IDBDatabase>ev.target['result'];
-					this.pool.db = newDb;
-					upgrade(newDb);
-				}
-			}
-			request.onsuccess = ()=>{
-				resolve(request.result);
-			}
-			request.onerror = ()=>{
-				reject();
-			}
-		});
+	public deleteFile(id : number) : Promise<void>{
+		let storeName = "FILE_" + id;
+		if (this.pool.db){
+			this.pool.db.close();
+		};
+		
+		return this.openDb().then((db)=>{
+				let version = parseInt(db.version)+1;
+				db.close();
+				return this.openDb(version, (newDb)=>{
+					if (newDb.objectStoreNames.contains(storeName)) {
+						newDb.deleteObjectStore(storeName);
+					}
+				});
+			}).then(()=>{})
 	}
 	
 	/**
@@ -167,5 +156,33 @@ export class FileRepository {
 		}
 		
 		return result;
+	}
+	
+	private openDb(version?: number, upgrade? : (IDBDatabase) => void): Promise<IDBDatabase>{
+		return new Promise<IDBDatabase>((resolve,reject)=>{
+			let indexedDB =self.indexedDB || window.indexedDB
+			let request : IDBOpenDBRequest;
+			if (!version)
+			{
+				request = indexedDB.open("Chartiddle");
+			}
+			else 
+			{
+				request = indexedDB.open("Chartiddle", version);
+			}
+			if (upgrade){
+				request.onupgradeneeded = (ev)=>{
+					let newDb = <IDBDatabase>ev.target['result'];
+					this.pool.db = newDb;
+					upgrade(newDb);
+				}
+			}
+			request.onsuccess = ()=>{
+				resolve(request.result);
+			}
+			request.onerror = ()=>{
+				reject();
+			}
+		});
 	}
 }

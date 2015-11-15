@@ -29,9 +29,18 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 			Actions.selectDataSource(dataSource)
 		}
 	}
+	__handleDataSourceDelete(dataSource : IDataSource){
+		return ()=>{
+			Actions.deleteDataSource(dataSource)
+		}
+	}
 	render() {
 		let files = this.state.dataSources.map(x=> {
-			return <button key={x.id} onClick={this.__handleDataSourceClick(x)} className="list-group-item">{x.name}</button>
+			return <DataSourceItem 
+						data={x} 
+						key={x.id}
+						onSelect={this.__handleDataSourceClick(x)}
+						onClickDelete={this.__handleDataSourceDelete(x)}/>
 		});
 		return (
 			<div className="col-md-6 col-md-offset-3 displayNone">
@@ -60,5 +69,49 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 	}
 	_onChange(){
 		this.setState({ dataSources : DataSourceStore.getAll(), loading : DataSourceStore.isLoading()});	
+	}
+}
+
+
+interface IDataSourceItemParams {
+	data : IDataSource;
+	onSelect : (data : IDataSource) => void;
+	onClickDelete : (data : IDataSource) => void;
+	key : any;
+}
+interface IDataSourceItemState {
+}
+export class DataSourceItem extends React.Component<IDataSourceItemParams,IDataSourceItemState> {
+	constructor(){
+		this.state = {};
+		super();
+	}
+	render() {
+		return (
+			<div className="list-group-item text-right">
+				<span className="pull-left">
+					{this.props.data.name}
+				</span>
+				<div className="btn-group" >
+					<button type="button" 
+							className="btn btn-default"
+							onClick={()=>this.props.onClickDelete(this.props.data)}>
+						<span className="glyphicon glyphicon-trash" 
+						      aria-hidden="true"></span>
+					</button>
+					<button type="button" 
+							className="btn btn-default"
+							onClick={()=>this.props.onSelect(this.props.data)}>
+						<span className="glyphicon glyphicon-eye-open"
+						      aria-hidden="true"></span>
+					</button>
+				</div>
+			</div>
+		);
+	}
+	componentDidMount(){
+	}
+	_onChange(){
+		this.setState({});
 	}
 }

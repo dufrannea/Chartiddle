@@ -29,6 +29,11 @@ export class FileService {
 		return this._sourcesRepo.getAll();
 	}
 	
+	public deleteDataSource(source : IDataSource) : Promise<void> {
+		return this._fileRepo.deleteFile(source.id).then(()=>{
+				return this._sourcesRepo.delete(source.id);
+			});
+	}
 	/**
 	 * Run a query against a datasource.
 	 * @param queryModel {IQuery} : the query.

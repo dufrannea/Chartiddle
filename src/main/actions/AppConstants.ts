@@ -8,6 +8,7 @@ export enum AppConstants {
 	 */
 	SELECT_DATASOURCE,
 	NAVIGATE_DATASOURCES_LIST,
+	DELETE_DATASOURCE,
 	/**
 	 * DatasourceList.
 	 */

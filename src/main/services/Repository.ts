@@ -20,7 +20,7 @@ export class Repository<TObject, TKey>  {
 	 * @param key {TKey} : the key of the item to delete.
 	 */
 	public delete(key : TKey){
-		this.executeInTransaction((objectStore, resolve, reject)=>{
+		return this.executeInTransaction<void>((objectStore, resolve, reject)=>{
 			let request = objectStore.delete(key);
 			request.onsuccess = (ev) => {
 				resolve();

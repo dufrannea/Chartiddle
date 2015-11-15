@@ -18,6 +18,14 @@ class AppActions {
 		})
 	}
 	
+	deleteDataSource(dataSource : IDataSource){
+		Dispatcher.dispatch({
+			actionType : AppConstants.DELETE_DATASOURCE,
+			selectDataSourceAction : {
+				dataSource: dataSource
+			}
+		})
+	}
 	/**
 	 * Back to the datasources list.
 	 */

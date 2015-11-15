@@ -35,6 +35,19 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 			dataSources = <IDataSource[]>action.data;
 			dataSourceStore.fireEvent(CHANGE)
 			break;
+		case AppConstants.DELETE_DATASOURCE:
+			let sourceToRemove = action.selectDataSourceAction.dataSource;
+			Container
+				.fileService
+				.deleteDataSource(sourceToRemove)
+				.then(()=>{
+					let removed = dataSources.indexOf(sourceToRemove)
+					if (removed !== -1){
+						dataSources.splice(removed,1);
+						dataSourceStore.fireEvent(CHANGE);
+					}
+				})
+			break;	
 		case AppConstants.ADD_FILE:
 		    let name : string = "REMOTE";
 			let fileService = Container.fileService; 
