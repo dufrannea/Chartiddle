@@ -56,13 +56,31 @@ export class FileService {
 		let savee : IDataSource={
 			name : file.name
 		};
+		let dataStream = new BatchingProvider(
+				new PapaLocalDataProvider(file),
+				100);
 		
+		return this.__saveFileAsync(dataStream, savee);
+	}
+	
+	public saveDropboxFileAsync(file : IDropBoxFile){
+		let savee : IDataSource = {
+			name : file.name
+		}
+		
+		return PapaLocalDataProvider.createFromURL(file.link)
+			.then(dataStream =>{
+				return new BatchingProvider(dataStream);
+			}).then(p=>{
+				return this.__saveFileAsync(p,savee); 
+			})
+	}
+	
+	private __saveFileAsync(provider : IDataProvider, savee : IDataSource){
 		return this._sourcesRepo
 			.save(savee)
 			.then(()=>{
-				let dataStream = new BatchingProvider(
-						new PapaLocalDataProvider(file),
-						100);
+				let dataStream = provider;
 				
 				return this._fileRepo.save({
 					id : savee.id,

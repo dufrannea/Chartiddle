@@ -37,7 +37,8 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 			<div className="col-md-6 col-md-offset-3 displayNone">
 				<DropzoneComponent 
 					loading={this.state.loading}
-					onDrop={this._acceptFile.bind(this)}/>
+					onDrop={this._acceptFile.bind(this)}
+					onDropboxChoose={this._loadUrl.bind(this)}/>
 				<div className="panel panel-default">
 					<div className="panel-heading">Your files :</div>
 					<div className="list-group">
@@ -46,6 +47,10 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 				</div>
 			</div>
 		);
+	}
+	_loadUrl(f : IDropBoxFile){
+		console.info("asked to load url : ", f)
+		Actions.addFileFromURL(f);
 	}
 	_acceptFile(f: File){
 		Actions.addFile(f);

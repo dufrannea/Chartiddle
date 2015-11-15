@@ -4,7 +4,8 @@ import {Dispatcher} from 'flux';
 import {AppConstants, ApplicationTabs} from '../actions/AppConstants'
 
 export interface IFileAction {
-	file : File;
+	file? : File;
+	dropboxFile? : IDropBoxFile;
 }
 
 export interface IPreviewAction {

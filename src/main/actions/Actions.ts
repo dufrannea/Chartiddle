@@ -40,6 +40,18 @@ class AppActions {
 	}
 	
 	/**
+	 * Add a file to indexeddb.
+	 */
+	addFileFromURL(file : IDropBoxFile){
+		Dispatcher.dispatch({
+			actionType : AppConstants.ADD_FILE,
+			fileAction : {
+				dropboxFile : file 
+			}
+		});
+	}
+	
+	/**
 	 * Model has been loaded,
 	 * application is ready.
 	 */

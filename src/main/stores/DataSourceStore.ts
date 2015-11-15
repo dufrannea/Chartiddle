@@ -36,24 +36,40 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 			dataSourceStore.fireEvent(CHANGE)
 			break;
 		case AppConstants.ADD_FILE:
-			let dataSource : IDataSource= {
-				name : action.fileAction.file.name
-			}
+		    let name : string = "REMOTE";
 			let fileService = Container.fileService; 
 			loadingFile = true;
 			dataSourceStore.fireEvent(CHANGE);
+			let saveAction : Promise<number>;
+			let dataSource : IDataSource = null;
 			
-			fileService
-				.saveFileAsync(action.fileAction.file)
-				.then((id)=>{
-					loadingFile = false;
-					dataSource.id = id;
-					dataSources.push(dataSource);
-					dataSourceStore.fireEvent(CHANGE);
-				})
-				.catch(()=>{
-					alert("could not upload file")
-				});
+			if (action.fileAction.file){
+				name = action.fileAction.file.name;
+				dataSource= {
+					name : name
+				}
+				
+				saveAction = fileService
+					.saveFileAsync(action.fileAction.file)
+					
+			} else if (action.fileAction.dropboxFile){
+				name = action.fileAction.dropboxFile.name;
+				dataSource = {
+					name : name
+				}
+				
+				saveAction = fileService
+					.saveDropboxFileAsync(action.fileAction.dropboxFile)
+			}
+			saveAction.then((id)=>{
+						loadingFile = false;
+						dataSource.id = id;
+						dataSources.push(dataSource);
+						dataSourceStore.fireEvent(CHANGE);
+					})
+					.catch(()=>{
+						alert("could not upload file")
+					});
 			break;
 	}
 });

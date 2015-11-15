@@ -52,9 +52,7 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
 		}
 		
 		return (
-			
 			<div>
-				 
 				<div className="form-group">
 					<div className="checkbox">
 						<label>

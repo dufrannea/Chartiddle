@@ -149,3 +149,9 @@ declare module "highcharts" {
     var a  : HighchartsStatic;
     export = a ;
 }
+
+interface IDropBoxFile {
+    bytes : number;
+    link : string;
+    name : string;
+}

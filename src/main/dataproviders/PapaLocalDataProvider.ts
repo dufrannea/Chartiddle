@@ -29,4 +29,20 @@ export class PapaLocalDataProvider implements IDataStream{
 			}
 		});
 	}
+	
+	static createFromURL(url : string) : Promise<PapaLocalDataProvider> {
+		return new Promise<PapaLocalDataProvider>((resolve, reject)=>{
+			var oReq = new XMLHttpRequest();
+			oReq.open("GET", url, true);
+			oReq.responseType = "blob";
+			oReq.onload = function(oEvent) {
+				resolve(new PapaLocalDataProvider(<File>oReq.response));
+			};
+			oReq.onerror = (e)=>{
+				console.error(e);
+				reject();
+			}
+			oReq.send();
+		})
+	}
 }
