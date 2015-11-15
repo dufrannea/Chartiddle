@@ -191,10 +191,12 @@ class SimpleChartDropZone extends ChartDropZone<IWithKey>{
 	}
 	render() {
 		return (
-			<div ref="dropzone" className="chart-drop-zone col-md-4" style={{'min-height':'200px'}}>
-				<ul className="list-group">
-					{this.props.items.map(x=> <li className="list-group-item" ref="x"><span className="glyphicon glyphicon-remove" onClick={()=> this.__handleRemove.bind(this)(x)}></span>{" " + x.key}</li>)}
-				</ul>
+			<div className="col-md-4">
+				<div ref="dropzone" className="chart-drop-zone">
+					<ul className="list-group">
+						{this.props.items.map(x=> <li className="list-group-item" ref="x"><span className="glyphicon glyphicon-remove" onClick={()=> this.__handleRemove.bind(this)(x)}></span>{" " + x.key}</li>)}
+					</ul>
+				</div>
 			</div>
 		);
 	}
@@ -229,10 +231,12 @@ class MeasureDropZone extends ChartDropZone<IMeasure>{
 			</li>);
 			
 		return (
-			<div ref="dropzone" className="chart-drop-zone col-md-4" style={{'min-height':'200px'}}>
-				<ul className="list-group">
-					{lis}
-				</ul>
+			<div className="col-md-4">
+				<div ref="dropzone" className="chart-drop-zone">
+					<ul className="list-group">
+						{lis}
+					</ul>
+				</div>
 			</div>
 		);
 	}
@@ -339,14 +343,31 @@ export class ChartRenderer extends React.Component<IChartRendererParams,IChartRe
 	}
 	render() {
 		return (
-			<div className="row">
-				<div className="col-md-6 col-md-offset-3">
-					<Chart 
-						loading={this.state.loading}
-						data={this.state.queryResult} />
-					<QueryOptions/>
-					<ChartConfigurationZone/>
-					<DataPreview/>
+			<div>
+				<div className="row">
+					<div className="col-md-10 col-md-offset-1">
+						<Chart 
+							loading={this.state.loading}
+							data={this.state.queryResult} />
+					</div>
+				</div>
+				<div className="row">
+					<div className="col-md-6 col-md-offset-3">
+						<div className="panel panel-default">
+							<div className="panel-heading">
+							Options
+							</div>
+							<div className="panel-body">
+								<QueryOptions/>
+							</div>
+						</div>
+						<ChartConfigurationZone/>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col-md-10 col-md-offset-1">
+						<DataPreview/>
+					</div>
 				</div>
 			</div>
 		);

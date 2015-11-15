@@ -27,17 +27,15 @@
 $zoneWidth : 300px;
 
 .chart-drop-zone {
-  // width : $zoneWidth;
-  // height : $zoneWidth;
-  border : 1px solid;
-  // float:left;
-  
-  // &:last-child{
-  //   clear:right;
-  // }
-  
+  border-radius : 10px;
+  background-color: lightblue;
+  min-height: 200px;
+  width:100%;
+  margin-left : 3px;
+  margin-right : 3px;
+  padding : 3px;
   &.active{
-    background-color: aquamarine;  
+    background-color: lightgreen;  
   }
 }
 
