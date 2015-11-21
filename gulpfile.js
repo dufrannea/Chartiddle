@@ -45,7 +45,7 @@ gulp.task('build-static', ['build-bootstrap'], function(){
 		.pipe(gulp.dest('build'));
 });
 
-gulp.task('build-fonts', ()=>{
+gulp.task('build-fonts', function() {
     return gulp.src('bower_components/bootstrap/dist/fonts/*')
                 .pipe(gulp.dest('build/main/fonts'))
 })
