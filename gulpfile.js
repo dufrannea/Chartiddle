@@ -142,3 +142,21 @@ gulp.task('build', ["build-typescript","build-static", "build-sass", "build-font
  * and install bower deps.
  */
 gulp.task('rebuild', ["build-bower","build-external-libs", "build"]);
+
+
+var karmaServer = require('karma').Server;
+gulp.task('testci', function (done) {
+    process.env.CHROME_BIN = process.env.BUILD_REPOSITORY_LOCALPATH + '\\tools\\bin\\chrome\\Chrome-bin\\chrome.exe';
+    new karmaServer({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true,
+        autoWatch: false,
+        hostname: '127.0.0.1',
+        reporters: ['dots', 'junit'],
+        junitReporter: {
+            useBrowserName: false,
+            outputDir: 'build',
+            outputFile: 'test-results.xml'
+        }
+    }, done).start();
+});

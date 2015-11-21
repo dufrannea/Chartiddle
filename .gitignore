@@ -6,3 +6,6 @@ bower_components
 /dist
 
 settings.json
+
+/tools/bin/
+/tools/temp/
