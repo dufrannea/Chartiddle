@@ -54,16 +54,12 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 			dataSourceStore.fireEvent(CHANGE)
 			break;
 		case AppConstants.DELETE_DATASOURCE:
-			let sourceToRemove = action.selectDataSourceAction.dataSource;
+			let sourceToRemove = action.selectDataSourceAction.dataSourceId;
 			Container
 				.fileService
 				.deleteDataSource(sourceToRemove)
 				.then(()=>{
-					let removed = dataSources.indexOf(sourceToRemove)
-					if (removed !== -1){
-						dataSources.splice(removed,1);
-						dataSourceStore.fireEvent(CHANGE);
-					}
+					dataSources = dataSources.filter(x=>x.id !== sourceToRemove)
 				})
 			break;	
 		case AppConstants.ADD_FILE:

@@ -19,26 +19,26 @@ class AppActions {
 	/**
 	 * Select a datasource to 
 	 * go and play with it.
-	 * @param {IDataSource} : the datasource.
+	 * @param datasourceId - {number}: the datasourceId.
 	 */
-	viewChartForDataSource(dataSource : IDataSource) {
+	viewChartForDataSource(dataSourceId : number) {
 		Dispatcher.dispatch({
 			actionType : AppConstants.VIEW_CHART_FOR_DATASOURCE,
 			selectDataSourceAction : {
-				dataSource: dataSource
+				dataSourceId: dataSourceId
 			}
 		})
 	}
 	
 	/**
 	 * Delete a datasource.
-	 * @param {IDataSource} : the datasource.
+	 * @param datasourceId - {number}: the datasourceId.
 	 */
-	deleteDataSource(dataSource : IDataSource){
+	deleteDataSource(dataSourceId : number){
 		Dispatcher.dispatch({
 			actionType : AppConstants.DELETE_DATASOURCE,
 			selectDataSourceAction : {
-				dataSource: dataSource
+				dataSourceId: dataSourceId
 			}
 		})
 	}

@@ -28,7 +28,9 @@
     "jquery-ui": "~1.11.4",
     "es6-promise": "~3.0.2",
     "text": "~2.0.14",
-    "highcharts": "~4.1.9"
+    "highcharts": "~4.1.9",
+    "hasher": "~1.2.0",
+    "crossroads": "~0.12.2"
   },
   "overrides": {
     "bootstrap": {

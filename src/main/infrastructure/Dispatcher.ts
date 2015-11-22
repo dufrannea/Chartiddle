@@ -16,7 +16,7 @@ export interface IPreviewAction {
 }
 
 export interface ISelectDataSourceAction {
-	dataSource : IDataSource;
+	dataSourceId : number;
 }
 
 export interface IUpdateChartRendererModelAction {

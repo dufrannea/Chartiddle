@@ -27,12 +27,12 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 	}
 	__handleDataSourceClick(dataSource : IDataSource){
 		return ()=>{
-			Actions.viewChartForDataSource(dataSource)
+			Actions.viewChartForDataSource(dataSource.id)
 		}
 	}
 	__handleDataSourceDelete(dataSource : IDataSource){
 		return ()=>{
-			Actions.deleteDataSource(dataSource)
+			Actions.deleteDataSource(dataSource.id)
 		}
 	}
 	render() {

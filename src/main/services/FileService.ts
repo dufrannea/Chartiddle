@@ -63,9 +63,9 @@ export class FileService {
 		return this._sourcesRepo.getAll();
 	}
 	
-	public deleteDataSource(source : IDataSource) : Promise<void> {
-		return this._fileRepo.deleteFile(source.id).then(()=>{
-				return this._sourcesRepo.delete(source.id);
+	public deleteDataSource(id : number) : Promise<void> {
+		return this._fileRepo.deleteFile(id).then(()=>{
+				return this._sourcesRepo.delete(id);
 			});
 	}
 	/**

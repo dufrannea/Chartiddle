@@ -7,6 +7,9 @@ import {appActions as Actions} from '../actions/Actions'
 import {FileService} from '../services/FileService'
 import {ProxiedWorker} from "../infrastructure/ObjectProxy"
 import {Container} from '../infrastructure/Container'
+import {Router} from './routing'
+
+Router.setupRoutes();
 
 ProxiedWorker
 	.Load<FileService>(FileService,"app/bootstrap")

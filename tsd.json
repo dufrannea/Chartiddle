@@ -34,6 +34,15 @@
     },
     "es6-promise/es6-promise.d.ts": {
       "commit": "efd40e67ff323f7147651bdbef03c03ead7b1675"
+    },
+    "js-signals/js-signals.d.ts": {
+      "commit": "fa04c80f4a889613b96cb4f283848c61a9f64233"
+    },
+    "hasher/hasher.d.ts": {
+      "commit": "fa04c80f4a889613b96cb4f283848c61a9f64233"
+    },
+    "crossroads/crossroads.d.ts": {
+      "commit": "fa04c80f4a889613b96cb4f283848c61a9f64233"
     }
   }
 }

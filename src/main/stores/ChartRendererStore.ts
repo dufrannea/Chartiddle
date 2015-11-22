@@ -170,7 +170,7 @@ chartRendererStore.callBackId = Dispatcher.register((action) => {
 			break;
 		case AppConstants.VIEW_CHART_FOR_DATASOURCE:
 			Dispatcher.waitFor([ApplicationStore.callBackId]);
-			dataSourceId = action.selectDataSourceAction.dataSource.id;
+			dataSourceId = action.selectDataSourceAction.dataSourceId;
 			queryOptions = {
 				sort : false,
 				sortOrder : 1,
@@ -179,9 +179,7 @@ chartRendererStore.callBackId = Dispatcher.register((action) => {
 			// get the data
 		    Container
 				.fileService
-				.getPreviewAsync(action
-					.selectDataSourceAction
-					.dataSource.id)
+				.getPreviewAsync(dataSourceId)
 				.then((preview)=>{
 					previewData = preview;
 					chartRendererStore.fireEvent(CHANGE);

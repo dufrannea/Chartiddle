@@ -16,7 +16,10 @@ require = <any>{
 		"jquery" : "bower_components/jquery.min",
 		"es6-promise" :"bower_components/promise",
 		"text" : "bower_components/text",
-		"highcharts" : "bower_components/highcharts"
+		"highcharts" : "bower_components/highcharts",
+		"crossroads" : 'bower_components/crossroads',
+		"hasher" : 'bower_components/hasher',
+		"signals" : "bower_components/signals"
 	},
 	shim : {
 		bootstrap : ['jquery'],
