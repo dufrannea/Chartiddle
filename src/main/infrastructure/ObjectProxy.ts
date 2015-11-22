@@ -23,7 +23,8 @@ export class ProxiedWorker<T> {
 				paths : currentRequireConfig.paths
 			}
 
-			let requireJsBaseURI : string = requirejs['s'].head.baseURI;
+			let url = new (<any>URL)(requirejs['s'].head.baseURI);
+			let requireJsBaseURI = url.origin + url.pathname;
 			debugger;
 			let messageBody = {
 				action : "LOAD", 
