@@ -165,8 +165,6 @@ export let process = (hierarchies: IHierarchy[], measures: IMeasureDef[], dataSo
 			
 			// compute aggregations
 			for (let tuple of GenerateAllTuples(line, ts)) {
-				// now here tuple has the wrong format.
-				
 				let key = GetUniqueName(tuple, ts);
 				if (simpleFacts.has(key)) {
 					simpleFacts.set(key, simpleFacts.get(key) + 1);
@@ -180,12 +178,6 @@ export let process = (hierarchies: IHierarchy[], measures: IMeasureDef[], dataSo
 				structure: ts,
 				hierarchies: computedHierarchies
 			};
-			// result.hierarchies.get(hierarchies[0].name).Children.forEach((value, index)=>{
-			// 	console.info(index + " " + value.Children.size)
-			// 	value.Children.forEach((v, i )=>{
-			// 		console.info(`\t ${i} (${v.Children.size})`)
-			// 	})
-			// })
 			resolve(result);
 		});
 	})
@@ -235,10 +227,13 @@ export let query = (cube: IProcessingResult) => (cols: IHierarchy[], rows: IHier
 				});
 			return hierarchyLevel1Tuples;
 		})
-		.reduce((p, c) => p.concat(c))
+		.reduce((p, c) => p.concat(c),[])
 		.map(x=>{
 		 	return [x,cube.data.get(x)];
 		});
+		
+	// should cut tuples with respect to rows and columns.
+	
 	
 	return values;
 }
