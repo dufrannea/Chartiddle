@@ -197,7 +197,7 @@ gulp.task('package', ['rebuild'], function () {
     var dstPath = process.env.BUILD_STAGINGDIRECTORY || __dirname + '\\build';
     
     return gulp
-        .src('./build/main/*')
+        .src('./build/main/**/*')
         .pipe(zip('package.zip'))
         .pipe(gulp.dest(dstPath));
 });
