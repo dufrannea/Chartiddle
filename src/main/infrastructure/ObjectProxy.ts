@@ -17,7 +17,8 @@ export class ProxiedWorker<T> {
 			// let worker = new Worker(URL.createObjectURL(blob));
 			// IE 11 bug : when worker is created from blob
 			// indexeddb is not available.
-			let worker = new Worker("app/Worker.js");
+			let workerURL = requirejs.toUrl("app/Worker") + ".js"
+			let worker = new Worker(workerURL);
 			let currentRequireConfig = requirejs['s'].contexts._.config;
 			let newRequireConfig = {
 				paths : currentRequireConfig.paths

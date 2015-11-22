@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "gulpfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "gulp-concat": "^2.6.0"
+  },
   "devDependencies": {
     "deeply": "^0.1.0",
     "event-stream": "^3.3.1",

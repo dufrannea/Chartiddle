@@ -14,7 +14,9 @@ var sass = require('gulp-sass'),
     uglify = require('gulp-uglify'),	
     htmlreplace = require('gulp-html-replace'),
     es = require('event-stream'),
-    zip = require('gulp-zip');
+    zip = require('gulp-zip'),
+    es = require('event-stream'),
+    concat = require('gulp-concat');
     
 /**
  * TASKS DEFINITION
@@ -97,31 +99,60 @@ gulp.task("build-external-libs", function(){
 })
 
 gulp.task('release-css', ['rebuild'], function(){
-    return gulp.src('build/main/styles/style.css')
-               .pipe(gulp.dest("dist"))
+    return gulp.src('build/main/styles/**/*')
+               .pipe(concat("style.css"))
+               .pipe(gulp.dest("dist/styles"))
 })
+
+gulp.task('release-fonts', ['rebuild'], function(){
+    return gulp.src('build/main/fonts/**/*')
+                .pipe(gulp.dest("dist/fonts"));    
+});
 
 gulp.task('release-html', ['rebuild'], function(){
     return gulp.src('build/main/index.html')
         .pipe(htmlreplace({
             'js': 'scripts.js',
-            'css': 'style.css'
+            'css': 'styles/style.css'
         }))
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('release', ['release-html', 'release-css'], function(){
+gulp.task('release-worker',['rebuild'], function(){
+    // read runtime Config
+	var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('build/main/require.config.js') + '; require;');
+    requireJsOptimizerConfig = merge(requireJsRuntimeConfig, {
+        out: 'Worker.js',
+        baseUrl: './build/main',
+        name: 'app/Worker',
+        paths: {
+            requireLib: 'bower_components/require'
+        },
+        insertRequire : [],
+        include: [
+            'requireLib',
+            "app/bootstrap"
+        ],
+        bundles: {
+        }
+    });
+    return rjs(requireJsOptimizerConfig)
+        // .pipe(uglify({ preserveComments: 'none' }))
+        .pipe(gulp.dest('./dist/app'));    
+});
+	
+gulp.task('release', ["release-worker","release-fonts",'release-html', 'release-css'], function(){
 	
     // read runtime Config
 	var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('build/main/require.config.js') + '; require;');
     requireJsOptimizerConfig = merge(requireJsRuntimeConfig, {
         out: 'scripts.js',
         baseUrl: './build/main',
-        name: 'app/main',
+        name: 'app/startup',
         paths: {
             requireLib: 'bower_components/require'
         },
-        insertRequire : ["app/main"],
+        insertRequire : ["app/startup"],
         include: [
             'requireLib'
         ],

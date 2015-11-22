@@ -54,7 +54,9 @@ onmessage = ( ev : IMessageEvent ) =>{
 
 			requireConfig.baseUrl = requireJsBase;
 			debugger;
-			importScripts(requireJsPath);
+			if (!self.hasOwnProperty("require")){
+				importScripts(requireJsPath);
+			}
 			require.config(requireConfig);
 			require([moduleName], (ns) => {
 				ns.Load().then((value)=>{
