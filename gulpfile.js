@@ -13,7 +13,8 @@ var sass = require('gulp-sass'),
 	rjs = require('gulp-requirejs-bundler'),
     uglify = require('gulp-uglify'),	
     htmlreplace = require('gulp-html-replace'),
-    es = require('event-stream');
+    es = require('event-stream'),
+    zip = require('gulp-zip');
     
 /**
  * TASKS DEFINITION
@@ -159,4 +160,13 @@ gulp.task('testci', function (done) {
             outputFile: 'test-results.xml'
         }
     }, done).start();
+});
+
+gulp.task('package', ['rebuild'], function () {
+    var dstPath = process.env.BUILD_STAGINGDIRECTORY || __dirname + '\\build';
+    
+    return gulp
+        .src('./build/main/*')
+        .pipe(zip('package.zip'))
+        .pipe(gulp.dest(dstPath));
 });
