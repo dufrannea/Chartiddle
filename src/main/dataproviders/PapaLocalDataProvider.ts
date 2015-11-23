@@ -3,7 +3,7 @@
 
 import Papa = require('papaparse');
 
-export class PapaLocalDataProvider implements IDataStream{
+export class PapaLocalDataProvider implements IDataStream<Object> {
 	private file : File;
 	private preview : number;
 	private header : boolean;

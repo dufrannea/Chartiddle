@@ -2,7 +2,8 @@
 /// <reference path="../../main/model/model.d.ts"/>
 
 import {dataSource} from './testFile'
-import {process, query} from '../staging/Processing'
+import {process, query} from '../../main/services/Processing'
+
 describe("processing tests", () => {
 	var data;
 	
@@ -21,9 +22,6 @@ describe("processing tests", () => {
 				done();
 			});
 	});
-	
-	// it("should load data", (done) => {
-	// });
 	
 	it("should query ", ()=>{
 		let result = query(data)([{

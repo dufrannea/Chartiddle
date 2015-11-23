@@ -3,23 +3,28 @@
 import {FileRepository} from './FileRepository'
 import {Repository} from './Repository'
 import {BatchingProvider} from '../dataproviders/BatchingProvider'
+import {MapProvider} from '../dataproviders/MapProvider'
 import {PapaLocalDataProvider} from '../dataproviders/PapaLocalDataProvider'
 import {DataProcessor} from '../services/DataProcessor'
+import {process} from './Processing'
 
 export class FileService {
 	private _sourcesRepo : Repository<IDataSource, number>;
 	private _fileRepo : FileRepository;
+	private _processingRepo : FileRepository;
 	private _processor : DataProcessor;
 	private _chartRepo : Repository<IChartConfiguration, number>;
 	
 	constructor(
 		sourcesRepo : Repository<IDataSource,number>,
 		fileRepo : FileRepository,
+		processingRepo: FileRepository,
 		processor : DataProcessor,
 		chartRepo : Repository<IChartConfiguration, number>)
 	{
 		this._sourcesRepo = sourcesRepo;
 		this._fileRepo = fileRepo;
+		this._processingRepo = processingRepo;
 		this._processor = processor;
 		this._chartRepo = chartRepo;
 	}
@@ -68,6 +73,24 @@ export class FileService {
 				return this._sourcesRepo.delete(id);
 			});
 	}
+	
+	/**
+	 * Processes a file and saves the result to indexeddb.
+	 */
+	public processFile(sourceId : number, hierarchies : IHierarchy[]) : Promise<void>{
+		let dataSource = this._fileRepo.getAsDataStream(sourceId);
+		return process(hierarchies, [], dataSource)
+			.then(v =>{
+				let provider = new MapProvider(v.data);
+				
+				return this._processingRepo.save({
+				 	id : sourceId,
+				 	name : "",
+					dataStream : provider
+				});
+			})
+	}
+	
 	/**
 	 * Run a query against a datasource.
 	 * @param queryModel {IQuery} : the query.

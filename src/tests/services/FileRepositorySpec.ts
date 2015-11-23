@@ -54,7 +54,7 @@ describe('FileRepositorySpec tests', () => {
 
 	it('should init database', (done) => {
 		console.info("basetest**********")
-		let repo = new FileRepository(pool);
+		let repo = new FileRepository(pool,"TEST");
 		repo.save({
 			dataStream: dataProvider,
 			id: 1,
@@ -70,7 +70,7 @@ describe('FileRepositorySpec tests', () => {
 
 	it('should read all data', (done) => {
 		console.info("completetest**********")
-		let repo = new FileRepository(pool);
+		let repo = new FileRepository(pool,"TEST");
 		let allData = [];
 		repo.save({
 			dataStream: dataProvider,

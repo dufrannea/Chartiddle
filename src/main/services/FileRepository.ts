@@ -13,11 +13,22 @@ import {Promise} from "es6-promise"
  */
 export class FileRepository {
 	private pool : ConnectionPool;
+	private _storeName : string;
+	private _keyPath : string;
 	
-	constructor(pool: ConnectionPool = new ConnectionPool()) {
+	constructor(
+		pool: ConnectionPool = new ConnectionPool(), 
+		storeName : string,
+		keyPath : string = null 
+	) {
 		this.pool = pool;
+		this._storeName = storeName;
+		this._keyPath = keyPath;
 	}
-
+	
+	private getStoreName(id : number){
+		return this._storeName + "_"+ id;
+	}
 	/**
 	 * Used for tests.
 	 */
@@ -25,6 +36,14 @@ export class FileRepository {
 		this.pool.db.close();
 	}
 	
+	/**
+	 * Saves a file that will be parsed to csv 
+	 * and batched.
+	 * @param id {number} : the id of the file, used to 
+	 * 		create the datastore.
+	 * @param csvFile {File} : the file to convert to csv.
+	 * @return {Promise<void>}
+	 */
 	public saveFile(id : number, csvFile : File) : Promise<void>{
 		let fileItem : IFileItem = {
 			id : id,
@@ -34,8 +53,13 @@ export class FileRepository {
 		return this.save(fileItem)
 	}
 	
+	/**
+	 * Deletes a file, i.e. delete the whole datastore.
+	 * @param id {number} : the id of the file to delete.
+	 * @return {Promise<void>}
+	 */
 	public deleteFile(id : number) : Promise<void>{
-		let storeName = "FILE_" + id;
+		let storeName = this.getStoreName(id);
 		if (this.pool.db){
 			this.pool.db.close();
 		};
@@ -59,7 +83,7 @@ export class FileRepository {
 	 */
 	public save(file: IFileItem): Promise<void> {
 
-		let storeName = "FILE_" + file.id;
+		let storeName = this.getStoreName(file.id);	
 		if (this.pool.db){
 			this.pool.db.close();
 		}
@@ -84,7 +108,19 @@ export class FileRepository {
 					if (newDb.objectStoreNames.contains(storeName)) {
 						newDb.deleteObjectStore(storeName);
 					}
-					newDb.createObjectStore(storeName, { autoIncrement: true });	
+					if (this._keyPath){
+						newDb.createObjectStore(
+							storeName, 
+							{ 
+								autoIncrement: false, 
+								keyPath : this._keyPath 
+							});
+					} else {
+						newDb.createObjectStore(storeName, 
+							{ 
+								autoIncrement: true 
+							});
+					}	
 				});
 			}).then((db)=>{
 				file.dataStream.foreach((data) => {
@@ -130,7 +166,7 @@ export class FileRepository {
 	 * 	returning false needs to stop the loop.
 	 */
 	public getAsDataStream(id: number, lines? : number) {
-		let storeName = "FILE_" + id;
+		let storeName = this.getStoreName(id);		
 		
 		let result = {
 			foreach : (each : (data : any) => (void | boolean), done : () => void ) => {
