@@ -1,7 +1,7 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 /// <reference path="../model/model.d.ts" />
 
-import {AppComponent} from '../components/AppComponent'
+import {AppViewComponent} from '../views/AppView'
 import React = require('react');
 
 /**
@@ -11,7 +11,7 @@ export function startReact(){
 	let mainElement = document.querySelector("#main");
 	
 	React.render(
-		<AppComponent/>,
+		<AppViewComponent/>,
 		mainElement
 	);
 }

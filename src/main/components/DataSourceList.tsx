@@ -152,7 +152,6 @@ export class ChartList extends React.Component<IChartListParams,IChartListState>
 		DataSourceStore.registerChangeListener(this._onChange.bind(this));
 	}
 	_onChange(){
-		debugger;
 		this.setState({
 			charts : DataSourceStore.getCharts()
 		});	

@@ -1,19 +1,18 @@
 /// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../model/model.d.ts" />
 
 import React = require('react');
-import {DataSourceList} from './DataSourceList'
-import {ChartRenderer} from './ChartRenderer'
-import {NavBar} from './NavBar'
+import {HomeViewComponent} from './HomeView'
+import {DataSourceList} from '../components/DataSourceList'
+import {ChartRenderer} from '../components/ChartRenderer'
+import {NavBar} from '../components/NavBar'
 import {ApplicationTabs} from '../actions/AppConstants'
 import {applicationStore as AppStore} from '../stores/ApplicationStore';
 
-interface IAppComponentParams {
-}
-interface IAppComponentState {
+interface IAppViewComponentState {
 	activeTab : ApplicationTabs;
 }
-export class AppComponent extends React.Component<IAppComponentParams,IAppComponentState> {
+
+export class AppViewComponent extends React.Component<Object, IAppViewComponentState> {
 	constructor(){
 		this.state = {
 			activeTab : AppStore.getActiveTab()
@@ -50,6 +49,7 @@ export class AppComponent extends React.Component<IAppComponentParams,IAppCompon
 						<div className="col-xs-12">
 							<div>
 								{tabToRender}
+								{/* <HomeViewComponent /> */}
 							</div>
 						</div>
 					</div>
