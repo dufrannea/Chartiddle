@@ -15,10 +15,10 @@ interface IQueryOptionsState {
 }
 export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOptionsState> {
 	constructor(){
+		super();
 		this.state = {
 			options : ChartRendererStore.getQueryOptions()
 		};
-		super();
 	}
 	__toggleSort(){
 		this.state.options.sort = !this.state.options.sort;
@@ -67,9 +67,12 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
 		);
 	}
 	componentDidMount(){
-		ChartRendererStore.registerChangeListener(this._onChange.bind(this));
+		ChartRendererStore.registerChangeListener(this._onChange);
 	}
-	_onChange(){
+	componentWillUnmount(){
+		ChartRendererStore.removeListener("CHANGE", this._onChange);
+	}
+	_onChange = () => {
 		this.setState({
 			options: ChartRendererStore.getQueryOptions()
 		});
@@ -88,12 +91,12 @@ interface IChartConfigurationZoneState {
 
 class ChartConfigurationZone extends React.Component<Object,IChartConfigurationZoneState> {
 	constructor() {
+		super();
 		this.state = {
 			rows : ChartRendererStore.getSelectedRows(),
 			columns : ChartRendererStore.getSelectedColumns(),
 			measures : []
 		}
-		super();
 	}
 	__handleColumnDrop(colName : string){
 		Actions.dropColumn(colName);
@@ -132,9 +135,12 @@ class ChartConfigurationZone extends React.Component<Object,IChartConfigurationZ
 		);
 	}
 	componentDidMount(){
-		ChartRendererStore.registerChangeListener(this._onChange.bind(this));
+		ChartRendererStore.registerChangeListener(this._onChange);
 	}
-	_onChange(){
+	componentWillUnmount(){
+		ChartRendererStore.removeListener("CHANGE", this._onChange);
+	}
+	_onChange = () => {
 		this.setState({ 
 			rows : ChartRendererStore.getSelectedRows(),
 			columns : ChartRendererStore.getSelectedColumns(),
@@ -253,10 +259,10 @@ interface IDataItem {
 
 class DataPreview extends React.Component<Object ,IDataPreviewState> {
 	constructor(){
+		super();
 		this.state = {
 			data : ChartRendererStore.getPreviewData()
 		}
-		super();
 	}
 	render() {
 		let headers = [];
@@ -283,9 +289,12 @@ class DataPreview extends React.Component<Object ,IDataPreviewState> {
 		);
 	}
 	componentDidMount(){
-		ChartRendererStore.registerChangeListener(this._onChange.bind(this));
+		ChartRendererStore.registerChangeListener(this._onChange);
 	}
-	_onChange(){
+	componentWillUnmount(){
+		ChartRendererStore.removeListener("CHANGE", this._onChange);
+	}
+	_onChange = () => {
 		this.setState({ data : ChartRendererStore.getPreviewData()});	
 	}
 }
@@ -326,16 +335,19 @@ interface IChartViewComponentState {
  */
 export class ChartViewComponent extends React.Component<IChartViewComponentParams,IChartViewComponentState> {
 	constructor(){
+		super();
 		this.state = {
 			loading : false,
 			queryResult : null
 		}
-		super();
 	}
 	componentDidMount(){
-		ChartRendererStore.registerChangeListener(this._onChange.bind(this));
+		ChartRendererStore.registerChangeListener(this._onChange);
 	}
-	_onChange(){
+	componentWillUnmount(){
+		ChartRendererStore.removeListener("CHANGE", this._onChange);
+	}
+	_onChange = () => {
 		this.setState({ 
 			queryResult : ChartRendererStore.getQueryResult(), 
 			loading : ChartRendererStore.isQueryComputing()}

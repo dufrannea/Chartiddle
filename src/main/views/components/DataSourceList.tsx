@@ -19,11 +19,11 @@ interface IDataSourceListState {
 
 export class DataSourceList extends React.Component<IDataSourceListParams,IDataSourceListState> {
 	constructor(){
+		super();
 		this.state = {
 			dataSources : DataSourceStore.getAll(),
 			loading : false
 		};
-		super(this);
 	}
 	__handleDataSourceClick(dataSource : IDataSource){
 		return ()=>{
@@ -67,9 +67,12 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 		Actions.addFile(f);
 	}
 	componentDidMount(){
-		DataSourceStore.registerChangeListener(this._onChange.bind(this));
+		DataSourceStore.registerChangeListener(this._onChange);
 	}
-	_onChange(){
+	componentWillUnmount(){
+		DataSourceStore.removeListener("CHANGE", this._onChange)	
+	}
+	_onChange = () => {
 		this.setState({ dataSources : DataSourceStore.getAll(), loading : DataSourceStore.isLoading()});	
 	}
 }
