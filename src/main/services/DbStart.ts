@@ -31,7 +31,7 @@ export class DbStart {
             return;
         }
         this.pool = pool;
-        console.info("indexedDB seems to be supported");
+        console.debug("indexedDB seems to be supported");
     }
 
     /**

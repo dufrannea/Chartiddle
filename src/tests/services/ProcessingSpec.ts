@@ -13,7 +13,6 @@ describe("processing tests", () => {
 			columns: ["pos_seq", "t1_tok_min"]
 		}], null, dataSource)
 			.then((res) => {
-				console.info("**************DONE")
 				data = res;
 				done()
 			})
@@ -28,6 +27,5 @@ describe("processing tests", () => {
 			name: "h1",
 			columns: ["pos_seq", "t1_tok_min"]
 		}],[]);
-		console.info(result);
 	})
 })

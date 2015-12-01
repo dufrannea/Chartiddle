@@ -45,7 +45,6 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 				.getAllChartsForDataSource(action.data.id)
 				.then((configs)=>{
 					chartList = configs;
-					debugger;
 					dataSourceStore.fireEvent(CHANGE);
 				});
 				break;

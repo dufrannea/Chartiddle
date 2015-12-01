@@ -125,11 +125,9 @@ export class FileRepository {
 			}).then((db)=>{
 				file.dataStream.foreach((data) => {
 					if (!transaction){
-						console.info("*******creating a new transaction")
 						transaction = db.transaction([storeName], "readwrite");
 						transaction.oncomplete = () => {
 							tryResolve(transactionId);
-							console.info('transaction complete')
 						};
 					}
 					try { 
@@ -137,19 +135,16 @@ export class FileRepository {
 							.objectStore(storeName)
 							.add(data);
 					} catch (e){
-						console.error("reuse failed");
 						transactionId+=1;
 						transaction = db.transaction([storeName], "readwrite");
 						transaction.oncomplete = () => {
 							tryResolve(transactionId);
-							console.info('transaction complete')
 						};
 						transaction
 							.objectStore(storeName)
 							.add(data);
 					}
 				}, () => {
-					console.info("no more data");
 				});
 				
 			})
