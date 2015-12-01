@@ -1,8 +1,8 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../model/model.d.ts" />
+/// <reference path="../../../typings/tsd.d.ts"/>
+/// <reference path="../../model/model.d.ts" />
 /// <amd-dependency path="highcharts"/>
 import React = require('react');
-import {appActions as Actions} from '../actions/Actions'
+import {appActions as Actions} from '../../actions/Actions'
 import $ = require('jquery');
 
 declare var Highcharts: HighchartsStatic;

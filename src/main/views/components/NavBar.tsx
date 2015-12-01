@@ -1,7 +1,7 @@
-/// <reference path="../../typings/tsd.d.ts"/>
+/// <reference path="../../../typings/tsd.d.ts"/>
 import React = require('react');
-import {applicationStore as AppStore} from '../stores/ApplicationStore'
-import {appActions as Actions} from '../actions/Actions'
+import {applicationStore as AppStore} from '../../stores/ApplicationStore'
+import {appActions as Actions} from '../../actions/Actions'
 interface INavBarParams { 
 }
 interface INavBarState {

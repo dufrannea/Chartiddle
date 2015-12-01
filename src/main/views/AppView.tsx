@@ -2,9 +2,9 @@
 
 import React = require('react');
 import {HomeViewComponent} from './HomeView'
-import {DataSourceList} from '../components/DataSourceList'
-import {ChartRenderer} from '../components/ChartRenderer'
-import {NavBar} from '../components/NavBar'
+import {DataSourceList} from '../views/components/DataSourceList'
+import {ChartViewComponent} from '../views/ChartView'
+import {NavBar} from '../views/components/NavBar'
 import {ApplicationTabs} from '../actions/AppConstants'
 import {applicationStore as AppStore} from '../stores/ApplicationStore';
 
@@ -34,7 +34,7 @@ export class AppViewComponent extends React.Component<Object, IAppViewComponentS
 					return <DataSourceList/>
 					break;
 				case ApplicationTabs.CHART_VIEW:
-					return <ChartRenderer/>
+					return <ChartViewComponent/>
 					break;
 				default:
 					return <div>Nothing!</div>

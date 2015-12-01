@@ -1,12 +1,12 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../model/model.d.ts" />
+/// <reference path="../../../typings/tsd.d.ts"/>
+/// <reference path="../../model/model.d.ts" />
 /// <amd-dependency path="bootstrap"/>
 
 import React = require('react');
 import {DropzoneComponent} from './DropzoneComponent'
-import {dataSourceStore as DataSourceStore} from '../stores/DataSourceStore'
-import {appActions as Actions} from '../actions/Actions'
-import {ApplicationTabs} from '../actions/AppConstants'
+import {dataSourceStore as DataSourceStore} from '../../stores/DataSourceStore'
+import {appActions as Actions} from '../../actions/Actions'
+import {ApplicationTabs} from '../../actions/AppConstants'
 import {Chart} from './Chart'
 
 interface IDataSourceListParams {
