@@ -40,7 +40,7 @@ onmessage = ( ev : IMessageEvent ) =>{
 		// Note : load failure should fail
 		//		  all waiting calls.
 		case "LOAD" :
-			console.info("being asked to load...");
+			console.debug("worker loading...");
 			let {
 				requireJsBase = null,
 				requireJsPath = null,
@@ -53,7 +53,6 @@ onmessage = ( ev : IMessageEvent ) =>{
 			}
 
 			requireConfig.baseUrl = requireJsBase;
-			debugger;
 			if (!self.hasOwnProperty("require")){
 				importScripts(requireJsPath);
 			}
@@ -66,7 +65,7 @@ onmessage = ( ev : IMessageEvent ) =>{
 			})
 			break;
 		case "CALL":
-			console.info("being asked to call");
+			console.debug("worker calling method");
 			let {
 				methodName = null,
 				arguments = []

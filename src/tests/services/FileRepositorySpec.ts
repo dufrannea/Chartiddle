@@ -27,7 +27,6 @@ describe('FileRepositorySpec tests', () => {
 	beforeEach((done) => {
 		let dropRequest = window.indexedDB.deleteDatabase(DATABASE_NAME)
 		dropRequest.onsuccess = () => {
-			console.info("*****dropdbsuccess")
 			let createRequest = window.indexedDB.open(DATABASE_NAME);
 			createRequest.onsuccess = (ev) => {
 				pool.db = createRequest.result
@@ -53,8 +52,7 @@ describe('FileRepositorySpec tests', () => {
 	});
 
 	it('should init database', (done) => {
-		console.info("basetest**********")
-		let repo = new FileRepository(pool);
+		let repo = new FileRepository(pool,"TEST");
 		repo.save({
 			dataStream: dataProvider,
 			id: 1,
@@ -69,8 +67,7 @@ describe('FileRepositorySpec tests', () => {
 	});
 
 	it('should read all data', (done) => {
-		console.info("completetest**********")
-		let repo = new FileRepository(pool);
+		let repo = new FileRepository(pool,"TEST");
 		let allData = [];
 		repo.save({
 			dataStream: dataProvider,
@@ -79,10 +76,8 @@ describe('FileRepositorySpec tests', () => {
 		}).then(() => {
 			repo.getAsDataStream(1).foreach((data) => {
 				allData.push(data);
-				console.info("reading", data);
 			}, () => {
 				expect(allData).toEqual([ [[ '1', '2', '3' ]], [[ '4', '5', '6' ]], [[ '7', '8', '9' ]] ] );
-				console.info("soure read")
 			})
 		})
 		.then(()=>{

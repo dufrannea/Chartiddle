@@ -98,7 +98,6 @@ export class Repository<TObject, TKey>  {
 			let objectStore = transaction.objectStore(storeName || this.tableName);
 	
 			transaction.oncomplete = function(event) {
-				console.info("transaction completed");
 				resolve();
 			};
 	

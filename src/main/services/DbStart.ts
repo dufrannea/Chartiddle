@@ -7,6 +7,7 @@ import {FileRepository} from './FileRepository'
 
 declare var window: Window;
 const CHARTS_STORE: string = "Charts";
+const PROCESSING_STORE: string = "Processing";
 const DATAMODELS_STORE: string = "DataModels";
 const DATASOURCES_STORE: string = "DataSources";
 
@@ -19,6 +20,7 @@ export class DbStart {
     public DataModelRepository: Repository<IDataModel, number>;
     public ChartConfigurationRepository: Repository<IChartConfiguration, number>;
     public FileRepository : FileRepository;
+    public ProcessingRepository : FileRepository;
     
     private pool : ConnectionPool;
     private indexedDB  :IDBFactory;
@@ -29,7 +31,7 @@ export class DbStart {
             return;
         }
         this.pool = pool;
-        console.info("indexedDB seems to be supported");
+        console.debug("indexedDB seems to be supported");
     }
 
     /**
@@ -86,7 +88,8 @@ export class DbStart {
         this.DataSourceRepository = new Repository<IDataSource, number>(this.pool, DATASOURCES_STORE);
         this.DataModelRepository = new Repository<IDataModel, number>(this.pool, DATAMODELS_STORE);
         this.ChartConfigurationRepository = new Repository<IChartConfiguration, number>(this.pool, CHARTS_STORE);
-        this.FileRepository = new FileRepository(this.pool);
+        this.FileRepository = new FileRepository(this.pool,"FILE");
+        this.ProcessingRepository = new FileRepository(this.pool,"PROCESS");
     }
 
     /**
@@ -94,7 +97,7 @@ export class DbStart {
      * @param db {IDBDatabase} : the db to update.
      */
     private upgradeDatabase(db: IDBDatabase) {
-        let dropCreate = (name: string) => {
+        let dropCreate = (name: string, autoIncrement = true, keyPath = "id") => {
             if (!db.objectStoreNames.contains(name)) {
                 var dataModelStore = db.createObjectStore(name, { autoIncrement: true, keyPath: "id" });
             }

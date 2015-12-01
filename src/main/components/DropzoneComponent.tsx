@@ -23,16 +23,13 @@ export class DropzoneComponent extends React.Component<IDropzoneComponentParams,
 	componentDidMount(){
 		let element = this.refs['holder']['getDOMNode']();
 		element.ondragover = () => { 
-			console.info("dragging over");
 			this.__startHover();
 			return false; 
 		};
 		element.ondragend = () => { 
-			console.info("dragging end");
 			this.__stopHover();
 		};
 		element.ondrop = (e) => {
-			console.info("dropping");
 			e.preventDefault();
 			this.__stopHover();
 			var file = e.dataTransfer.files[0];

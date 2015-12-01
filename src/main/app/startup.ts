@@ -4,7 +4,7 @@
 
 import {startReact} from './main'
 import {appActions as Actions} from '../actions/Actions'
-import {FileService} from '../services/FileService'
+import {ApplicationService} from '../services/ApplicationService'
 import {ProxiedWorker} from "../infrastructure/ObjectProxy"
 import {Container} from '../infrastructure/Container'
 import {Router} from './routing'
@@ -12,10 +12,10 @@ import {Router} from './routing'
 Router.setupRoutes();
 
 ProxiedWorker
-	.Load<FileService>(FileService,"app/bootstrap")
-	.then(fileService=> {
-		Container.fileService = fileService;
-		return fileService.getAllDataSourcesAsync()
+	.Load<ApplicationService>(ApplicationService,"app/bootstrap")
+	.then(applicationService=> {
+		Container.ApplicationService = applicationService;
+		return applicationService.getAllDataSourcesAsync()
 	})
 	.then(value => {
 		Actions.modelLoaded(value);

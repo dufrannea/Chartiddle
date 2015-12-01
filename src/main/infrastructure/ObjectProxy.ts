@@ -26,7 +26,6 @@ export class ProxiedWorker<T> {
 
 			let url = new (<any>URL)(requirejs['s'].head.baseURI);
 			let requireJsBaseURI = url.origin + url.pathname;
-			debugger;
 			let messageBody = {
 				action : "LOAD", 
 				actionBody : {
@@ -40,7 +39,7 @@ export class ProxiedWorker<T> {
 			worker.onmessage = (ev)=>{
 				switch (ev.data) {
 					case "LOAD_DONE":
-						console.info("worker has been loaded");
+						console.debug("worker has been loaded");
 						resolve(ObjectProxy.proxy<T>(<any>ctor, worker));
 						break;
 				}
@@ -80,7 +79,7 @@ class ObjectProxy {
 				result = null
 			} = ev.data;
 			if (action === "CALL_DONE"){
-				console.info("received call done");
+				console.debug("received call done");
 				queued[methodName](result);	
 			}
 		})
