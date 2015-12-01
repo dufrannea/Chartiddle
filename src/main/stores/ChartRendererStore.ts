@@ -108,7 +108,7 @@ let updateQueryResult = () => {
 	fireChange();
 	
 	return Container
-		.fileService
+		.ApplicationService
 		.Query(query, dataSourceId, queryOptions)
 		.then((result)=>{
 			queryResult = result;
@@ -121,7 +121,7 @@ chartRendererStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
 		case AppConstants.SAVE_CHART:
 			Container
-				.fileService
+				.ApplicationService
 				.saveChart(action.data)
 				.then(()=>{
 					fireChange();
@@ -178,7 +178,7 @@ chartRendererStore.callBackId = Dispatcher.register((action) => {
 			};
 			// get the data
 		    Container
-				.fileService
+				.ApplicationService
 				.getPreviewAsync(dataSourceId)
 				.then((preview)=>{
 					previewData = preview;

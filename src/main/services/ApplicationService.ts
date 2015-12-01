@@ -8,7 +8,7 @@ import {PapaLocalDataProvider} from '../dataproviders/PapaLocalDataProvider'
 import {DataProcessor} from '../services/DataProcessor'
 import {process} from './Processing'
 
-export class FileService {
+export class ApplicationService {
 	private _sourcesRepo : Repository<IDataSource, number>;
 	private _fileRepo : FileRepository;
 	private _processingRepo : FileRepository;

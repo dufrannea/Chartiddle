@@ -2,7 +2,7 @@
 /// <reference path="../model/model.d.ts" />
 
 import {DbStart} from '../services/DbStart'
-import {FileService} from '../services/FileService'
+import {ApplicationService} from '../services/ApplicationService'
 import {ConnectionPool} from '../services/ConnectionPool'
 import {DataProcessor} from '../services/DataProcessor'
 import {Container} from '../infrastructure/Container'
@@ -19,12 +19,12 @@ export function Load(){
 			console.error("db updgrade failed, sorry.")
 		})
 		.then(()=>{
-			Container.fileService = new FileService(
+			Container.ApplicationService = new ApplicationService(
 				dataService.DataSourceRepository, 
 				dataService.FileRepository,
 				dataService.ProcessingRepository,
 				new DataProcessor(),
 				dataService.ChartConfigurationRepository);
-			return Container.fileService;
+			return Container.ApplicationService;
 		});
 }

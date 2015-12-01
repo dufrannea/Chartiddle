@@ -41,7 +41,7 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
 		case AppConstants.SELECT_DATASOURCE:
 			Container
-				.fileService
+				.ApplicationService
 				.getAllChartsForDataSource(action.data.id)
 				.then((configs)=>{
 					chartList = configs;
@@ -56,7 +56,7 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 		case AppConstants.DELETE_DATASOURCE:
 			let sourceToRemove = action.selectDataSourceAction.dataSourceId;
 			Container
-				.fileService
+				.ApplicationService
 				.deleteDataSource(sourceToRemove)
 				.then(()=>{
 					dataSources = dataSources.filter(x=>x.id !== sourceToRemove)
@@ -64,7 +64,7 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 			break;	
 		case AppConstants.ADD_FILE:
 		    let name : string = "REMOTE";
-			let fileService = Container.fileService; 
+			let fileService = Container.ApplicationService; 
 			loadingFile = true;
 			dataSourceStore.fireEvent(CHANGE);
 			let saveAction : Promise<number>;
