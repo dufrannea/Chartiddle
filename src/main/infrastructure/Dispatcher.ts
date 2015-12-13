@@ -28,7 +28,6 @@ export interface IUpdateChartRendererModelAction {
 }
 
 export interface IActionType {
-	// operation to be done on todo.
 	actionType : AppConstants; 
 	
 	fileAction? : IFileAction;
@@ -41,6 +40,11 @@ export interface IActionType {
 	// weakly typed data,
 	// use with care.	
 	data? : any;
+}
+
+export interface IRouteAction extends IActionType {
+	routeActionType: string;
+	routeData? : number | string;
 }
 
 // here create an AppDispatcher

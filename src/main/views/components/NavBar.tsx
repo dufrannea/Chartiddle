@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/tsd.d.ts"/>
 import React = require('react');
 import {applicationStore as AppStore} from '../../stores/ApplicationStore'
-import {appActions as Actions} from '../../actions/Actions'
+import {NavigationActions} from '../../actions/NavigationActions'
 interface INavBarParams { 
 }
 interface INavBarState {
@@ -11,15 +11,12 @@ export class NavBar extends React.Component<INavBarParams,INavBarState> {
 		this.state = {};
 		super();
 	}
-	__handleMainClick(){
-		Actions.navigateDataSourcesList();
-	}
 	render() {
 		return (
 				<nav className="navbar navbar-inverse">
 					<div className="container-fluid">
 						<div className="navbar-header">
-							<a className="navbar-brand" href="#" onClick={this.__handleMainClick}>Chartiddle</a>
+							<a className="navbar-brand" href="#/datasources">Chartiddle</a>
 						</div>
 					</div>
 				</nav>

@@ -1,37 +1,29 @@
 import {appActions as Actions} from '../actions/Actions'
 import {dispatcher as Dispatcher} from '../infrastructure/Dispatcher'
-import {AppConstants} from '../actions/AppConstants'
 import crossroads = require('crossroads')
 import hasher = require('hasher')
 
 export module Router { 
-	
-	function setHashSilently(hash){
-		hasher.changed.active = false; //disable changed signal
-		hasher.setHash(hash); //set hash without dispatching changed signal
-		hasher.changed.active = true; //re-enable signal
+
+	export let goHome = () => {
+		hasher.setHash(`home`);
 	}
-	
-	let startRewrite = () => {
-		Dispatcher.register((action) => {
-			switch (action.actionType) {
-				case AppConstants.NAVIGATE_DATASOURCES_LIST:
-					setHashSilently(`home`);
-					break;
-				case AppConstants.VIEW_CHART_FOR_DATASOURCE:
-					let dataSourceId = action.selectDataSourceAction.dataSourceId;
-					setHashSilently(`editor/${dataSourceId}`);
-					break;
-			}	
-		});
+	export let goDatasource = (id : number) => {
+		hasher.setHash(`editor/${id}`);
+	}
+	export let goDataSourceList = () =>{
+		hasher.setHash('datasources');	
 	}
 	
 	export let setupRoutes = ()=>{
-		var DEFAULT_HASH = 'home';
+		var DEFAULT_HASH = 'datasources';
 		
-		//setup crossroads
 		crossroads.addRoute('home', ()=>{
-			Actions.navigateDataSourcesList();
+			setTimeout(()=>Actions.navigateDataSourcesList(),0);
+		});
+		
+		crossroads.addRoute('datasources', ()=>{
+			setTimeout(()=>Actions.navigateDataSourcesList(),0);
 		});
 		
 		crossroads.addRoute('editor/{sourceId}', (id)=>{
@@ -39,7 +31,7 @@ export module Router {
 			if (! (nId > 0)){
 				return;
 			} else {
-				Actions.viewChartForDataSource(nId)
+				setTimeout(()=>Actions.viewChartForDataSource(nId),0)
 			}
 		});
 		crossroads.routed.add(console.log, console); //log all routes
@@ -59,6 +51,5 @@ export module Router {
 		hasher.changed.add(parseHash); //parse hash changes
 		
 		hasher.init(); //start listening for hash changes
-		startRewrite();
 	}
 }

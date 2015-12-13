@@ -413,8 +413,6 @@ export class ChartRendererToolbar extends React.Component<IChartRendererToolbarP
 	__handleClickSave(){
 		Actions.saveChart(ChartRendererStore.getChartConfiguration())
 	}
-	componentDidMount(){
-	}
 	_onChange(){
 		this.setState({});
 	}
