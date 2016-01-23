@@ -16,10 +16,10 @@ export module Router {
 	}
 	
 	export let setupRoutes = ()=>{
-		var DEFAULT_HASH = 'datasources';
+		var DEFAULT_HASH = 'home';
 		
 		crossroads.addRoute('home', ()=>{
-			setTimeout(()=>Actions.navigateDataSourcesList(),0);
+			setTimeout(()=>Actions.navigateHome(),0);
 		});
 		
 		crossroads.addRoute('datasources', ()=>{
@@ -36,20 +36,19 @@ export module Router {
 		});
 		crossroads.routed.add(console.log, console); //log all routes
 		
-		// sets a default value
-		if(! hasher.getHash()){
-			hasher.setHash(DEFAULT_HASH);
-		}
-		
 		let parseHash = (newHash, oldHash) => {
 			// second parameter of crossroads.parse() is the "defaultArguments" and should be an array
 			// so we ignore the "oldHash" argument to avoid issues.
 			crossroads.parse(newHash);
 		}
 		
-		// hasher.initialized.add(parseHash); //parse initial hash
+		hasher.initialized.add(parseHash); //parse initial hash
 		hasher.changed.add(parseHash); //parse hash changes
 		
 		hasher.init(); //start listening for hash changes
+		
+		if(! hasher.getHash()){
+			hasher.setHash(DEFAULT_HASH);
+		}
 	}
 }

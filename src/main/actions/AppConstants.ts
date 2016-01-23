@@ -9,6 +9,7 @@ export enum AppConstants {
 	SELECT_DATASOURCE,
 	VIEW_CHART_FOR_DATASOURCE,
 	NAVIGATE_DATASOURCES_LIST,
+	NAVIGATE_HOME,
 	DELETE_DATASOURCE,
 	/**
 	 * DatasourceList.
@@ -33,6 +34,7 @@ export enum AppConstants {
 }
 
 export enum ApplicationTabs {
+	HOME_VIEW,
 	DATASOURCES_VIEW,
-	CHART_VIEW
+	CHART_EDITOR_VIEW
 }

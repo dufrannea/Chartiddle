@@ -93,8 +93,6 @@ let fireChange = ()=>{
 	chartRendererStore.fireEvent(CHANGE);
 }
 
-
-
 let updateQueryResult = () => {
 	if (!selectedMeasures || selectedMeasures.length === 0){
 		fireChange();

@@ -30,10 +30,13 @@ export class AppViewComponent extends React.Component<Object, IAppViewComponentS
 	render() {
 		let tabToRender = (()=>{
 			switch (this.state.activeTab) {
+				case ApplicationTabs.HOME_VIEW:
+					return <HomeViewComponent/>
+					break;
 				case ApplicationTabs.DATASOURCES_VIEW:
 					return <DataSourceList/>
 					break;
-				case ApplicationTabs.CHART_VIEW:
+				case ApplicationTabs.CHART_EDITOR_VIEW:
 					return <ChartViewComponent/>
 					break;
 				default:
@@ -49,7 +52,6 @@ export class AppViewComponent extends React.Component<Object, IAppViewComponentS
 						<div className="col-xs-12">
 							<div>
 								{tabToRender}
-								{/* <HomeViewComponent /> */}
 							</div>
 						</div>
 					</div>

@@ -59,6 +59,7 @@ dataSourceStore.callBackId = Dispatcher.register((action) => {
 				.deleteDataSource(sourceToRemove)
 				.then(()=>{
 					dataSources = dataSources.filter(x=>x.id !== sourceToRemove)
+					dataSourceStore.fireEvent(CHANGE);
 				})
 			break;	
 		case AppConstants.ADD_FILE:

@@ -9,7 +9,7 @@ import {Container} from '../infrastructure/Container'
 const CHANGE = "CHANGE";
 
 // default active tab.
-let activeTab = ApplicationTabs.DATASOURCES_VIEW;
+let activeTab = ApplicationTabs.HOME_VIEW;
 let activeDataSourceId : number = null;
 
 class ApplicationStore extends EventEmitter {
@@ -33,12 +33,17 @@ applicationStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
 		case AppConstants.VIEW_CHART_FOR_DATASOURCE:
 			activeDataSourceId = action.selectDataSourceAction.dataSourceId;
-			activeTab = ApplicationTabs.CHART_VIEW;
+			activeTab = ApplicationTabs.CHART_EDITOR_VIEW;
 			applicationStore.fireEvent(CHANGE);
 			break;
 		case AppConstants.NAVIGATE_DATASOURCES_LIST:
 			activeDataSourceId = null;
 			activeTab = ApplicationTabs.DATASOURCES_VIEW;
+			applicationStore.fireEvent(CHANGE);
+			break;
+		case AppConstants.NAVIGATE_HOME:
+			activeDataSourceId = null;
+			activeTab = ApplicationTabs.HOME_VIEW;
 			applicationStore.fireEvent(CHANGE);
 			break;
 	}

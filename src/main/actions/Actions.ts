@@ -43,6 +43,14 @@ class AppActions {
 		})
 	}
 	/**
+	 * Navigate home
+	 */
+	navigateHome(){
+		Dispatcher.dispatch({
+			actionType : AppConstants.NAVIGATE_HOME
+		});
+	}
+	/**
 	 * Back to the datasources list.
 	 */
 	navigateDataSourcesList(){
