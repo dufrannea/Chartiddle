@@ -2,39 +2,39 @@
 
 import React = require('react');
 import {HomeViewComponent} from './HomeView'
-import {DataSourceList} from '../views/components/DataSourceList'
+import {DataSourcesViewComponent} from '../views/DataSourcesView'
 import {ChartViewComponent} from '../views/ChartView'
 import {NavBar} from '../views/components/NavBar'
 import {ApplicationTabs} from '../actions/AppConstants'
 import {applicationStore as AppStore} from '../stores/ApplicationStore';
 
 interface IAppViewComponentState {
-	activeTab : ApplicationTabs;
+	activeTab: ApplicationTabs;
 }
 
 export class AppViewComponent extends React.Component<Object, IAppViewComponentState> {
-	constructor(){
+	constructor() {
 		this.state = {
-			activeTab : AppStore.getActiveTab()
+			activeTab: AppStore.getActiveTab()
 		}
 		super();
 	}
-	componentDidMount(){
+	componentDidMount() {
 		AppStore.registerChangeListener(this._onChange.bind(this));
 	}
-	_onChange(){
-		this.setState({ 
-			activeTab : AppStore.getActiveTab()
-		});	
+	_onChange() {
+		this.setState({
+			activeTab: AppStore.getActiveTab()
+		});
 	}
 	render() {
-		let tabToRender = (()=>{
+		let tabToRender = (() => {
 			switch (this.state.activeTab) {
 				case ApplicationTabs.HOME_VIEW:
 					return <HomeViewComponent/>
 					break;
 				case ApplicationTabs.DATASOURCES_VIEW:
-					return <DataSourceList/>
+					return <DataSourcesViewComponent/>
 					break;
 				case ApplicationTabs.CHART_EDITOR_VIEW:
 					return <ChartViewComponent/>
@@ -47,15 +47,13 @@ export class AppViewComponent extends React.Component<Object, IAppViewComponentS
 		return (
 			<div>
 				<NavBar/>
-				<div className="container-fluid">
-					<div className="row">
-						<div className="col-xs-12">
-							<div>
-								{tabToRender}
-							</div>
-						</div>
+				{tabToRender}
+				<footer id="footer">
+					<div className="container">
+						<span className="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span>
+						2015 Chartiddle Inc.
 					</div>
-				</div>
+				</footer>
 			</div>
 		);
 	}

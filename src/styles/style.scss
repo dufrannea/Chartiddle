@@ -1,3 +1,44 @@
+
+.navbar-default {
+  background-color: #eee;
+  background-image: none;
+}
+
+.navbar-home {
+  border-bottom: none;
+  box-shadow: none;
+  margin-bottom: 0;
+}
+
+#footer {
+  background-color: #F5F5F5;
+  color: #777;
+  margin-top: 20px;
+  
+  .container {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  html {
+    position: relative;
+    min-height: 100%;
+  }
+  
+  body {
+    margin-bottom: 60px;
+  }
+  
+  #footer {
+    bottom: 0;
+    height: 60px;
+    position: absolute;
+    width: 100%;
+  }
+}
+
 .dropzone {
   border: 10px dashed #ccc;
   width: 300px; 

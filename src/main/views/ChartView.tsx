@@ -282,7 +282,7 @@ class DataPreview extends React.Component<Object ,IDataPreviewState> {
 			return <TableHeaderCell name={x}/>
 		});
 		return (
-			<table className="table table-condensed table-bordered">
+			<table className="table table-condensed table-bordered table-striped">
 				<tr>{tableHeaders}</tr>
 				{tableContent}
 			</table>
@@ -355,37 +355,19 @@ export class ChartViewComponent extends React.Component<IChartViewComponentParam
 	}
 	render() {
 		return (
-			<div>
-				<div className="row">
-					<div className="col-md-6 col-md-offset-3">
-						<ChartRendererToolbar/>
+			<div className="container">
+				<ChartRendererToolbar/>
+				<Chart loading={this.state.loading}	data={this.state.queryResult} />
+				<div className="panel panel-default">
+					<div className="panel-heading">Options</div>
+					<div className="panel-body">
+						<QueryOptions/>
 					</div>
 				</div>
-				<div className="row">
-					<div className="col-md-10 col-md-offset-1">
-						<Chart 
-							loading={this.state.loading}
-							data={this.state.queryResult} />
-					</div>
+				<div className="well">
+					<ChartConfigurationZone/>
 				</div>
-				<div className="row">
-					<div className="col-md-6 col-md-offset-3">
-						<div className="panel panel-default">
-							<div className="panel-heading">
-							Options
-							</div>
-							<div className="panel-body">
-								<QueryOptions/>
-							</div>
-						</div>
-						<ChartConfigurationZone/>
-					</div>
-				</div>
-				<div className="row">
-					<div className="col-md-10 col-md-offset-1">
-						<DataPreview/>
-					</div>
-				</div>
+				<DataPreview/>
 			</div>
 		);
 	}
@@ -402,11 +384,13 @@ export class ChartRendererToolbar extends React.Component<IChartRendererToolbarP
 	}
 	render() {
 		return (
-			<div>
-			  <button className="btn"
-			  		  onClick={this.__handleClickSave} >Save
-			  	<span className="glyphicon glyphicon-floppy-disk"></span>			
-			  </button>
+			<div className="panel panel-default">
+				<div className="panel-body">
+					<button className="btn"
+								onClick={this.__handleClickSave} >Save
+						<span className="glyphicon glyphicon-floppy-disk"></span>			
+					</button>
+				</div>
 			</div>
 		);
 	}

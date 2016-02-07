@@ -45,7 +45,7 @@ export class DataSourceList extends React.Component<IDataSourceListParams,IDataS
 						onClickDelete={this.__handleDataSourceDelete(x)}/>
 		});
 		return (
-			<div className="col-md-6 col-md-offset-3 displayNone">
+			<div>
 				<DropzoneComponent 
 					loading={this.state.loading}
 					onDrop={this._acceptFile.bind(this)}
