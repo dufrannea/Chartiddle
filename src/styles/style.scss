@@ -39,6 +39,12 @@
   }
 }
 
+@media (min-width: 1300px) {
+  .container {
+    width: auto;
+  }
+}
+
 .dropzone {
   border: 10px dashed #ccc;
   width: 300px; 

@@ -282,10 +282,12 @@ class DataPreview extends React.Component<Object ,IDataPreviewState> {
 			return <TableHeaderCell name={x}/>
 		});
 		return (
-			<table className="table table-condensed table-bordered table-striped">
-				<tr>{tableHeaders}</tr>
-				{tableContent}
-			</table>
+			<div className="table-responsive">
+				<table className="table table-condensed table-bordered table-striped">
+					<tr>{tableHeaders}</tr>
+					{tableContent}
+				</table>
+			</div>
 		);
 	}
 	componentDidMount(){
