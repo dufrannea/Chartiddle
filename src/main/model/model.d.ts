@@ -151,3 +151,8 @@ interface IDropBoxFile {
     link : string;
     name : string;
 }
+
+interface IChartDisplayOptions {
+    chartType : string;
+    stacked : boolean;
+}

@@ -46,6 +46,11 @@ let getQuery = () => {
 	}
 }
 
+let chartDisplayOptions = {
+    stacked: false,
+    chartType : "column"
+}
+
 class ChartRendererStore extends EventEmitter {
 	getSelectedRows(){
 		return selectedRows;
@@ -69,6 +74,9 @@ class ChartRendererStore extends EventEmitter {
 	getQueryOptions(){
 		return queryOptions;
 	}
+    getChartDisplayOptions(){
+        return chartDisplayOptions;
+    }
 	getChartConfiguration() : IChartConfiguration{
 		return {
 			datasource_id : dataSourceId,
@@ -117,6 +125,10 @@ let updateQueryResult = () => {
 
 chartRendererStore.callBackId = Dispatcher.register((action) => {
 	switch (action.actionType) {
+        case AppConstants.CHANGE_CHARTDISPLAY_OPTIONS:
+            chartDisplayOptions = action.data;
+            fireChange();
+            break;
 		case AppConstants.SAVE_CHART:
 			Container
 				.ApplicationService

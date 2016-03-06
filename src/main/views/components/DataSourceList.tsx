@@ -144,6 +144,8 @@ export class ChartList extends React.Component<IChartListParams,IChartListState>
 						key={c.id}
 						data={c.results}
 						loading={false}
+                        chartType="column"
+                        stacked={false}
 					/>
 		})
 		return (

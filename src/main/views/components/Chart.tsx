@@ -41,7 +41,9 @@ const baseConfig = {
 const stacked = false;
 const graphType = "column";
 
-let buildConfig = (result : IQueryResult) =>{
+let buildConfig = (props: IChartProps) =>{
+    let result = props.data;
+    
 	let cats = result.Columns;
 	let vals = result.Values;
 	let series = [];
@@ -73,23 +75,25 @@ let buildConfig = (result : IQueryResult) =>{
 	}
 
 	var newConfig = baseConfig;
-	newConfig.chart.type = graphType;
+	newConfig.chart.type = props.chartType;
 	newConfig.series = series;
-	if (stacked) {
+	if (props.stacked) {
 		newConfig.plotOptions.column.stacking = 'normal';
 	} else {
 		newConfig.plotOptions.column.stacking = null;
 	}
 	return newConfig;
 }
-interface IChartParams {
+interface IChartProps {
 	data : IQueryResult;
 	loading : boolean;
 	key? : number;
+    chartType : string;
+    stacked : boolean;
 }
 interface IChartState {
 }
-export class Chart extends React.Component<IChartParams,IChartState> {
+export class Chart extends React.Component<IChartProps,IChartState> {
 	private chart : any;
 	private changeListener : any;
 	constructor(){
@@ -113,16 +117,17 @@ export class Chart extends React.Component<IChartParams,IChartState> {
 		}
 	}
 
-	updateChart(data : IQueryResult){
+	updateChart(props: IChartProps){
+        let data = props.data;
 		if (data != null){	
 			let domElement = this.refs["chart"]['getDOMNode']();
-			this.chart = $(domElement).highcharts(buildConfig(data));
+			this.chart = $(domElement).highcharts(buildConfig(props));
 		}
 	}
-	componentWillReceiveProps(newProps : IChartParams){
+	componentWillReceiveProps(newProps : IChartProps){
 		let oldData = this.props.data;
 		if (oldData !== newProps.data){
-			this.updateChart(newProps.data);
+			this.updateChart(newProps);
 		}
 	}
 }

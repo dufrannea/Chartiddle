@@ -172,6 +172,13 @@ class AppActions {
 			data : chart
 		});
 	}
+    
+    updateChartDisplayOptions(chartDisplayOptions: IChartDisplayOptions){
+        Dispatcher.dispatch({
+			actionType: AppConstants.CHANGE_CHARTDISPLAY_OPTIONS,
+			data : chartDisplayOptions
+		});
+    }
 }
 
 export var appActions = new AppActions();

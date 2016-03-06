@@ -11,13 +11,16 @@ import {Chart} from './components/Chart'
 interface IQueryOptionsParams {
 }
 interface IQueryOptionsState {
-	options : IQueryOptions
+	options : IQueryOptions,
+    displayOptions : IChartDisplayOptions
 }
+
 export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOptionsState> {
 	constructor(){
 		super();
 		this.state = {
-			options : ChartRendererStore.getQueryOptions()
+			options : ChartRendererStore.getQueryOptions(),
+            displayOptions : ChartRendererStore.getChartDisplayOptions()
 		};
 	}
 	__toggleSort(){
@@ -35,6 +38,10 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
     __triggerOptionsUpdate(){
         //this.state.options.limitTo = parseInt(event.target.value);
         Actions.updateQueryOption(this.state.options); 
+    }
+    __toggleStacking(){
+        this.state.displayOptions.stacked = !this.state.displayOptions.stacked; 
+        this._onChange();
     }
 	render() {
 		let sortOptions = this.state.options.sort ? <div className="checkbox">
@@ -56,7 +63,15 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
 									   onChange={this.__updateResultsLimit.bind(this)}/>
 							</div>
 		}
-		
+        
+        let displayOptions = <div className="checkbox">
+						<label>
+						<input type="checkbox"
+							   onChange={this.__toggleStacking.bind(this)} 
+                               checked={this.state.displayOptions.stacked}/> Sort ascending
+						</label>
+					</div>
+        
 		return (
 			<div>
 				<div className="form-group">
@@ -68,6 +83,7 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
 					</div>
 					{sortOptions}
 					{limitOptions}
+                    {displayOptions}
 				</div>
 			</div>
 		);
@@ -80,7 +96,11 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
 	}
 	_onChange = () => {
 		this.setState({
-			options: ChartRendererStore.getQueryOptions()
+			options: ChartRendererStore.getQueryOptions(),
+            displayOptions : {
+                stacked : this.state.displayOptions.stacked,
+                chartType : this.state.displayOptions.chartType
+            }
 		});
 	}
 }
@@ -337,6 +357,7 @@ interface IChartViewComponentParams {
 interface IChartViewComponentState {
 	loading : boolean;
 	queryResult : IQueryResult;
+    displayOptions : IChartDisplayOptions;
 }
 /**
  * Component that renders a chart.
@@ -346,7 +367,11 @@ export class ChartViewComponent extends React.Component<IChartViewComponentParam
 		super();
 		this.state = {
 			loading : false,
-			queryResult : null
+			queryResult : null,
+            displayOptions : {
+                stacked : false,
+                chartType : "column"
+            }
 		}
 	}
 	componentDidMount(){
@@ -356,16 +381,21 @@ export class ChartViewComponent extends React.Component<IChartViewComponentParam
 		ChartRendererStore.removeListener("CHANGE", this._onChange);
 	}
 	_onChange = () => {
+        let displayOptions = ChartRendererStore.getChartDisplayOptions();
 		this.setState({ 
 			queryResult : ChartRendererStore.getQueryResult(), 
-			loading : ChartRendererStore.isQueryComputing()}
-		);	
+			loading : ChartRendererStore.isQueryComputing(),
+            displayOptions : displayOptions
+        });	
 	}
 	render() {
 		return (
 			<div className="container">
 				<ChartRendererToolbar/>
-				<Chart loading={this.state.loading}	data={this.state.queryResult} />
+				<Chart loading={this.state.loading}	
+                       data={this.state.queryResult} 
+                       chartType={this.state.displayOptions.chartType} 
+                       stacked={this.state.displayOptions.stacked}/>
 				<div className="panel panel-default">
 					<div className="panel-heading">Options</div>
 					<div className="panel-body">

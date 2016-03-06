@@ -30,7 +30,11 @@ export enum AppConstants {
 	/**
 	 * Charts
 	 */
-	SAVE_CHART
+	SAVE_CHART,
+    /**
+     * Chart display options
+     */
+    CHANGE_CHARTDISPLAY_OPTIONS
 }
 
 export enum ApplicationTabs {
