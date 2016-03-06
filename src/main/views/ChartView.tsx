@@ -30,13 +30,18 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
 	}
 	__updateResultsLimit(event){
 		this.state.options.limitTo = parseInt(event.target.value); 
-		Actions.updateQueryOption(this.state.options);
+        this._onChange();
 	}
+    __triggerOptionsUpdate(){
+        //this.state.options.limitTo = parseInt(event.target.value);
+        Actions.updateQueryOption(this.state.options); 
+    }
 	render() {
 		let sortOptions = this.state.options.sort ? <div className="checkbox">
 						<label>
 						<input type="checkbox"
-							onChange={this.__toggleSortOrder.bind(this)} checked={this.state.options.sortOrder == 0}/> Sort ascending
+							   onChange={this.__toggleSortOrder.bind(this)} 
+                               checked={this.state.options.sortOrder == 0}/> Sort ascending
 						</label>
 					</div> : null;
 		
@@ -47,6 +52,7 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
 								<input type="number" 
 									   className="form-control" 
 									   value={this.state.options.limitTo.toString()}
+                                       onBlur={this.__triggerOptionsUpdate.bind(this)}
 									   onChange={this.__updateResultsLimit.bind(this)}/>
 							</div>
 		}
