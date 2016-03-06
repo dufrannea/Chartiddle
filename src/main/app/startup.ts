@@ -9,8 +9,6 @@ import {ProxiedWorker} from "../infrastructure/ObjectProxy"
 import {Container} from '../infrastructure/Container'
 import {Router} from './routing'
 
-Router.setupRoutes();
-
 ProxiedWorker
 	.Load<ApplicationService>(ApplicationService,"app/bootstrap")
 	.then(applicationService=> {
@@ -19,6 +17,9 @@ ProxiedWorker
 	})
 	.then(value => {
 		Actions.modelLoaded(value);
-	}); 
+	})
+    .then(()=>{
+        startReact();
+        Router.setupRoutes();        
+    }); 
 
-startReact();
