@@ -41,7 +41,12 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
     }
     __toggleStacking(){
         this.state.displayOptions.stacked = !this.state.displayOptions.stacked; 
-        this._onChange();
+        let newState = {
+            stacked : this.state.displayOptions.stacked,
+            chartType : this.state.displayOptions.chartType
+        };
+
+        Actions.updateChartDisplayOptions(newState);
     }
 	render() {
 		let sortOptions = this.state.options.sort ? <div className="checkbox">
@@ -68,7 +73,7 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
 						<label>
 						<input type="checkbox"
 							   onChange={this.__toggleStacking.bind(this)} 
-                               checked={this.state.displayOptions.stacked}/> Sort ascending
+                               checked={this.state.displayOptions.stacked}/> Stacked
 						</label>
 					</div>
         
@@ -97,10 +102,7 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
 	_onChange = () => {
 		this.setState({
 			options: ChartRendererStore.getQueryOptions(),
-            displayOptions : {
-                stacked : this.state.displayOptions.stacked,
-                chartType : this.state.displayOptions.chartType
-            }
+            displayOptions : ChartRendererStore.getChartDisplayOptions()
 		});
 	}
 }
