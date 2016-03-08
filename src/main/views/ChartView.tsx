@@ -36,7 +36,6 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
         this._onChange();
 	}
     __triggerOptionsUpdate(){
-        //this.state.options.limitTo = parseInt(event.target.value);
         Actions.updateQueryOption(this.state.options); 
     }
     __toggleStacking(){
@@ -387,7 +386,7 @@ export class ChartViewComponent extends React.Component<IChartViewComponentParam
 		this.setState({ 
 			queryResult : ChartRendererStore.getQueryResult(), 
 			loading : ChartRendererStore.isQueryComputing(),
-            displayOptions : displayOptions
+            displayOptions :  ChartRendererStore.getChartDisplayOptions()
         });	
 	}
 	render() {
