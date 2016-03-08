@@ -47,6 +47,16 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
 
         Actions.updateChartDisplayOptions(newState);
     }
+    __selectChartType(event){
+        this.state.displayOptions.chartType = event.target.value 
+
+        let newState = {
+            stacked : this.state.displayOptions.stacked,
+            chartType : this.state.displayOptions.chartType
+        };
+
+        Actions.updateChartDisplayOptions(newState);
+}
 	render() {
 		let sortOptions = this.state.options.sort ? <div className="checkbox">
 						<label>
@@ -68,26 +78,37 @@ export class QueryOptions extends React.Component<IQueryOptionsParams,IQueryOpti
 							</div>
 		}
         
-        let displayOptions = <div className="checkbox">
-						<label>
-						<input type="checkbox"
-							   onChange={this.__toggleStacking.bind(this)} 
-                               checked={this.state.displayOptions.stacked}/> Stacked
-						</label>
-					</div>
-        
 		return (
 			<div>
 				<div className="form-group">
 					<div className="checkbox">
 						<label>
-						<input type="checkbox"
-							onChange={this.__toggleSort.bind(this)} checked={this.state.options.sort}/> Sort results
+						<input  type="checkbox"
+							    onChange={this.__toggleSort.bind(this)} 
+                                checked={this.state.options.sort}/> Sort results
 						</label>
 					</div>
 					{sortOptions}
 					{limitOptions}
-                    {displayOptions}
+                    <div className="form-group">
+                        <div className="checkbox">
+                            <label>
+                            <input  type="checkbox"
+                                    onChange={this.__toggleStacking.bind(this)} 
+                                    checked={this.state.displayOptions.stacked}/> Stacked
+                            </label>
+                        </div>
+                    </div>
+                    <select onChange={this.__selectChartType.bind(this)}>
+                        {
+                            ["column","pie","spline","bar"].map(y=>{
+                                let selected = this.state.displayOptions.chartType === y
+                                return <option key={y} 
+                                               value={y} 
+                                               selected={selected}>{y}</option>
+                            })
+                        }
+				    </select>
 				</div>
 			</div>
 		);
@@ -418,8 +439,8 @@ interface IChartRendererToolbarState {
 }
 export class ChartRendererToolbar extends React.Component<IChartRendererToolbarParams,IChartRendererToolbarState> {
 	constructor(){
-		this.state = {};
 		super();
+		this.state = {};
 	}
 	render() {
 		return (
