@@ -1,9 +1,3 @@
-/// <amd-dependency path="text!app/Worker.js"/>
-// declare function URL(txt : string) : void;
-declare var require : Require;
-
-var workerTemplate = require('text!app/Worker.js');
-// delcare
 export class ProxiedWorker<T> {
 	constructor(){
 	}
@@ -13,27 +7,11 @@ export class ProxiedWorker<T> {
 	 */
 	public static  Load<T>(ctor : Function , moduleName : string) : Promise<T> {
 		return new Promise<T>((resolve, reject)=>{
-			// let blob = new Blob([workerTemplate],{type : 'application/javascript'});
-			// let worker = new Worker(URL.createObjectURL(blob));
-			// IE 11 bug : when worker is created from blob
-			// indexeddb is not available.
-			let workerURL = requirejs.toUrl("app/Worker") + ".js"
-			let worker = new Worker(workerURL);
-			let currentRequireConfig = requirejs['s'].contexts._.config;
-			let newRequireConfig = {
-				paths : currentRequireConfig.paths
-			}
+			const workerConstructor = require("worker-loader!../app/Worker");
+			const worker = new workerConstructor();
 
-			let url = new (<any>URL)(requirejs['s'].head.baseURI);
-			let requireJsBaseURI = url.origin + url.pathname;
-			let messageBody = {
-				action : "LOAD", 
-				actionBody : {
-					requireJsBase : requireJsBaseURI,
-					requireJsPath : requireJsBaseURI+  /(?:\.\/)?(.*)/.exec(requirejs.toUrl("requireLib") + ".js")[1],
-					requireConfig : newRequireConfig,
-					moduleName : moduleName
-				}
+			const messageBody = {
+				action : "LOAD"
 			};
 			worker.postMessage(messageBody)
 			worker.onmessage = (ev)=>{

@@ -1,11 +1,13 @@
 {
 	"compilerOptions": {
-		"target": "es5",
+		"target": "es2015",
 		"rootDir": "src",
 		"jsx": "react",
-		"module": "amd",
+		"module": "commonjs",
 		"outDir": "build",
-		"listFiles": true
+		"listFiles": true,
+		"lib": [
+		]
 	},
 	"exclude" : [
 		"node_modules",

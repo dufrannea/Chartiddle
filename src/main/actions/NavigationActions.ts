@@ -1,9 +1,7 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../model/model.d.ts"/>
-
 import {dispatcher as Dispatcher} from '../infrastructure/Dispatcher'
 import {AppConstants, ApplicationTabs} from './AppConstants'
 import {RouteConstants} from './RouteConstants'
+import {IDataSource} from "../model/model";
 
 export module NavigationActions {
 	/**

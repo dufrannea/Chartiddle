@@ -5,13 +5,12 @@
 //	- create new graph from data source
 // - upload (local file, dropbox, drive)
 
-/// <reference path="../../typings/tsd.d.ts"/>
-import React = require('react');
+import * as React from 'react';
+import { Component } from 'react';
 import {DataSourceList} from './components/DataSourceList'
 
-export class DataSourcesViewComponent extends React.Component<Object, Object> {
+export class DataSourcesViewComponent extends React.Component<void, void> {
     constructor() {
-        this.state = {};
         super();
     }
     

@@ -1,12 +1,10 @@
-/// <reference path="../model/model.d.ts"/>
-/// <reference path="../dataproviders/model.d.ts"/>
-
 import {AppConstants} from '../actions/AppConstants'
 import {dispatcher as Dispatcher} from '../infrastructure/Dispatcher'
 import {EventEmitter} from '../infrastructure/EventEmitter'
 import {Container} from '../infrastructure/Container'
 import {PapaLocalDataProvider} from '../dataproviders/PapaLocalDataProvider'
 import {BatchingProvider} from '../dataproviders/BatchingProvider'
+import {IChartConfiguration, IMeasure, IQueryResult, IQueryOptions, IQuery} from "../model/model";
 
 import {applicationStore as ApplicationStore} from './ApplicationStore';
 const CHANGE = "CHANGE";

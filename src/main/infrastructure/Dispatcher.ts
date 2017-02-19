@@ -1,7 +1,6 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-
 import {Dispatcher} from 'flux';
 import {AppConstants, ApplicationTabs} from '../actions/AppConstants'
+import {IDropBoxFile, IMeasure, IQueryOptions} from "../model/model";
 
 export interface IFileAction {
 	file? : File;

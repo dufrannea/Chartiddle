@@ -1,4 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts"/>
 import {EventEmitter } from '../../main/infrastructure/EventEmitter'
 
 describe('Event Emitter tests', ()=>{

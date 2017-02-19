@@ -1,7 +1,6 @@
-/// <reference path="../../typings/tsd.d.ts"/>
 import {DbStart} from '../../main/services/DbStart'
 import {ConnectionPool} from '../../main/services/ConnectionPool'
-
+import {IDataSource} from "../../main/model/model"
 const DATABASE_NAME = "testdb";
 let success = false;
 let version = 1;

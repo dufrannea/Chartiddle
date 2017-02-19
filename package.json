@@ -4,7 +4,25 @@
   "description": "",
   "main": "gulpfile.js",
   "dependencies": {
-    "gulp-concat": "^2.6.0"
+    "@types/flux": "^3.0.1",
+    "@types/highcharts": "^4.2.47",
+    "@types/jasmine": "^2.5.43",
+    "@types/jquery": "^2.0.40",
+    "@types/node": "^7.0.5",
+    "@types/papaparse": "^4.1.28",
+    "@types/react-dom": "^0.14.23",
+    "bootstrap": "^3.3.7",
+    "crossroads": "^0.12.2",
+    "es6-promise": "^4.0.5",
+    "flux": "^3.1.2",
+    "gulp-concat": "^2.6.0",
+    "hasher": "^1.2.0",
+    "highcharts": "4.1.9",
+    "jquery": "^3.1.1",
+    "jquery-ui": "^1.12.1",
+    "papaparse": "^4.1.4",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
   },
   "devDependencies": {
     "deeply": "^0.1.0",
@@ -27,12 +45,13 @@
     "karma-requirejs": "^0.2.2",
     "main-bower-files": "^2.9.0",
     "requirejs": "^2.1.20",
-    "tsd": "^0.6.5"
+    "ts-loader": "^2.0.0",
+    "tsd": "^0.6.5",
+    "typescript": "^2.1.6",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.3.0"
   },
-  "scripts": {
-    "postinstall": "tsd install && bower install",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "author": "",
   "license": "ISC"
 }

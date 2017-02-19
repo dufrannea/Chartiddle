@@ -1,6 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../dataproviders/model.d.ts"/>
-
 import {Repository} from './Repository'
 import {ConnectionPool} from './ConnectionPool'
 import {PapaLocalDataProvider} from '../dataproviders/PapaLocalDataProvider'
@@ -65,7 +62,7 @@ export class FileRepository {
 		};
 		
 		return this.openDb().then((db)=>{
-				let version = parseInt(db.version)+1;
+				let version = parseInt(""+db.version)+1;
 				db.close();
 				return this.openDb(version, (newDb)=>{
 					if (newDb.objectStoreNames.contains(storeName)) {
@@ -102,7 +99,7 @@ export class FileRepository {
 			}
 			
 			this.openDb().then((db)=>{
-				let version = parseInt(db.version)+1;
+				let version = parseInt(""+db.version)+1;
 				db.close();
 				return this.openDb(version, (newDb)=>{
 					if (newDb.objectStoreNames.contains(storeName)) {

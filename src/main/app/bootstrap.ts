@@ -1,6 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../model/model.d.ts" />
-
 import {DbStart} from '../services/DbStart'
 import {ApplicationService} from '../services/ApplicationService'
 import {ConnectionPool} from '../services/ConnectionPool'

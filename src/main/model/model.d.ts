@@ -1,7 +1,7 @@
 /// this file defines 
 /// the domain of the application.
 
-interface IDataSource {
+export interface IDataSource {
     // name of the datasource, correspond to the name
     // of a datastore.
 	name : string;
@@ -13,7 +13,7 @@ interface IDataSource {
 
 // global configuration for the application
 // store in "configuration" dataStore
-interface IConfiguration {
+export interface IConfiguration {
     // all the datasources
     // for the given configuration
     dataSources : IDataSource[];
@@ -26,7 +26,7 @@ interface IConfiguration {
     charts : IChartConfiguration[];
 }
 
-interface IChartConfiguration {
+export interface IChartConfiguration {
     id? : number;
     // type of the chart
     // ie 'pie',
@@ -47,7 +47,7 @@ interface IChartConfiguration {
 }
 
 
-interface IDataModel {
+export interface IDataModel {
     // hierarchies defined in the model
     hierarchies: IHierarchy[];
 
@@ -62,18 +62,18 @@ interface IDataModel {
     datasource_id : number;
 }
 
-interface IHierarchy {
+export interface IHierarchy {
     name: string;
     columns: string[];
 }
 
-interface IMeasure {
+export interface IMeasure {
     key : string;
     name: string;
     type: string;
 }
 
-interface IDataProvider {
+export interface IDataProvider {
     foreach: (stepCallback: (data: any) => void,
                 completeCallback: () => void,
                 bindTo?: any) => void;
@@ -83,7 +83,7 @@ interface IDataProvider {
  * Simple model 
  * for a query.
  */
-interface IQuery {
+export interface IQuery {
     Rows: IRow[];
     Columns: IColumn[];
     Measures? : IMeasureDef[];
@@ -91,7 +91,7 @@ interface IQuery {
     top?: number;
 }
 
-interface IQueryOptions {
+export interface IQueryOptions {
     // sort results 
     sort : boolean;
     // sort in ascending/descending
@@ -104,7 +104,7 @@ interface IQueryOptions {
  * A row represented as a list
  * of columns in the original source.
  */
-interface IRow {
+export interface IRow {
     columns: string[];
 }
 
@@ -112,11 +112,11 @@ interface IRow {
  * A column represented as a list
  * of columns in the original datasource.
  */
-interface IColumn {
+export interface IColumn {
     columns: string[];
 }
 
-interface IMeasureDef {
+export interface IMeasureDef {
     column : string;
     // type can be one of
     // count, sum, min, max
@@ -126,33 +126,28 @@ interface IMeasureDef {
 /**
  * Query execution result.
  */
-interface IQueryResult {
+export interface IQueryResult {
     Rows: ITupleInfo[];
     Columns: ITupleInfo[];
     Values: number[][];
 }
 
-interface ITupleInfo{
+export interface ITupleInfo{
     members : IMemberInfo[]
 }
 
-interface IMemberInfo {
+export interface IMemberInfo {
     id : string;
     name : string;
 }
 
-declare module "highcharts" {
-    var a  : HighchartsStatic;
-    export = a ;
-}
-
-interface IDropBoxFile {
+export interface IDropBoxFile {
     bytes : number;
     link : string;
     name : string;
 }
 
-interface IChartDisplayOptions {
+export interface IChartDisplayOptions {
     chartType : string;
     stacked : boolean;
 }

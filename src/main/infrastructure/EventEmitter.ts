@@ -1,4 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts"/>
 var __slice = [].slice;
 
 export class EventEmitter {

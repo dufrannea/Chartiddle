@@ -1,6 +1,5 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-
-import React = require('react');
+import { Component } from 'react';
+import * as React from 'react';
 import {HomeViewComponent} from './HomeView'
 import {DataSourcesViewComponent} from '../views/DataSourcesView'
 import {ChartViewComponent} from '../views/ChartView'
@@ -12,12 +11,12 @@ interface IAppViewComponentState {
 	activeTab: ApplicationTabs;
 }
 
-export class AppViewComponent extends React.Component<Object, IAppViewComponentState> {
+export class AppViewComponent extends Component<void, IAppViewComponentState> {
 	constructor() {
+		super();
 		this.state = {
 			activeTab: AppStore.getActiveTab()
 		}
-		super();
 	}
 	componentDidMount() {
 		AppStore.registerChangeListener(this._onChange.bind(this));
@@ -32,16 +31,12 @@ export class AppViewComponent extends React.Component<Object, IAppViewComponentS
 			switch (this.state.activeTab) {
 				case ApplicationTabs.HOME_VIEW:
 					return <HomeViewComponent/>
-					break;
 				case ApplicationTabs.DATASOURCES_VIEW:
 					return <DataSourcesViewComponent/>
-					break;
 				case ApplicationTabs.CHART_EDITOR_VIEW:
 					return <ChartViewComponent/>
-					break;
 				default:
 					return <div>Nothing!</div>
-					break;
 			}
 		})()
 		return (

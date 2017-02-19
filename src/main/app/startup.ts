@@ -1,7 +1,6 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../model/model.d.ts" />
-/// <amd-dependency path="bootstrap"/>
-/// <amd-dependency path="../stores/RouteStore"/>
+require("bootstrap");
+require("../stores/RouteStore");
+
 import {startReact} from './main'
 import {appActions as Actions} from '../actions/Actions'
 import {ApplicationService} from '../services/ApplicationService'

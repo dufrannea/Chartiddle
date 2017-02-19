@@ -1,7 +1,6 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../dataproviders/model.d.ts"/>
-
 import {Container} from '../infrastructure/Container'
+import {IQuery, IDataProvider, IQueryOptions,
+     IQueryResult,ITupleInfo,IColumn, IRow} from "../model/model";
 
 interface IColumnData {
     // all the rows
@@ -82,25 +81,21 @@ export class DataProcessor {
                         func : countAggregator(),
                         type : "count"
                     };
-                    break;
                 case "sum":
                     return {
                         func : sumAggretator(column),
                         type : "sum"
                     }
-                    break;
                 case "min":
                     return {
                         func : minAggregator(column),
                         type : "min"
                     }
-                    break;
                 case "max":
                     return {
                         func : maxAggregator(column),
                         type : "max"
                     }
-                    break;
             }
         });
         

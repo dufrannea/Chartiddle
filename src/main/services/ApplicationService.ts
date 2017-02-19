@@ -1,5 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../model/model.d.ts"/>
 import {FileRepository} from './FileRepository'
 import {Repository} from './Repository'
 import {BatchingProvider} from '../dataproviders/BatchingProvider'
@@ -7,6 +5,9 @@ import {MapProvider} from '../dataproviders/MapProvider'
 import {PapaLocalDataProvider} from '../dataproviders/PapaLocalDataProvider'
 import {DataProcessor} from '../services/DataProcessor'
 import {process} from './Processing'
+import {IDataSource, IChartConfiguration, IQuery, 
+	IQueryOptions, IHierarchy,
+	IDropBoxFile, IDataProvider} from "../model/model";
 
 export class ApplicationService {
 	private _sourcesRepo : Repository<IDataSource, number>;

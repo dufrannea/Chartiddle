@@ -1,9 +1,7 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../model/model.d.ts"/>
-
 import {Repository} from './Repository'
 import {ConnectionPool} from './ConnectionPool'
 import {FileRepository} from './FileRepository'
+import {IDataModel, IDataSource, IChartConfiguration} from "../model/model";
 
 declare var window: Window;
 const CHARTS_STORE: string = "Charts";
@@ -40,7 +38,7 @@ export class DbStart {
     private isIndexedDBSupported() {
         let global = self || window;
         
-        global.indexedDB = global.indexedDB || global['mozIndexedDB'] || global['webkitIndexedDB'] || global['msIndexedDB'];
+        (<any>global).indexedDB = global.indexedDB || global['mozIndexedDB'] || global['webkitIndexedDB'] || global['msIndexedDB'];
         global['IDBTransaction'] = global['IDBTransaction'] || global['webkitIDBTransaction'] || global['msIDBTransaction'];
         global['IDBKeyRange'] = global['IDBKeyRange'] || global['webkitIDBKeyRange'] || global['msIDBKeyRange']
 

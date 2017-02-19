@@ -1,8 +1,6 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../model/model.d.ts" />
-
 import {AppViewComponent} from '../views/AppView'
 import React = require('react');
+import {render } from "react-dom";
 
 /**
  * Renders the main application component.
@@ -10,7 +8,7 @@ import React = require('react');
 export function startReact(){
 	let mainElement = document.querySelector("#main");
 	
-	React.render(
+	render(
 		<AppViewComponent/>,
 		mainElement
 	);

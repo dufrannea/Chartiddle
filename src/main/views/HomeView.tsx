@@ -3,12 +3,10 @@
 // - features
 // - howto
 
-/// <reference path="../../typings/tsd.d.ts"/>
 import React = require('react');
 
-export class HomeViewComponent extends React.Component<Object,Object> {
+export class HomeViewComponent extends React.Component<void,void> {
 	constructor(){
-		this.state = {};
 		super();
 	}
 	

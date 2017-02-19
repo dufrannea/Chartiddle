@@ -1,4 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts"/>
 import {FileRepository} from '../../main/services/FileRepository'
 import {BatchingProvider} from '../../main/dataproviders/BatchingProvider';
 import {PapaLocalDataProvider} from '../../main/dataproviders/PapaLocalDataProvider';

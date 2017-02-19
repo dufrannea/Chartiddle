@@ -1,6 +1,3 @@
-/// <reference path="../model/model.d.ts"/>
-/// <reference path="../dataproviders/model.d.ts"/>
-
 import {AppConstants, ApplicationTabs} from '../actions/AppConstants'
 import {dispatcher as Dispatcher} from '../infrastructure/Dispatcher'
 import {EventEmitter} from '../infrastructure/EventEmitter'

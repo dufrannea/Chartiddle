@@ -1,5 +1,4 @@
-/// <reference path="../../../typings/tsd.d.ts"/>
-import React = require('react');
+import * as  React from 'react';
 import {applicationStore as AppStore} from '../../stores/ApplicationStore'
 import {NavigationActions} from '../../actions/NavigationActions'
 import {ApplicationTabs} from '../../actions/AppConstants'
@@ -9,8 +8,8 @@ interface INavBarState {
 }
 export class NavBar extends React.Component<INavBarParams,INavBarState> {
 	constructor(){
-		this.state = {};
 		super();
+		this.state = {};
 	}
 	
 	getNavbarClassName() {

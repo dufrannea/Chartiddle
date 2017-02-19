@@ -1,5 +1,5 @@
 import {DataProcessor} from '../../main/services/DataProcessor'
-
+import {IQuery, IDataProvider} from "../../main/model/model";
 /**
  * Helper function to create datasets.
  */

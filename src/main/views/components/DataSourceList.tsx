@@ -1,14 +1,14 @@
-/// <reference path="../../../typings/tsd.d.ts"/>
-/// <reference path="../../model/model.d.ts" />
-/// <amd-dependency path="bootstrap"/>
+require("bootstrap");
 
-import React = require('react');
+import * as  React from 'react';
+import {Component} from "react";
 import {DropzoneComponent} from './DropzoneComponent'
 import {dataSourceStore as DataSourceStore} from '../../stores/DataSourceStore'
 import {appActions as Actions} from '../../actions/Actions'
 import {NavigationActions} from '../../actions/NavigationActions'
 import {ApplicationTabs} from '../../actions/AppConstants'
 import {Chart} from './Chart'
+import {IDataSource, IDropBoxFile, IChartConfiguration} from "../../model/model";
 
 interface IDataSourceListParams {
 }
@@ -131,12 +131,12 @@ interface IChartListParams {
 interface IChartListState {
 	charts : IChartConfiguration[];
 }
-export class ChartList extends React.Component<IChartListParams,IChartListState> {
+export class ChartList extends Component<IChartListParams,IChartListState> {
 	constructor(){
+		super();
 		this.state = {
 			charts : []
 		};
-		super();
 	}
 	render() {
 		let charts = this.state.charts.map(c =>{

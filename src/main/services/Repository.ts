@@ -1,6 +1,7 @@
 import {ConnectionPool} from './ConnectionPool'
 
-export class Repository<TObject, TKey>  {
+type arrayKey = IDBKeyRange | IDBValidKey;
+export class Repository<TObject, TKey extends arrayKey>  {
 	private tableName: string;
 	private pool : ConnectionPool;
 	
@@ -41,7 +42,7 @@ export class Repository<TObject, TKey>  {
 			request.onerror = (ev) => {
 			}
 			request.onsuccess = (ev) => {
-				item[objectStore.keyPath] = request.result;
+				item[<string>objectStore.keyPath] = request.result;
 			}
 		});
 	}

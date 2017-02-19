@@ -1,11 +1,10 @@
-/// <reference path="../../../typings/tsd.d.ts"/>
-/// <reference path="../../model/model.d.ts" />
-/// <amd-dependency path="highcharts"/>
+require("highcharts");
 import React = require('react');
 import {appActions as Actions} from '../../actions/Actions'
 import $ = require('jquery');
+import {IQueryResult} from "../../model/model";
 
-declare var Highcharts: HighchartsStatic;
+import * as HighCharts from "highcharts";
 
 const baseConfig = {
     chart: {

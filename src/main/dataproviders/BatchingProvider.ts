@@ -1,5 +1,3 @@
-/// <reference path="model.d.ts"/>
-
 /**
  * Groups data before streaming.
  */

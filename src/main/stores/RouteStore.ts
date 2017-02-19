@@ -1,6 +1,3 @@
-/// <reference path="../model/model.d.ts"/>
-/// <reference path="../dataproviders/model.d.ts"/>
-
 import {EventEmitter} from '../infrastructure/EventEmitter'
 import {dispatcher as Dispatcher, IRouteAction} from '../infrastructure/Dispatcher'
 import {RouteConstants} from '../actions/RouteConstants'

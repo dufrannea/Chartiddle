@@ -1,12 +1,12 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../model/model.d.ts" />
-/// <amd-dependency path="jquery-ui" />
-import $ = require('jquery');
+require("jquery-ui");
+import * as $ from 'jquery';
 
-import React = require('react');
+import  * as React from 'react';
+import {Component} from "react";
 import {appActions as Actions} from '../actions/Actions'
 import {chartRendererStore as ChartRendererStore} from '../stores/ChartRendererStore';
 import {Chart} from './components/Chart'
+import {IQueryResult, IQueryOptions, IChartDisplayOptions, IMeasure} from "../model/model";
 
 interface IQueryOptionsParams {
 }
@@ -137,7 +137,7 @@ interface IChartConfigurationZoneState {
 	measures : IMeasure[];
 }
 
-class ChartConfigurationZone extends React.Component<Object,IChartConfigurationZoneState> {
+class ChartConfigurationZone extends Component<void,IChartConfigurationZoneState> {
 	constructor() {
 		super();
 		this.state = {
@@ -305,7 +305,7 @@ interface IDataItem {
 	[columnName : string] : any;
 }
 
-class DataPreview extends React.Component<Object ,IDataPreviewState> {
+class DataPreview extends React.Component<void ,IDataPreviewState> {
 	constructor(){
 		super();
 		this.state = {

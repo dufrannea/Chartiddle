@@ -1,3 +1,4 @@
+import {Load} from "./bootstrap";
 
 /**
  * For some reason typings force the use of
@@ -20,7 +21,7 @@ interface ILoadMessage {
 }
 
 interface ICallMessage {
-	arguments : any[],
+	callArguments : any[],
 	methodName : string
 }
 
@@ -41,37 +42,21 @@ onmessage = ( ev : IMessageEvent ) =>{
 		//		  all waiting calls.
 		case "LOAD" :
 			console.debug("worker loading...");
-			let {
-				requireJsBase = null,
-				requireJsPath = null,
-				requireConfig = null,
-				moduleName = ""
-			} = data.actionBody;
 			
-			if (!requireJsPath){
-				console.error("must provide a requirejs path");
-			}
-
-			requireConfig.baseUrl = requireJsBase;
-			if (!self.hasOwnProperty("require")){
-				importScripts(requireJsPath);
-			}
-			require.config(requireConfig);
-			require([moduleName], (ns) => {
-				ns.Load().then((value)=>{
-					proxied = value;
-					postMessage("LOAD_DONE");
-				});
-			})
+			Load().then((value)=>{
+				proxied = value;
+				postMessage("LOAD_DONE");
+			});
+			
 			break;
 		case "CALL":
 			console.debug("worker calling method");
 			let {
 				methodName = null,
-				arguments = []
+				callArguments = []
 			} = data.callActionBody;
 			
-			proxied[methodName].apply(proxied, arguments).then((r)=>{
+			proxied[methodName].apply(proxied, callArguments).then((r)=>{
 				postMessage({
 					action : "CALL_DONE",
 					methodName : methodName,

@@ -1,5 +1,4 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../../main/model/model.d.ts"/>
+import {IHierarchy,IMeasureDef, IDataProvider} from "../model/model";
 
 interface IProcessingItem {
 	// unique key of fact

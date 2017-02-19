@@ -1,6 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../../main/model/model.d.ts"/>
-
 import {dataSource} from './testFile'
 import {process, query} from '../../main/services/Processing'
 

@@ -1,5 +1,5 @@
-/// <reference path="../../../typings/tsd.d.ts"/>
-import React = require('react');
+import * as React from "react";
+import {IDropBoxFile } from "../../model/model";
 
 declare var Dropbox : any;
 
@@ -15,10 +15,10 @@ interface IDropzoneComponentState {
 
 export class DropzoneComponent extends React.Component<IDropzoneComponentParams,IDropzoneComponentState> {
 	constructor(){
+		super();
 		this.state = {
 			hover: false
 		};
-		super();
 	}
 	componentDidMount(){
 		let element = this.refs['holder']['getDOMNode']();
@@ -38,13 +38,17 @@ export class DropzoneComponent extends React.Component<IDropzoneComponentParams,
 		this.__renderDropBox();
 	}
 	__stopHover(){
-		let newState = this.state;
-		newState.hover = false;
+		const newState = { 
+			...this.state,
+			hover : false
+		};
 		this.setState(newState);
 	}
 	__startHover(){
-		let newState = this.state;
-		newState.hover = true;
+		const newState = { 
+			...this.state,
+			hover : true
+		};
 		this.setState(newState);
 	}
 	componentWillUnmount(){

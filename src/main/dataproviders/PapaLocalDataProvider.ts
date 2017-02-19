@@ -1,7 +1,4 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="./model.d.ts"/>
-
-import Papa = require('papaparse');
+import * as Papa from 'papaparse';
 
 export class PapaLocalDataProvider implements IDataStream<Object> {
 	private file : File;
