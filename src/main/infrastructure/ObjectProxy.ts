@@ -1,10 +1,4 @@
 export class ProxiedWorker<T> {
-	constructor(){
-	}
-	
-	/**
-	 * Loads.
-	 */
 	public static  Load<T>(ctor : Function , moduleName : string) : Promise<T> {
 		return new Promise<T>((resolve, reject)=>{
 			const workerConstructor = require("worker-loader!../app/Worker");
