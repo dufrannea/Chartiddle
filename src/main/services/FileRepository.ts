@@ -2,7 +2,6 @@ import {Repository} from './Repository'
 import {ConnectionPool} from './ConnectionPool'
 import {PapaLocalDataProvider} from '../dataproviders/PapaLocalDataProvider'
 import {BatchingProvider} from '../dataproviders/BatchingProvider'
-import {Promise} from "es6-promise"
 
 /**
  * Repository allowing

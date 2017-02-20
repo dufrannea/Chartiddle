@@ -1,4 +1,4 @@
-require("jquery-ui");
+import "jquery-ui";
 import * as $ from 'jquery';
 
 import  * as React from 'react';

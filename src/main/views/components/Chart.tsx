@@ -1,4 +1,4 @@
-require("highcharts");
+import "highcharts";
 import React = require('react');
 import {appActions as Actions} from '../../actions/Actions'
 import $ = require('jquery');

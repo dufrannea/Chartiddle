@@ -6,8 +6,7 @@
 		"module": "commonjs",
 		"outDir": "build",
 		"listFiles": true,
-		"lib": [
-		]
+		"sourceMap": true
 	},
 	"exclude" : [
 		"node_modules",

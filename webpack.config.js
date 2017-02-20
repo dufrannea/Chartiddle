@@ -1,12 +1,32 @@
-const path = require("path");
+const path = require("path"),
+      webpack = require("webpack");
 
 module.exports = {
-    entry : {
-        "main" : "src/main/app/startup.ts"
+    entry: {
+        "main": "./src/main/app/startup.ts"
     },
-    resolve : [".ts", ".tsx", ".js"],
-    loaders: [{
-        test : /.tsx?$/,
-        loader : "ts-loader"
-    }]
+    output: {
+        filename: "[name].bundle.js",
+        path: path.resolve(__dirname, "build"),
+        publicPath : "./build/"
+    },
+    devtool: "source-map",
+    resolve: { extensions: [".ts", ".tsx", ".js", ".css"] },
+    module: {
+        rules: [{
+            test: /.tsx?$/,
+            use: [
+                {
+                    loader: "ts-loader"
+                }
+            ]
+        }]
+    },
+    plugins: [
+        new webpack.ProvidePlugin({
+            jQuery: 'jquery',
+            $: 'jquery',
+            jquery: 'jquery'
+        })
+    ]
 }

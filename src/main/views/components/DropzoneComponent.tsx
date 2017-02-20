@@ -21,7 +21,8 @@ export class DropzoneComponent extends React.Component<IDropzoneComponentParams,
 		};
 	}
 	componentDidMount(){
-		let element = this.refs['holder']['getDOMNode']();
+		let element : any= this.refs['holder'];
+
 		element.ondragover = () => { 
 			this.__startHover();
 			return false; 
@@ -102,7 +103,7 @@ export class DropzoneComponent extends React.Component<IDropzoneComponentParams,
 			// see File types below. By default, all extensions are allowed.
 			extensions: ['.csv', '.tsv'],
 		};
-		let element = this.refs['dropbox-item']['getDOMNode']();
+		let element : any = this.refs['dropbox-item'];
 		var button = Dropbox.createChooseButton(options);
 		element.appendChild(button);
 	}

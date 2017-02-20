@@ -7,18 +7,12 @@
 
 import * as React from 'react';
 import { Component } from 'react';
-import {DataSourceList} from './components/DataSourceList'
+import { DataSourceList } from './components/DataSourceList'
 
-export class DataSourcesViewComponent extends React.Component<void, void> {
-    constructor() {
-        super();
-    }
-    
-    render() {
-        return (
-            <div className="container">
-                <DataSourceList />
-            </div>
-        );
-    }
+export const DataSourcesViewComponent = () => {
+    return (
+        <div className="container">
+            <DataSourceList />
+        </div>
+    );
 }

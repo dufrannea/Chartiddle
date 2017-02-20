@@ -207,6 +207,7 @@ let getTupleUniqueNameForHierarchy = (hierarchyColumns: string[], ts: string[], 
 		.join(".");
 }
 
+// DEPRECATED
 export let query = (cube: IProcessingResult) => (cols: IHierarchy[], rows: IHierarchy[]): (string|number)[][] => {
 	// build the tuples you need.
 	let hierarchies = cols.map(x=> x).concat(rows);

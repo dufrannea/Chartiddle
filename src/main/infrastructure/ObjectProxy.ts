@@ -32,7 +32,7 @@ class ObjectProxy {
 		let queued : {
 			[key : string] : Function
 		} = {}
-		for (var methodName in functionConstructor.prototype){
+		for (let methodName of Object.getOwnPropertyNames(functionConstructor.prototype)){
 			if (typeof functionConstructor.prototype[methodName] === "function"){
 				let innerMethodName = methodName;
 				innerProxy[innerMethodName]=  ((innerMethodName)=> (...args) => {

@@ -1,7 +1,7 @@
-import {Repository} from './Repository'
-import {ConnectionPool} from './ConnectionPool'
-import {FileRepository} from './FileRepository'
-import {IDataModel, IDataSource, IChartConfiguration} from "../model/model";
+import { Repository } from './Repository'
+import { ConnectionPool } from './ConnectionPool'
+import { FileRepository } from './FileRepository'
+import { IDataModel, IDataSource, IChartConfiguration } from "../model/model";
 
 declare var window: Window;
 const CHARTS_STORE: string = "Charts";
@@ -17,13 +17,13 @@ export class DbStart {
     public DataSourceRepository: Repository<IDataSource, number>;
     public DataModelRepository: Repository<IDataModel, number>;
     public ChartConfigurationRepository: Repository<IChartConfiguration, number>;
-    public FileRepository : FileRepository;
-    public ProcessingRepository : FileRepository;
-    
-    private pool : ConnectionPool;
-    private indexedDB  :IDBFactory;
-    
-    constructor(pool : ConnectionPool) {
+    public FileRepository: FileRepository;
+    public ProcessingRepository: FileRepository;
+
+    private pool: ConnectionPool;
+    private indexedDB: IDBFactory;
+
+    constructor(pool: ConnectionPool) {
         if (!this.isIndexedDBSupported()) {
             console.error("indexedDB is not supported in your browser");
             return;
@@ -37,17 +37,23 @@ export class DbStart {
      */
     private isIndexedDBSupported() {
         let global = self || window;
-        
-        (<any>global).indexedDB = global.indexedDB || global['mozIndexedDB'] || global['webkitIndexedDB'] || global['msIndexedDB'];
-        global['IDBTransaction'] = global['IDBTransaction'] || global['webkitIDBTransaction'] || global['msIDBTransaction'];
-        global['IDBKeyRange'] = global['IDBKeyRange'] || global['webkitIDBKeyRange'] || global['msIDBKeyRange']
+
+        if (!global["indexedDB"]) {
+            (<any>global).indexedDB = global['mozIndexedDB'] || global['webkitIndexedDB'] || global['msIndexedDB'];
+        }
+        if (!global["IDBTransaction"]) {
+            (<any>global)['IDBTransaction'] = global['webkitIDBTransaction'] || global['msIDBTransaction'];
+        }
+        if (!global["IDBKeyRange"]) {
+            (<any>global)['IDBKeyRange'] = global['webkitIDBKeyRange'] || global['msIDBKeyRange']
+        }
 
         if (!global.indexedDB) {
             return false;
         }
         this.indexedDB = global.indexedDB;
         return true;
-    }
+    } 
 
     /**
      * Initializes the database.
@@ -55,10 +61,10 @@ export class DbStart {
      *        database to initialize.
      */
     public initDatabase(dataBaseName, version?: number): Promise<void> {
-        return new Promise<void>((resolve,reject)=>{
-            let initDbRequest : IDBOpenDBRequest;
-            if (version){
-                initDbRequest = this.indexedDB.open(dataBaseName, version); 
+        return new Promise<void>((resolve, reject) => {
+            let initDbRequest: IDBOpenDBRequest;
+            if (version) {
+                initDbRequest = this.indexedDB.open(dataBaseName, version);
             } else {
                 initDbRequest = this.indexedDB.open(dataBaseName);
             }
@@ -67,12 +73,12 @@ export class DbStart {
                 this.createRepos();
                 resolve();
             }
-    
+
             initDbRequest.onerror = (event) => {
                 console.error("Database error: " + event.target['errorCode']);
                 reject();
             }
-    
+
             initDbRequest.onupgradeneeded = (event) => {
                 this.upgradeDatabase(event.target['result']);
             };
@@ -86,8 +92,8 @@ export class DbStart {
         this.DataSourceRepository = new Repository<IDataSource, number>(this.pool, DATASOURCES_STORE);
         this.DataModelRepository = new Repository<IDataModel, number>(this.pool, DATAMODELS_STORE);
         this.ChartConfigurationRepository = new Repository<IChartConfiguration, number>(this.pool, CHARTS_STORE);
-        this.FileRepository = new FileRepository(this.pool,"FILE");
-        this.ProcessingRepository = new FileRepository(this.pool,"PROCESS");
+        this.FileRepository = new FileRepository(this.pool, "FILE");
+        this.ProcessingRepository = new FileRepository(this.pool, "PROCESS");
     }
 
     /**

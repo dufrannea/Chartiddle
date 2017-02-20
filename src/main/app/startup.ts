@@ -1,6 +1,6 @@
-require("bootstrap");
-require("../stores/RouteStore");
-
+import "jquery";
+import "bootstrap";
+import "../stores/RouteStore";
 import {startReact} from './main'
 import {appActions as Actions} from '../actions/Actions'
 import {ApplicationService} from '../services/ApplicationService'

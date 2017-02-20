@@ -1,0 +1,5 @@
+{
+  "globalDependencies": {
+    "jqueryui": "registry:dt/jqueryui#1.11.0+20161214061125"
+  }
+}
