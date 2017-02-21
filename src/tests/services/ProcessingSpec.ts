@@ -1,5 +1,6 @@
 import {dataSource} from './testFile'
 import {process, query} from '../../main/services/Processing'
+import "es6-shim";
 
 describe("processing tests", () => {
 	var data;

@@ -1,7 +1,8 @@
 import {BatchingProvider} from '../../main/dataproviders/BatchingProvider';
 import {PapaLocalDataProvider} from '../../main/dataproviders/PapaLocalDataProvider';
 import Papa = require('papaparse');
- 
+import "es6-shim";
+
 let text = `t1_tok_min	pos_seq	liaison_realisation
 était	VER+ADJ	1
 était	VER+ADJ	0

@@ -1,4 +1,5 @@
 import {EventEmitter } from '../../main/infrastructure/EventEmitter'
+import "es6-shim"
 
 describe('Event Emitter tests', ()=>{
 	let eventEmitter : EventEmitter;
