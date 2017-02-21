@@ -54,7 +54,9 @@
     "webpack-dev-server": "^2.4.0",
     "worker-loader": "^0.7.1"
   },
-  "scripts": {},
+  "scripts": {
+    "install": "typings install"
+  },
   "author": "",
   "license": "ISC"
 }
