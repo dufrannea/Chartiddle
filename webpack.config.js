@@ -1,5 +1,5 @@
 const path = require("path"),
-      webpack = require("webpack");
+    webpack = require("webpack");
 
 module.exports = {
     entry: {
@@ -8,7 +8,7 @@ module.exports = {
     output: {
         filename: "[name].bundle.js",
         path: path.resolve(__dirname, "build"),
-        publicPath : "./build/"
+        publicPath: "./build/"
     },
     devtool: "source-map",
     resolve: { extensions: [".ts", ".tsx", ".js", ".css"] },
@@ -20,6 +20,16 @@ module.exports = {
                     loader: "ts-loader"
                 }
             ]
+        },
+        {
+            test: /\.s?css$/,
+            use: [{
+                loader: "style-loader" // creates style nodes from JS strings
+            }, {
+                loader: "css-loader" // translates CSS into CommonJS
+            }, {
+                loader: "sass-loader" // compiles Sass to CSS
+            }]
         }]
     },
     plugins: [

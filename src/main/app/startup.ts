@@ -7,7 +7,10 @@ import {ApplicationService} from '../services/ApplicationService'
 import {ProxiedWorker} from "../infrastructure/ObjectProxy"
 import {Container} from '../infrastructure/Container'
 import {Router} from './routing'
-
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap-theme.min.css";
+import "../../styles/style.scss";
+	
 ProxiedWorker
 	.Load<ApplicationService>(ApplicationService,"app/bootstrap")
 	.then(applicationService=> {

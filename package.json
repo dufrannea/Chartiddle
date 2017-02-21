@@ -25,6 +25,7 @@
     "react-dom": "^15.4.2"
   },
   "devDependencies": {
+    "css-loader": "^0.26.1",
     "deeply": "^0.1.0",
     "event-stream": "^3.3.1",
     "gulp": "^3.9.0",
@@ -46,6 +47,8 @@
     "karma-webpack": "^2.0.2",
     "main-bower-files": "^2.9.0",
     "requirejs": "^2.1.20",
+    "sass-loader": "^6.0.1",
+    "style-loader": "^0.13.1",
     "ts-loader": "^2.0.0",
     "tsd": "^0.6.5",
     "typescript": "^2.1.6",
