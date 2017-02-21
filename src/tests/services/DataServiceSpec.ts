@@ -1,6 +1,8 @@
 import {DbStart} from '../../main/services/DbStart'
 import {ConnectionPool} from '../../main/services/ConnectionPool'
 import {IDataSource} from "../../main/model/model"
+import "es6-shim"
+
 const DATABASE_NAME = "testdb";
 let success = false;
 let version = 1;

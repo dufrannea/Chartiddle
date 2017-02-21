@@ -1,5 +1,7 @@
 import {DataProcessor} from '../../main/services/DataProcessor'
 import {IQuery, IDataProvider} from "../../main/model/model";
+import "es6-shim";
+
 /**
  * Helper function to create datasets.
  */

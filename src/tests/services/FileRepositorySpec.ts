@@ -5,6 +5,7 @@ import {PapaLocalDataProvider} from '../../main/dataproviders/PapaLocalDataProvi
 import {ConnectionPool} from '../../main/services/ConnectionPool'
 
 import Papa = require('papaparse');
+import "es6-shim";
 
 const DATABASE_NAME = "testdb2";
 const PARSE_TEXT ="1,2,3\n4,5,6\n7,8,9";
