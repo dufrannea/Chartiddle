@@ -83,6 +83,7 @@ let buildConfig = (props: IChartProps) => {
     }
     return newConfig;
 }
+
 interface IChartProps {
     data: IQueryResult;
     loading: boolean;
@@ -121,7 +122,6 @@ export class Chart extends React.Component<IChartProps, IChartState> {
     updateChart(props: IChartProps) {
         let data = props.data;
         if (data != null) {
-            debugger;
             this.chart = HighCharts.chart(this.domElement, buildConfig(props));
         }
     }

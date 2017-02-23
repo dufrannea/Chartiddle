@@ -151,3 +151,7 @@ export interface IChartDisplayOptions {
     chartType : string;
     stacked : boolean;
 }
+
+export interface IWithKey {
+	key : string
+}

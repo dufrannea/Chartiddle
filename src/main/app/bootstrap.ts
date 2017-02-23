@@ -3,7 +3,7 @@ import {ApplicationService} from '../services/ApplicationService'
 import {ConnectionPool} from '../services/ConnectionPool'
 import {DataProcessor} from '../services/DataProcessor'
 import {Container} from '../infrastructure/Container'
-import {ProxiedWorker} from "../infrastructure/ObjectProxy"
+import {ProxiedWorker} from "../infrastructure/ProxiedWorker"
 
 
 let pool = new ConnectionPool();
