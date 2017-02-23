@@ -1,4 +1,4 @@
-import "highcharts";
+import * as Highcharts from "highcharts";
 import React = require('react');
 import {appActions as Actions} from '../../actions/Actions'
 import $ = require('jquery');
@@ -95,13 +95,15 @@ interface IChartState {
 export class Chart extends React.Component<IChartProps, IChartState> {
     private chart: any;
     private changeListener: any;
+    private domElement : HTMLElement;
+
     constructor() {
         super();
     }
     render() {
         return (
             <div>
-                <div ref="chart"></div>
+                <div ref={(div) => {this.domElement =  div} }></div>
                 <div style={{ display: this.props.loading ? '' : 'none' }} className="spinner-centerer">
                     <div className="spinner-container">
                         <div className="whirly-loader"/>
@@ -112,22 +114,19 @@ export class Chart extends React.Component<IChartProps, IChartState> {
     }
     componentWillUnmount() {
         if (this.chart) {
-            $(this.chart).highcharts().destroy();
+            this.chart.destroy();
         }
     }
 
     updateChart(props: IChartProps) {
         let data = props.data;
         if (data != null) {
-            let domElement = this.refs["chart"]['getDOMNode']();
-            this.chart = $(domElement).highcharts(buildConfig(props));
+            debugger;
+            this.chart = HighCharts.chart(this.domElement, buildConfig(props));
         }
     }
     componentWillReceiveProps(newProps: IChartProps) {
         console.info("updating chart");
-        // let oldData = this.props.data;
-        // if (oldData !== newProps.data){
         this.updateChart(newProps);
-        // }
     }
 }

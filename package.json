@@ -18,7 +18,7 @@
     "flux": "^3.1.2",
     "gulp-concat": "^2.6.0",
     "hasher": "^1.2.0",
-    "highcharts": "4.1.9",
+    "highcharts": "^5.0.7",
     "jquery": "^3.1.1",
     "jquery-ui": "^1.12.1",
     "papaparse": "^4.1.4",
