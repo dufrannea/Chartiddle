@@ -1,4 +1,6 @@
 import "jquery-ui";
+import "jquery-ui/ui/widgets/droppable";
+import "jquery-ui/ui/widgets/draggable";
 import * as $ from 'jquery';
 
 import  * as React from 'react';
@@ -207,7 +209,7 @@ class ChartDropZone<X extends IWithKey> extends React.Component<IChartDropZonePa
 		super();
 	}
 	componentDidMount() {
-		let domNode = this.refs['dropzone']['getDOMNode']();
+		let domNode = this.refs['dropzone'];
 		$(domNode).droppable({
 			accept: function(event){
 				return true;
@@ -270,7 +272,7 @@ class MeasureDropZone extends ChartDropZone<IMeasure>{
 
 	render(){
 		let lis = this.props.items.map(x=> 
-			<li className="list-group-item" ref="x">
+			<li className="list-group-item" key={x.key}>
 				<span className="glyphicon glyphicon-remove" 
 					onClick={()=> this.__handleRemove.bind(this)(x)}>
 				</span>{" " + x.key}
@@ -315,7 +317,7 @@ class DataPreview extends React.Component<void ,IDataPreviewState> {
 	render() {
 		let headers = [];
 		let headersLoaded = false;
-		let tableContent = this.state.data.map((row)=>{
+		let tableContent = this.state.data.map((row, index)=>{
 			let cols = [];
 			for (var colName in row){
 				if (!headersLoaded){
@@ -324,7 +326,7 @@ class DataPreview extends React.Component<void ,IDataPreviewState> {
 				cols.push(<td>{row[colName]}</td>)
 			};
 			headersLoaded=true;
-			return <tr>{cols}</tr>
+			return <tr key={index}>{cols}</tr>
 		});
 		let tableHeaders = headers.map(x=>{
 			return <TableHeaderCell name={x}/>
@@ -356,7 +358,7 @@ interface ITableHeaderCellState {
 }
 class TableHeaderCell extends React.Component<ITableHeaderCellParams,ITableHeaderCellState> {
 	componentDidMount(){
-		let $node =$(this.refs['node']['getDOMNode']());
+		let $node =$(this.refs['node']);
 		$node.data("data",this.props.name);
 		$node.draggable({
 			revert : "invalid",
