@@ -36,7 +36,7 @@ class ObjectProxy {
 							action : "CALL",
 							callActionBody : {
 								methodName: innerMethodName,
-								arguments : args,
+								callArguments : args,
 							}	
 						});
 					});
