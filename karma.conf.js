@@ -1,3 +1,5 @@
+const path = require("path"),
+  webpack = require("webpack");
 // Karma configuration
 // Generated on Sat Oct 03 2015 22:08:48 GMT+0200 (Romance Daylight Time)
 
@@ -14,15 +16,53 @@ module.exports = function (config) {
 
 
     // list of files / patterns to load in the browser
-    files: ['./build/tests/**/*.js'],
+    files: ['./build/tests/tests.webpack.js'],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'build/tests/**/*.js': ["webpack"]
+      './build/tests/tests.webpack.js': ["webpack"]
     },
-    
+
     webpack: {
+      output: {
+        path: path.resolve("./build"),
+        filename: "tests.bundle.js"
+      },
+
+      devtool: "source-map",
+
+      module: {
+        rules: [{
+          test: /.tsx?$/,
+          use: [
+            {
+              loader: "ts-loader",
+              options: {
+                compilerOptions: {
+                  target: "es5",
+                  lib: [
+                    "es2015",
+                    "dom"
+                  ]
+                }
+              }
+            }
+          ]
+        }]
+      },
+
+      plugins: [
+        new webpack.ProvidePlugin({
+          jQuery: 'jquery',
+          $: 'jquery',
+          jquery: 'jquery'
+        })
+      ],
+
+      resolve: {
+        extensions: [".ts", ".tsx", ".js", ".css"],
+      }
     },
 
     // test results reporter to use
@@ -55,18 +95,17 @@ module.exports = function (config) {
     singleRun: true,
 
     customLaunchers: {
-        Chrome_travis_ci: {
-            base: 'Chrome',
-            flags: ['--no-sandbox']
-        }
+      Chrome_travis_ci: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
     },
   };
 
   if (process.env.TRAVIS) {
-      configuration.browsers = ['Chrome_travis_ci'];
+    configuration.browsers = ['Chrome_travis_ci'];
   }
 
   config.set(configuration);
 }
 
- 
